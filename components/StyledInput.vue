@@ -38,7 +38,7 @@ export default {
   position: relative;
 
   input {
-    padding: 27px 30px;
+    padding: 20px 25px;
     width: 100%;
     border: solid 1px;
     font-size: 18px;
@@ -54,14 +54,14 @@ export default {
 
 
     &:focus + label {
-      transform: translate(-20px, -52px);
+      transform: translate(-20px, -48px);
       background: white;
       padding: 0 10px;
     }
   }
 
   .focused + label {
-    transform: translate(-20px, -52px);
+    transform: translate(-20px, -48px);
     background: white;
     padding: 0 10px;
   }
