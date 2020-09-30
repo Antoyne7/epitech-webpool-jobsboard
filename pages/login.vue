@@ -35,16 +35,11 @@ export default {
     }
   },
   components: {AuthRedirection, AuthButton, StyledInput},
+
   methods: {
     submit() {
       console.log(this.email, 'ET', this.password)
     },
-    redirection() {
-      console.log('rue')
-      this.$router.push({
-        path: '/redirection'
-      })
-    }
   }
 
 }

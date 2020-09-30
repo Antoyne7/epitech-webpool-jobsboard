@@ -35,6 +35,14 @@ header {
   background: white;
 }
 
+.sucess {
+  color: #4caf50;
+}
+
+.error {
+  color: brown;
+}
+
 *,
 *::before,
 *::after {
