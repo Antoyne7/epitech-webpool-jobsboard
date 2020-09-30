@@ -28,6 +28,7 @@ html {
 
 body {
   background: var(--color-background);
+  font-family: Rubik, sans-serif;
 }
 
 header {

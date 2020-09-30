@@ -11,7 +11,4 @@ export default {
 
 <style lang="scss">
 
-body {
-  font-family: Rubik, sans-serif;
-}
 </style>
