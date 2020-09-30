@@ -54,6 +54,7 @@ footer {
     text-transform: uppercase;
     font-weight: 900;
     color: var(--primary-jobs);
+    margin: auto;
 
     @media (max-width: 768px) {
       text-align: center;

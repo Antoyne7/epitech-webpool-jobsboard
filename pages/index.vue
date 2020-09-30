@@ -1,14 +1,17 @@
 <template>
-  <div class="container">
+  <div>
+    <SearchBar/>
+    <div class="container">
+
+    </div>
   </div>
 </template>
 
 <script>
-export default {
+import SearchBar from "~/components/SearchBar";
 
+export default {
+  components: {SearchBar}
 }
 </script>
 
-<style lang="scss">
-
-</style>
