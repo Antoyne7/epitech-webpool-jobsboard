@@ -2,6 +2,7 @@
   <div class="input-container">
     <input @keyup="valueChange($event.target.value)" :type="type" :placeholder="placeholder" :id="identifier">
     <label :for="identifier">{{ placeholder }}</label>
+    <img @click="changeType()" v-if="icone" :src="icone" alt="Icône">
   </div>
 </template>
 
@@ -14,7 +15,7 @@ export default {
       inputVal: null,
     }
   },
-  props: ['placeholder', 'type', 'identifier','varToUpdate'],
+  props: ['placeholder', 'type', 'identifier', 'varToUpdate', 'icone'],
   methods: {
     valueChange(value) {
       let input = document.querySelector('#' + this.$props.identifier);
@@ -25,6 +26,13 @@ export default {
         input.classList.remove('focused');
       } else {
         input.classList.add('focused');
+      }
+    },
+    changeType() {
+      if (this.$props.type === "password") {
+        this.$props.type = "text"
+      } else {
+        this.$props.type = "password"
       }
     }
   }
@@ -60,6 +68,15 @@ export default {
     }
   }
 
+  img {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    cursor: pointer;
+  }
+
   .focused + label {
     transform: translate(-20px, -48px);
     background: white;
@@ -71,7 +88,7 @@ export default {
     top: 50%;
     left: 30px;
     transform: translateY(-50%);
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 300;
     transition: all ease-in-out .15s;
   }

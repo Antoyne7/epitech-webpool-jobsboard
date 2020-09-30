@@ -16,7 +16,7 @@ button {
   border-radius: 5px;
   color: white;
   text-transform: uppercase;
-  font-size: 25px;
+  font-size: 2.4rem;
   font-weight: 500;
   width: 320px;
   height: 65px;

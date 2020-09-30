@@ -6,7 +6,7 @@
         <b-col class="fieldset" lg="9" md="10" cols="12">
           <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
                        identifier="email"/>
-          <StyledInput :password.sync="password" var-to-update="password" class="input-login" placeholder="Mot de passe"
+          <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login" placeholder="Mot de passe"
                        type="password" identifier="password"/>
           <AuthButton text="Connexion" @click="submit()"/>
           <nuxt-link to="/register" >

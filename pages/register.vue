@@ -10,9 +10,9 @@
                        type="text" identifier="nom"/>
           <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
                        identifier="email"/>
-          <StyledInput :password.sync="password" var-to-update="password" class="input-login" placeholder="Mot de passe"
+          <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login" placeholder="Mot de passe"
                        type="password" identifier="password"/>
-          <StyledInput :passwordConfirm.sync="passwordConfirm" var-to-update="passwordConfirm" class="input-login"
+          <StyledInput icone="eye.svg" :passwordConfirm.sync="passwordConfirm" var-to-update="passwordConfirm" class="input-login"
                        placeholder="Confirmer le mot de passe"
                        type="password" identifier="passwordConfirm"/>
           <Alert style="margin-top: -20px" :msg="alertMsg" :type="alertType" v-show="showAlert"/>
@@ -94,7 +94,7 @@ export default {
 
 .login-box {
   background: white;
-  margin: auto;
+  margin: 50px auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding-bottom: 30px;
 
