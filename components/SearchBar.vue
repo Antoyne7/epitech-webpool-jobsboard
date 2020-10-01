@@ -23,6 +23,9 @@
           <img class="icone rotate" src="/icons/ic_chevron_right_48px.svg" alt="Icone selecteur">
         </b-col>
       </b-row>
+      <button class="submit">
+        Rechercher
+      </button>
     </b-container>
   </div>
 </template>
@@ -34,15 +37,42 @@ export default {
 <style scoped lang="scss">
 .searchBar {
   background: white;
+  margin: 50px 0;
+  padding-bottom: 28px;
 
   .input-containers {
     padding: 30px 0;
+
+    div:nth-child(3) {
+      @media(max-width: 768px) {
+        margin: 20px 0;
+      }
+    }
+  }
+
+  .submit {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #260592;
+    border: none;
+    width: 245px;
+    height: 55px;
+    color: white;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-family: roboto, sans-serif;
+    border-radius: 5px;
   }
 
   .separator {
     display: flex;
     justify-content: center;
     align-items: center;
+    @media(max-width: 768px) {
+      display: none;
+    }
 
     .vr {
       width: 100%;
@@ -85,5 +115,6 @@ export default {
     font-weight: 300;
     padding: 0 10px;
   }
+
 }
 </style>
