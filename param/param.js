@@ -1,5 +1,5 @@
 // Serveur fournisseur des données
-const host = '';
+const host = 'http://localhost:8888/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/';
 
 export default {
 
@@ -9,7 +9,8 @@ export default {
   // util: null,
 
   // Les différentes adresses des flux de données
-  // listeVehicule: host + 'listeVehicules.php',
+  listeCandidatures: host + 'candidatures',
+  listeOffres: host + 'offres',
 
   //Messages d'erreur
   message: {

@@ -30,6 +30,7 @@ export default {
 <style scoped lang="scss">
 footer {
   background: white;
+  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
 
   > .container {
     padding: 40px 20px;

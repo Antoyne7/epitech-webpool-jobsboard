@@ -54,7 +54,7 @@ export default {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    background: #260592;
+    background: var(--primary-jobs);
     border: none;
     width: 245px;
     height: 55px;
@@ -114,6 +114,7 @@ export default {
     font-size: 14px;
     font-weight: 300;
     padding: 0 10px;
+
   }
 
 }
