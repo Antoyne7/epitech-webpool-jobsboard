@@ -7,13 +7,13 @@
         </b-col>
         <b-col lg="4" md="4" cols="12" class="social-media">
           <a href="https://instagram.com" target="_blank">
-            <img src="static/icons/instagram.svg" alt="Icône Instagram">
+            <img src="/icons/instagram.svg" alt="Icône Instagram">
           </a>
           <a href="https://facebook.com" target="_blank">
-            <img src="static/icons/facebook.svg" alt="Icône Facebook">
+            <img src="/icons/facebook.svg" alt="Icône Facebook">
           </a>
           <a href="https://twitter.com" target="_blank">
-            <img src="static/icons/twitter.svg" alt="Icône Twitter">
+            <img src="/icons/twitter.svg" alt="Icône Twitter">
           </a>
         </b-col>
       </b-row>

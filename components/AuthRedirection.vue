@@ -1,5 +1,5 @@
 <template>
-  <button>{{ text }} <img src="~/assets/icons/ic_chevron_right_48px.svg" alt="Icone chevron"></button>
+  <button>{{ text }} <img src="icons/ic_chevron_right_48px.svg" alt="Icone chevron"></button>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
   <div class="input-container">
     <input @keyup="valueChange($event.target.value)" :type="type" :placeholder="placeholder" :id="identifier">
     <label :for="identifier">{{ placeholder }}</label>
-    <img @click="changeType()" v-if="icone" :src="icone" alt="Icône">
+    <img @click="changeType()" v-if="icone" :src="'icone/'+icone" alt="Icône">
   </div>
 </template>
 

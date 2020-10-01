@@ -6,10 +6,10 @@
           <h1>Job's</h1>
           <div class="menu">
             <nuxt-link to="">
-              <img src="static/icons/ic_person_48px.svg" alt="Icône de personne">
+              <img src="/icons/ic_person_48px.svg" alt="Icône de personne">
             </nuxt-link>
             <a @click="dropdown()">
-              <img src="static/icons/disconnect.svg" alt="Icône deconnexion">
+              <img src="/icons/disconnect.svg" alt="Icône deconnexion">
               <div class="drop-d" v-show="isShowed">
                 <a>Deconnexion</a>
               </div>
