@@ -7,7 +7,7 @@
       <b-col class="separator" lg="1" md="1"></b-col>
       <b-col lg="6" md="6" cols="12">
         <h3>{{ offre.nom }}</h3>
-        <div class="tags-container">
+        <div v-if="offre.tags.length > 0" class="tags-container">
           <Tag v-for="tag in offre.tags" :text="tag.nom"/>
         </div>
         <div class="localisation">
@@ -21,6 +21,13 @@
           {{ offre.localisation }}
         </div>
         <p>{{ offre.short_description }}</p>
+      </b-col>
+    </b-row>
+    <b-row class="desc-container m-0">
+      <b-col lg="10" md="12" cols="12">
+        <p>
+          {{ offre.description }}
+        </p>
       </b-col>
     </b-row>
   </b-container>
@@ -54,6 +61,9 @@ export default {
 .offre-row {
   margin: 40px 0;
 
+  @media(max-width: 992px){
+    margin: 40px 0 20px;
+  }
   .separator {
     @media (max-width: 992px) {
       display: none;
@@ -63,10 +73,8 @@ export default {
   .tags-container {
     display: flex;
     margin: 15px 0;
+
     @media (max-width: 992px) {
-      margin: 10px 0;
-    }
-    @media (max-width: 768px){
       margin: 5px 0;
     }
 
@@ -79,10 +87,8 @@ export default {
     margin: 15px 0;
     display: flex;
     align-items: center;
+
     @media (max-width: 992px) {
-      margin: 10px 0;
-    }
-    @media (max-width: 768px){
       margin: 5px 0;
     }
 
@@ -107,8 +113,17 @@ export default {
     }
 
     p {
+      font-family: Roboto, sans-serif;
       font-size: 1.6rem;
     }
   }
+
+
+}
+
+.desc-container p {
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
 }
 </style>
