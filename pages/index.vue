@@ -5,7 +5,7 @@
       <b-row>
         <JobCard v-for="offre in listeOffres" :title="offre.nom"
                  :short-description="offre.short_description"
-                 link="/"
+                 :linkId="offre.id"
                  :img="offre.image"
                  :localisation="offre.localisation"
         />
@@ -28,6 +28,7 @@ export default {
   },
   created() {
     AjaxServices.getListe('listeOffres').then(promise => {
+      console.log(promise)
       this.listeOffres = promise;
     })
   }

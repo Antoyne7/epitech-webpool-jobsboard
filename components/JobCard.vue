@@ -3,11 +3,11 @@
     <div class="card-container">
       <h3>{{ title }}</h3>
       <br v-if="title.length < 22">
-<!--      <p>{{localisation}}</p>-->
+      <!--      <p>{{localisation}}</p>-->
       <p>{{ descriptionFunc(shortDescription) }}</p>
       <br v-if="shortDescription.length < 100">
       <img :src="img" alt="Image de l'offre">
-      <nuxt-link :to="link">
+      <nuxt-link :to="{name:'slug', params:{slug: linkId}}">
         <button>En savoir plus</button>
       </nuxt-link>
     </div>
@@ -17,7 +17,7 @@
 <script>
 export default {
   name: "JobCard",
-  props: ['title', 'shortDescription', 'img', 'link','localisation'],
+  props: ['title', 'shortDescription', 'img', 'linkId', 'localisation'],
   methods: {
     descriptionFunc(desc) {
       if (desc.length > 100) {

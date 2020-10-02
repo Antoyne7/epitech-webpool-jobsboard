@@ -3,7 +3,7 @@
     <nav>
       <b-container fluid>
         <div class="navbar-custom">
-          <h1>Job's</h1>
+          <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
             <nuxt-link to="">
               <img src="/icons/ic_person_48px.svg" alt="Icône de personne">
@@ -55,6 +55,10 @@ nav {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    a:hover {
+      text-decoration: none;
+    }
 
     h1 {
       font-family: Rubik, sans-serif;

@@ -7,12 +7,12 @@ export default {
   getListe(type) {
     return axios.get(param[type])
       .then(response => {
-         return response.data
+        return response.data
       })
   },
 
   getInformations(type, params) {
-    return axios.post(param[type], params)
+    return axios.get(param[type] + '/' + params)
       .then(response => {
         return response.data
       })

@@ -9,7 +9,7 @@ class Offre extends Model
 {
     use HasFactory;
 
-    protected $hidden = ['id', 'created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at'];
 
 
     public function tags()

@@ -39,6 +39,7 @@ export default {
   background: white;
   margin: 50px 0;
   padding-bottom: 28px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   .input-containers {
     padding: 30px 0;
