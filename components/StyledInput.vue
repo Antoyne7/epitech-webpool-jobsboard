@@ -1,8 +1,8 @@
 <template>
   <div class="input-container">
-    <input @keyup="valueChange($event.target.value)" :type="type" :placeholder="placeholder" :id="identifier">
+    <input @keyup="valueChange($event.target.value)" :type="typeInput" :placeholder="placeholder" :id="identifier">
     <label :for="identifier">{{ placeholder }}</label>
-    <img @click="changeType()" v-if="icone" :src="'icone/'+icone" alt="Icône">
+    <img @click="changeType()" v-if="icone" :src="'icons/'+icone" alt="Icône">
   </div>
 </template>
 
@@ -13,9 +13,13 @@ export default {
   data() {
     return {
       inputVal: null,
+      typeInput:null
     }
   },
   props: ['placeholder', 'type', 'identifier', 'varToUpdate', 'icone'],
+  created() {
+    this.typeInput = this.$props.type
+  },
   methods: {
     valueChange(value) {
       let input = document.querySelector('#' + this.$props.identifier);
@@ -29,10 +33,10 @@ export default {
       }
     },
     changeType() {
-      if (this.$props.type === "password") {
-        this.$props.type = "text"
+      if (this.typeInput === "password") {
+        this.typeInput = "text"
       } else {
-        this.$props.type = "password"
+        this.typeInput = "password"
       }
     }
   }

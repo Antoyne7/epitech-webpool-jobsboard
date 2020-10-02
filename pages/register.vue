@@ -10,13 +10,18 @@
                        type="text" identifier="nom"/>
           <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
                        identifier="email"/>
-          <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login" placeholder="Mot de passe"
+          <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login"
+                       placeholder="Mot de passe"
                        type="password" identifier="password"/>
-          <StyledInput icone="eye.svg" :passwordConfirm.sync="passwordConfirm" var-to-update="passwordConfirm" class="input-login"
+          <StyledInput icone="eye.svg" :passwordConfirm.sync="passwordConfirm" var-to-update="passwordConfirm"
+                       class="input-login"
                        placeholder="Confirmer le mot de passe"
                        type="password" identifier="passwordConfirm"/>
           <Alert style="margin-top: -20px" :msg="alertMsg" :type="alertType" v-show="showAlert"/>
-          <AuthButton text="Connexion" @click="submit()"/>
+          <div @click="submit()">
+            <AuthButton text="Connexion"/>
+          </div>
+          <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
           <nuxt-link to="/login">
             <AuthRedirection class="auth-redirection"
                              text="Se connecter"/>
@@ -24,6 +29,7 @@
         </b-col>
       </b-col>
     </div>
+    <ModalSuccess :is-centered="true" route="/login" message="Votre compte a bien été crée" id="modal-succ"/>
   </b-container>
 </template>
 
@@ -33,10 +39,13 @@ import AuthButton from "~/components/AuthButton";
 import StyledInput from "~/components/StyledInput";
 import AuthRedirection from "~/components/AuthRedirection";
 import param from "~/param/param";
+import ajaxServices from "~/services/ajaxServices";
+import ModalSuccess from "@/components/modalSuccess";
 
 export default {
 
   name: "login.vue",
+  layout: 'auth',
   data() {
     return {
       prenom: null,
@@ -47,15 +56,64 @@ export default {
       alertMsg: null,
       alertType: null,
       showAlert: false,
+
+      alertMsgGlobal: null,
+      alertTypeGlobal: null,
+      showAlertGlobal: false,
     }
   },
-  components: {Alert, AuthRedirection, AuthButton, StyledInput},
+  components: {ModalSuccess, Alert, AuthRedirection, AuthButton, StyledInput},
   methods: {
-
-    submit() {
-      console.log(this.email, 'ET', this.password)
+    validateEmail(email) {
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
     },
+    submit() {
+      if (this.prenom && this.prenom !== "" && this.nom && this.nom !== "" &&
+        this.email && this.email !== "" && this.password) {
+        this.showAlertGlobal = false
+        if (this.validateEmail(this.email)) {
+          if (this.password.length > 5) {
+            this.showAlertGlobal = false
+            if (this.passwordConfirm === this.password) {
+              this.showAlertGlobal = false
+              const params = new FormData();
+              params.append('nom', this.nom)
+              params.append('prenom', this.prenom)
+              params.append('email', this.email)
+              params.append('password', this.password)
 
+              ajaxServices.pushInformations('ajoutUtilisateur', params).then((promise) => {
+                console.log(promise)
+                if (promise.success == 1) {
+                  console.log('salut')
+                  this.$bvModal.show('modal-succ')
+                } else {
+                  this.showAlertGlobal = true
+                  this.alertTypeGlobal = "error"
+                  this.alertMsgGlobal = param.message.errDefault
+                }
+              }).catch((error) => {
+                console.log(error)
+              })
+            }
+          } else {
+            console.log('ERR MDP')
+            this.showAlertGlobal = true
+            this.alertMsgGlobal = param.message.errMdp
+            this.alertTypeGlobal = "error"
+          }
+        } else {
+          this.showAlertGlobal = true
+          this.alertMsgGlobal = param.message.errEmail
+          this.alertTypeGlobal = "error"
+        }
+      } else {
+        this.showAlertGlobal = true
+        this.alertMsgGlobal = param.message.errInfo
+        this.alertTypeGlobal = "error"
+      }
+    },
   },
   //Écoute de la modification de la variable passwordConfirm pour vérifier si elle correspon à Password
   watch: {
@@ -72,9 +130,10 @@ export default {
         }
         this.showAlert = true;
 
-        setTimeout(() => {
-          this.showAlert = false
-        }, 6000)
+        // setTimeout(() => {
+        //   this.showAlert = false
+        // }, 6000)
+
       }
     }
   }

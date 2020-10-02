@@ -28,6 +28,7 @@ import AuthRedirection from "~/components/AuthRedirection";
 export default {
 
   name: "login.vue",
+  layout: 'auth',
   data() {
     return {
       email: null,

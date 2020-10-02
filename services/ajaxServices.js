@@ -17,4 +17,11 @@ export default {
         return response.data
       })
   },
+
+  pushInformations(type, params) {
+    return axios.post(param[type], params)
+      .then(response => {
+        return response.data
+      })
+  },
 }

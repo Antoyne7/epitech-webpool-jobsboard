@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Candidature;
 use App\Models\Offre;
+use App\Models\Utilisateur;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -56,6 +57,10 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('candidature', function ($value) {
             return Candidature::with('offre.entreprise')->find($value) ?? abort(404);
+        });
+
+        Route::bind('utilisateur', function ($value) {
+            return Utilisateur::with('candidatures.offre')->find($value) ?? abort(404);
         });
     }
 
