@@ -18,7 +18,7 @@ export default {
     font-weight: 500;
     border: solid 1px var(--primary-jobs);
     border-radius: 5px;
-    padding: 5px 12px ;
+    padding: 5px 12px;
     text-transform: capitalize;
   }
 </style>
