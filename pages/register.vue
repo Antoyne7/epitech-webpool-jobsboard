@@ -19,7 +19,7 @@
                        type="password" identifier="passwordConfirm"/>
           <Alert style="margin-top: -20px" :msg="alertMsg" :type="alertType" v-show="showAlert"/>
           <div @click="submit()">
-            <AuthButton text="Connexion"/>
+            <AuthButton text="Inscription"/>
           </div>
           <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
           <nuxt-link to="/login">
@@ -156,6 +156,9 @@ export default {
   margin: 50px auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding-bottom: 30px;
+  @media (max-width: 768px) {
+    margin: 0;
+  }
 
   h2 {
     font-weight: 700;

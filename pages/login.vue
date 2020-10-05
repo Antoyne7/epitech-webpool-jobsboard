@@ -6,11 +6,17 @@
         <b-col class="fieldset" lg="9" md="10" cols="12">
           <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
                        identifier="email"/>
-          <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login" placeholder="Mot de passe"
+          <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login"
+                       placeholder="Mot de passe"
                        type="password" identifier="password"/>
-          <AuthButton text="Connexion" @click="submit()"/>
-          <nuxt-link to="/register" >
-            <AuthRedirection  class="auth-redirection"
+          <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
+          <div @click="submit()">
+            <AuthButton text="Connexion"/>
+          </div>
+
+          <nuxt-link to="/register">
+
+            <AuthRedirection class="auth-redirection"
                              text="Créer un compte"/>
           </nuxt-link>
           <AuthRedirection class="auth-redirection" text="Mot de passe oublié"/>
@@ -21,9 +27,11 @@
 </template>
 
 <script>
+import Alert from "@/components/Alert";
 import AuthButton from "~/components/AuthButton";
 import StyledInput from "~/components/StyledInput";
 import AuthRedirection from "~/components/AuthRedirection";
+import param from "@/param/param";
 
 export default {
 
@@ -33,13 +41,22 @@ export default {
     return {
       email: null,
       password: null,
+      alertMsgGlobal: null,
+      alertTypeGlobal: null,
+      showAlertGlobal: false
     }
   },
   components: {AuthRedirection, AuthButton, StyledInput},
 
   methods: {
     submit() {
-      console.log(this.email, 'ET', this.password)
+      if (this.email === null || this.password === null || this.email == "" || this.password == "") {
+        this.alertMsgGlobal = param.message.errNoInfo;
+        this.alertTypeGlobal = "error";
+        this.showAlertGlobal = true;
+      } else {
+
+      }
     },
   }
 

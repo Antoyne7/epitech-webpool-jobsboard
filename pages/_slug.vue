@@ -54,13 +54,17 @@
       <h2>Votre candidature</h2>
       <div class="slider-btn-container">
         <label class="switch">
-          <input type="checkbox">
+          <input v-model="profilCv" type="checkbox">
           <span class="slider round"></span>
         </label>
         <span>Utiliser le cv du profil<a><img src="/icons/eye.svg" alt="Voir le cv"></a></span>
       </div>
       <div class="msg">
         <textarea placeholder="Votre message" name="message" id="message" cols="30" rows="10"></textarea>
+        <label v-show="profilCv" for="image">Chargez votre CV <img src="/icons/ic_file_upload_48px.svg"
+                                                           alt="Icône upload de fichier"></label>
+
+        <input type="file" name="image" id="image" accept="image/gif, image/jpeg, image/png, application/pdf"/>
         <button>Envoyer</button>
       </div>
     </b-modal>
@@ -77,7 +81,10 @@ export default {
     return {
       id: 0,
       offre: null,
+      profilCv: false,
     }
+  },
+  methods: {
   },
   created() {
     this.id = this.$route.params.slug;
@@ -162,6 +169,13 @@ export default {
 .modal-dialog {
   padding: 10px;
 
+  .msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+
   .modal-body {
     padding: 15px;
   }
@@ -182,7 +196,7 @@ export default {
     span {
       display: flex;
       align-items: center;
-      font-family: Roboto,sans-serif;
+      font-family: Roboto, sans-serif;
       font-size: 1.8rem;
       font-weight: normal;
     }
@@ -223,6 +237,25 @@ export default {
   button {
     margin: 20px auto 10px;
     display: block;
+  }
+
+  input[type=file] {
+    display: none;
+  }
+
+  label[for=image] {
+    font-size: 1.4rem;
+    font-weight: 300;
+    padding: 15px 20px;
+    border: solid 1px black;
+    margin: 20px auto 0;
+    text-align: center;
+    display: flex;
+    cursor: pointer;
+
+    img {
+      width: 18px;
+    }
   }
 }
 
