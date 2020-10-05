@@ -27,3 +27,13 @@ Route::apiResource('tags', \App\Http\Controllers\Api\TagController::class);
 Route::apiResource('entreprises', \App\Http\Controllers\Api\EntrepriseController::class);
 Route::apiResource('typeoffres', \App\Http\Controllers\Api\TypeOffreController::class);
 Route::apiResource('candidatures', \App\Http\Controllers\Api\CandidatureController::class);
+
+Route::middleware('guest')->group(function () {
+    Route::post('register', 'AuthController@register')->name('register');
+    Route::post('login', 'AuthController@login')->name('login');
+    Route::post('refresh-token', 'AuthController@refreshToken')->name('refreshToken');
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('logout', 'AuthController@logout')->name('logout');
+});
