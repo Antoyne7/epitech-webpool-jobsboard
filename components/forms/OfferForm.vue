@@ -1,24 +1,35 @@
 <template>
   <div>
+    <b-modal id="modal-entreprise" title="Nouvelle entreprise" hide-footer hide-header centered>
+      <label class="d-block" for="nom-entreprise">Ajoutez une nouvelle entreprise</label>
+      <input v-model="entreprise.nom" type="text" name="nom-entreprise" id="nom-entreprise"
+        placeholder="Nom de l'entreprise">
+      <button class="btn bg-jobs mt-4 mr-2" @click="entrepriseSubmit">Enregistrer</button>
+      <button class="btn btn-danger mt-4" @click="hideEntrepriseModal">Annuler</button>
+    </b-modal>
     <b-container>
       <b-row>
         <div class="mx-auto rounded w-100 mt-3 mb-4 p-4">
-          <form @submit="preSubmit($event, offre)" class="d-flex flex-wrap">
+          <form autocomplete="off" @submit="preSubmit($event, offre)" class="d-flex flex-wrap">
             <label for="nom" class="d-none">Intitulé de l'offre</label>
-            <input v-model="offre.nom" style="height: fit-content" type="text" name="nom" id="nom"
-                   value="Titre de l'offre">
+            <div class="position-relative w-100 titre-container">
+              <input v-model="offre.nom" type="text" name="nom" id="nom"
+                     value="Titre de l'offre">
+              <img class="position-absolute" :src="editIcone" alt="edit icone" />
+            </div>
 
-            <div class="col-sm-6">
-              <div class="d-flex mt-5">
+            <div class="col-md-6 px-0 pr-md-4">
+              <div class="d-flex flex-wrap mt-5">
                 <label for="entreprise">Entreprise</label>
-                <input class="col-10" type="text" v-model="offre.entreprise" name="entreprise" id="entreprise"
+                <input class="col-10" type="text" v-model="offre.entreprise.nom" name="entreprise" id="entreprise"
                        placeholder="entreprise">
                 <div class="px-2 col-2">
-                  <button class="h-100 rounded-lg w-100 btn btn-primary">+</button>
+                  <button v-b-modal.modal-entreprise class="bg-jobs h-100 rounded-lg w-100 btn btn-primary">+</button>
                 </div>
+                <p>Entreprise séléctionné: {{ offre.entreprise.nom }}</p>
               </div>
 
-              <div class="mt-5">
+              <div class="my-5">
                 <label for="tags">Tags (select multiple ou checkboxes stylisé?)</label>
                 <input v-model="tagsText" type="text" name="tags" id="tags" placeholder="tag1, tag2, tag3"
                        @keyup="updateTags">
@@ -31,13 +42,13 @@
 
             </div>
 
-            <div class="position-relative col-sm-6 px-0" style="background-color: lightgray">
-              <input type="file" id="image" class="h-100 w-100 position-absolute" @change="updatePreviewImg($event)" />
-              <img class="mx-auto d-block" :src="preview" alt="">
+            <div class="position-relative d-flex align-items-center justify-content-center col-md-6 px-0" id="file-container">
+              <input type="file" id="image" class="h-100 w-100 position-absolute" @change="updatePreviewImg($event)"/>
+              <img class="mx-auto d-block mh-100 mw-100" :src="preview" alt="Prévisualisation de l'image">
             </div>
 
-            <div class="col-sm-6">
-              <label class="d-block">Type de contrat</label>
+            <div class="col-md-6 px-0">
+              <label class="d-block mt-4">Type de contrat</label>
               <CheckboxButton class="d-inline-block" value="alternance" label="alternance"/>
               <CheckboxButton class="d-inline-block" value="cdi" label="CDI"/>
               <CheckboxButton class="d-inline-block" value="cdd" label="CDD"/>
@@ -45,21 +56,21 @@
             </div>
 
 
-            <div class="col-sm-6 px-0 mt-4">
+            <div class="col-md-6 px-0 my-4">
               <label class="d-block" for="shortDescription">Description courte</label>
               <textarea class="d-block w-100" rows="5" v-model="offre.shortDescription" name="shortDescription"
                         id="shortDescription"/>
             </div>
 
-            <div class="col-12 row flex-wrap">
-              <label class="d-block col-12" for="description">Description détaillée</label>
-              <p class="col-12 text-secondary">
+            <div class="col-12 d-flex px-0 flex-wrap">
+              <label class="d-block w-100" for="description">Description détaillée</label>
+              <p class="w-100 text-secondary">
                 Il est possible d’utiliser <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a>
                 pour écrire votre description, plus d’information sur l’utilisation de Markdown
                 <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">ici</a>.
               </p>
 
-              <div class="col-sm-6">
+              <div class="col-md-6 px-0">
                 <textarea class="d-block w-100"
                           rows="12"
                           v-model="description"
@@ -67,11 +78,11 @@
                           id="description"
                           @keyup="updateDescriptions"/>
               </div>
-              <div class="col-sm-6" v-html="offre.description"></div>
+              <div class="col-md-6 d-none d-md-block" v-html="offre.description"></div>
             </div>
 
             <div class="d-flex col-12 mt-4">
-              <button class="btn mx-auto mt-3 px-4 py-3" type="submit">Enregistrer</button>
+              <button class="bg-jobs btn mx-auto mt-3 px-4 py-3" type="submit">Enregistrer</button>
             </div>
           </form>
         </div>
@@ -84,6 +95,8 @@
 <script>
 import Tag from '~/components/Tag'
 import CheckboxButton from "~/components/forms/CheckboxButton";
+import camera from '~/static/icons/camera.svg'
+import edit from '~/static/icons/edit.svg'
 
 export default {
   name: "OfferForm",
@@ -111,12 +124,13 @@ export default {
     offer: {
       type: Object,
       required: false,
-      default: {}
+      default: null
     }
   },
   data() {
     return {
-      preview: '',
+      preview: camera,
+      editIcone: edit,
       types: [],
       description: '# Détail de l\'offre\n' +
         '---\n' +
@@ -133,12 +147,18 @@ export default {
         nom: 'Titre de l\'offre',
         ville: null,
         departement: null,
-        entreprise: null,
+        entreprise: {
+          id: null,
+          nom: null,
+        },
         tags: [],
         image: null,
         offreType: [],
         shortDescription: '',
         description: ''
+      },
+      entreprise: {
+        nom: ''
       }
     }
   },
@@ -149,15 +169,22 @@ export default {
       this.offre.offreType = this.$store.state.offretype.types
       this.onSubmit(offre)
     },
-    updateDescriptions () {
+    updateDescriptions() {
       this.offre.description = this.compiledDescription
     },
-    updateTags () {
+    updateTags() {
       console.log('update tags')
       this.offre.tags = this.compiledTags
     },
-    updatePreviewImg (event) {
+    updatePreviewImg(event) {
       this.preview = window.URL.createObjectURL(event.target.files[0])
+    },
+    entrepriseSubmit() {
+      console.log('Creation nouvelle entreprise avec pour nom:', this.entreprise.nom)
+      this.$bvModal.hide('modal-entreprise')
+    },
+    hideEntrepriseModal () {
+      this.$bvModal.hide('modal-entreprise')
     }
   },
   computed: {
@@ -169,7 +196,9 @@ export default {
     }
   },
   mounted() {
-    this.updateDescriptions()
+    if (marked) {
+      this.updateDescriptions()
+    }
   }
 }
 </script>
@@ -197,6 +226,7 @@ input {
     font-size: 3.6rem;
     font-weight: 700;
   }
+
   &#image {
     opacity: 0;
     cursor: pointer;
@@ -230,10 +260,41 @@ textarea {
   font-size: 1.6rem;
 }
 
-.btn {
+.btn.bg-jobs {
   background-color: var(--primary-jobs);
   color: white;
 }
 
+div#file-container {
+  background-color: transparent;
+  border: 2px solid black;
+  border-radius: 4px;
+  height: 300px;
+  &:hover::after {
+    content: url('~static/icons/camera.svg');
+    position: absolute;
+    pointer-events: none;
+    height: 36px;
+    opacity: .8;
+  }
+  &:hover::before {
+    content: '';
+    background-color: #000;
+    opacity: .2;
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.titre-container {
+  padding-left: 30px;
+  & img {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 
 </style>
