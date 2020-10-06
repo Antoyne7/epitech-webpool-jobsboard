@@ -23,7 +23,8 @@ class OffreFactory extends Factory
     {
         return [
             'nom' => $this->faker->sentence(3),
-            'localisation' => $this->faker->randomNumber(0),
+            'code_departement' => 67,
+            'code_ville' => $this->faker->numberBetween(67000,67500),
             'short_description' => $this->faker->text(),
             'description' => $this->faker->realText(600),
             'image' => $this->faker->imageUrl(),

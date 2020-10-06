@@ -9,6 +9,10 @@ class Tag extends Model
 {
     use HasFactory;
 
+    protected $hidden = [
+        'created_at'
+    ];
+
     public function offres()
     {
         return $this->belongsToMany(Offre::class);

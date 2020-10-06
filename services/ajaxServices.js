@@ -12,7 +12,22 @@ export default {
   },
 
   getInformations(type, params) {
-    return axios.get(param[type] + '/' + params)
+    return axios.get(param[type] + '/' + params, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+    })
+      .then(response => {
+        return response.data
+      })
+  },
+
+  pushInformations(type, params) {
+    return axios.post(param[type], params, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
       .then(response => {
         return response.data
       })

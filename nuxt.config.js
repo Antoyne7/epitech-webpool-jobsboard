@@ -19,6 +19,11 @@ export default {
       {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'}
     ]
   },
+  //Refresh token pour l'authentification
+  router: {
+    middleware: 'refreshToken',
+  },
+
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
@@ -44,7 +49,10 @@ export default {
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {},
+  axios: {
+    baseURL: 'http://localhost:8888/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/',
+    credentials: true,
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {}

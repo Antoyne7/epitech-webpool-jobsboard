@@ -11,6 +11,10 @@ export default {
   // Les différentes adresses des flux de données
   listeCandidatures: host + 'candidatures',
   listeOffres: host + 'offres',
+  ajoutUtilisateur: host + 'utilisateurs',
+  register: host + 'register',
+  login: host + 'login',
+  logout: host + 'logout',
 
   //Messages d'erreur
   message: {
@@ -22,8 +26,11 @@ export default {
     errSignIn: "Un compte existant utilise déjà cette adresse mail",
     errInfo: "Veuillez remplir les informations",
     errDeco: "Veuillez vous connecter pour accéder à cette page",
+    errEmail: "Veuillez entrer un email valide",
+    errMdp: "Veuillez entrer un mot de passe de plus de 5 caractères",
+    errNoInfo: "Veuillez remplir les informations",
 
     sucProfil: 'Vos informations ont bien été mises à jour !',
-    sucPasswords: "Les mots de passe sont les mêmes !"
+    sucPasswords: "Les mots de passe correspondent"
   }
 }
