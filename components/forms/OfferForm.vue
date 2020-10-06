@@ -3,7 +3,7 @@
     <b-modal id="modal-entreprise" title="Nouvelle entreprise" hide-footer hide-header centered>
       <label class="d-block" for="nom-entreprise">Ajoutez une nouvelle entreprise</label>
       <input v-model="entreprise.nom" type="text" name="nom-entreprise" id="nom-entreprise"
-        placeholder="Nom de l'entreprise">
+             placeholder="Nom de l'entreprise">
       <button class="btn bg-jobs mt-4 mr-2" @click="entrepriseSubmit">Enregistrer</button>
       <button class="btn btn-danger mt-4" @click="hideEntrepriseModal">Annuler</button>
     </b-modal>
@@ -15,10 +15,11 @@
             <div class="position-relative w-100 titre-container">
               <input v-model="offre.nom" type="text" name="nom" id="nom"
                      value="Titre de l'offre">
-              <img class="position-absolute" :src="editIcone" alt="edit icone" />
+              <img class="position-absolute" :src="editIcone" alt="edit icone"/>
             </div>
 
             <div class="col-md-6 px-0 pr-md-4">
+              <!-- Entreprise -->
               <div class="d-flex flex-wrap mt-5">
                 <label for="entreprise">Entreprise</label>
                 <input class="col-10" type="text" v-model="offre.entreprise.nom" name="entreprise" id="entreprise"
@@ -29,6 +30,7 @@
                 <p>Entreprise séléctionné: {{ offre.entreprise.nom }}</p>
               </div>
 
+              <!-- Tags -->
               <div class="my-5">
                 <label for="tags">Tags (select multiple ou checkboxes stylisé?)</label>
                 <input v-model="tagsText" type="text" name="tags" id="tags" placeholder="tag1, tag2, tag3"
@@ -40,9 +42,27 @@
                 </div>
               </div>
 
+              <!-- Localisation -->
+              <div class="d-flex flex-wrap mt-5 position-relative">
+                <label for="localisation">Localisation de l'offre</label>
+                <input type="text" v-model="localisation.search" @keyup="updateLocalisation" @focus="localisation.showList = true"
+                       name="localisation" id="localisation" placeholder="Strasbourg">
+                <ul id="localisation-autocomplete" class="position-absolute w-100 bg-white rounded"
+                    v-if="localisationFilter.length > 0 && localisation.showList"> <!-- Autocomplete list -->
+                  <li class="localisation-item" v-for="localisation in localisationFilter" v-bind:key="localisation.key"
+                      @click="setLocalisation(localisation)">
+                    {{ localisation.nom }} {{ localisation.codesPostaux[0] }}, {{ localisation.departement.nom }}
+                  </li>
+                </ul>
+                <p>Localisation:
+                  <span v-if="localisation.selected">{{ localisation.selected.nom }} {{ localisation.selected.codesPostaux[0] }}, {{ localisation.selected.departement.nom }}</span>
+                  <span v-else>Toute la France</span>
+                </p>
+              </div>
             </div>
 
-            <div class="position-relative d-flex align-items-center justify-content-center col-md-6 px-0" id="file-container">
+            <div class="position-relative d-flex align-items-center justify-content-center col-md-6 px-0"
+                 id="file-container">
               <input type="file" id="image" class="h-100 w-100 position-absolute" @change="updatePreviewImg($event)"/>
               <img class="mx-auto d-block mh-100 mw-100" :src="preview" alt="Prévisualisation de l'image">
             </div>
@@ -132,21 +152,16 @@ export default {
       preview: camera,
       editIcone: edit,
       types: [],
-      description: '# Détail de l\'offre\n' +
-        '---\n' +
-        'Écrivez les détails de votre offre ici\n' +
-        '\n' +
-        '## Missions\n' +
-        'Vous pouvez faire différentes parties\n' +
-        '- Avec des listes\n' +
-        '- non ordonnées\n' +
-        '1. mais aussi\n' +
-        '2. ordonnées',
+      description: '',
       tagsText: '',
+      localisation: {
+        search: '',
+        list: [],
+        selected: null,
+        showList: false
+      },
       offre: {
         nom: 'Titre de l\'offre',
-        ville: null,
-        departement: null,
         entreprise: {
           id: null,
           nom: null,
@@ -155,7 +170,12 @@ export default {
         image: null,
         offreType: [],
         shortDescription: '',
-        description: ''
+        description: '',
+        localisation: {
+          codeDepartement: null,
+          codeVille: null,
+          ville: ''
+        }
       },
       entreprise: {
         nom: ''
@@ -167,6 +187,7 @@ export default {
       event.preventDefault()
       console.log('pre submit de l\'ajout d\'offre')
       this.offre.offreType = this.$store.state.offretype.types
+      this.offre.image = document.querySelector('input[type="file"]').files[0]
       this.onSubmit(offre)
     },
     updateDescriptions() {
@@ -179,13 +200,43 @@ export default {
     updatePreviewImg(event) {
       this.preview = window.URL.createObjectURL(event.target.files[0])
     },
+    async updateLocalisation() {
+      if (this.localisation.search.length === 3) {
+        this.localisation.list = await this.$axios.$get('https://geo.api.gouv.fr/communes?nom=' + this.localisation.search + '&fields=nom,code,codesPostaux,codeDepartement,departement,codeRegion&format=json&geometry=centre')
+        this.localisation.showList = true
+      } else if (this.localisation.search.length < 3) {
+        this.localisation.list = []
+      }
+    },
     entrepriseSubmit() {
       console.log('Creation nouvelle entreprise avec pour nom:', this.entreprise.nom)
+      // this.$axios.$post()
+      this.hideEntrepriseModal()
+    },
+    hideEntrepriseModal() {
       this.$bvModal.hide('modal-entreprise')
     },
-    hideEntrepriseModal () {
-      this.$bvModal.hide('modal-entreprise')
-    }
+    initDescription() {
+      this.offre.description = '# Détail de l\'offre\n' +
+        '---\n' +
+        'Écrivez les détails de votre offre ici\n' +
+        '\n' +
+        '## Missions\n' +
+        'Vous pouvez faire différentes parties\n' +
+        '- Avec des listes\n' +
+        '- non ordonnées\n' +
+        '1. mais aussi\n' +
+        '2. ordonnées'
+      this.updateDescriptions()
+    },
+    setLocalisation(localisation) {
+      this.localisation.search = ''
+      this.localisation.selected = localisation
+      this.offre.localisation.codeDepartement = localisation.departement.code
+      this.offre.localisation.codeVille = localisation.code
+      this.offre.localisation.ville = localisation.nom
+      this.localisation.showList = false
+    },
   },
   computed: {
     compiledDescription() {
@@ -193,11 +244,20 @@ export default {
     },
     compiledTags() {
       return this.tagsText.split(',').map(tag => tag.trim().toLowerCase()).filter(tag => tag.length > 0)
+    },
+    localisationFilter() {
+      const sorted = this.localisation.list.filter(localisation =>
+        localisation.nom.toLowerCase().includes(this.localisation.search.toLowerCase().trim()))
+      if (sorted.length > 6) {
+        return sorted.slice(0,6)
+      } else {
+        return sorted
+      }
     }
   },
   mounted() {
     if (marked) {
-      this.updateDescriptions()
+      this.initDescription()
     }
   }
 }
@@ -270,6 +330,7 @@ div#file-container {
   border: 2px solid black;
   border-radius: 4px;
   height: 300px;
+
   &:hover::after {
     content: url('~static/icons/camera.svg');
     position: absolute;
@@ -277,6 +338,7 @@ div#file-container {
     height: 36px;
     opacity: .8;
   }
+
   &:hover::before {
     content: '';
     background-color: #000;
@@ -290,10 +352,26 @@ div#file-container {
 
 .titre-container {
   padding-left: 30px;
+
   & img {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
+  }
+}
+
+#localisation-autocomplete {
+  top: 40px;
+  z-index: 100;
+  list-style: none;
+  padding: 6px 0;
+  li {
+    padding: 4px 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #EEEEEE;
+    }
   }
 }
 
