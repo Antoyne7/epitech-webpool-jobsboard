@@ -35,7 +35,7 @@
                 <label for="tags">Tags (select multiple ou checkboxes stylisé?)</label>
                 <input v-model="tagsText" type="text" name="tags" id="tags" placeholder="tag1, tag2, tag3"
                        @keyup="updateTags">
-                <small>Les tags doivent être séparer par une virgule</small>
+                <p>Les tags doivent être séparer par une virgule</p>
 
                 <div v-if="offre.tags.length > 0" class="mt-2">
                   <Tag v-for="tag in offre.tags" v-bind:key="tag" class="d-inline-block m-1" :text="tag"/>
