@@ -25,6 +25,6 @@ Route::middleware('guest')->group(function () {
     Route::post('refresh-token', '\App\Http\Controllers\AuthController@refreshToken')->name('refreshToken');
 });
 
-//Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::post('logout', '\App\Http\Controllers\AuthController@logout')->name('logout');
-//});
+});

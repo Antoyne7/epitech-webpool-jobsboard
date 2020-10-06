@@ -11,7 +11,7 @@
             <a @click="dropdown()">
               <img src="/icons/disconnect.svg" alt="Icône deconnexion">
               <div class="drop-d" v-show="isShowed">
-                <a>Deconnexion</a>
+                <a @click="disconnect()">Deconnexion</a>
               </div>
             </a>
           </div>
@@ -33,6 +33,16 @@ export default {
   methods: {
     dropdown() {
       this.isShowed = !this.isShowed
+    },
+    disconnect() {
+      this.$axios.post('logout')
+        .then(resp => {
+          this.$store.dispatch('logout');
+          this.$router.push('/login');
+        })
+        .catch(errors => {
+          console.dir(errors);
+        });
     }
   }
 

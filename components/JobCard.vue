@@ -43,7 +43,7 @@ export default {
     height: 430px;
   }
   @media(max-width: 992px) {
-    height: 460px;
+    height: 540px;
   }
   margin: 15px 0;
 

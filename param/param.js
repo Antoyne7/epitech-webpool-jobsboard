@@ -13,6 +13,8 @@ export default {
   listeOffres: host + 'offres',
   ajoutUtilisateur: host + 'utilisateurs',
   register: host + 'register',
+  login: host + 'login',
+  logout: host + 'logout',
 
   //Messages d'erreur
   message: {

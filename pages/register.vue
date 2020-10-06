@@ -4,32 +4,34 @@
       <b-col class="login-box" lg="8" md="10" cols="12">
         <h2>S'inscrire à Jobs</h2>
         <b-col class="fieldset" lg="9" md="10" cols="12">
-          <StyledInput :prenom.sync="prenom" var-to-update="prenom" class="input-login" placeholder="Prenom"
-                       type="text" identifier="Prenom"/>
-          <StyledInput :nom.sync="nom" var-to-update="nom" class="input-login" placeholder="Nom"
-                       type="text" identifier="nom"/>
-          <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
-                       identifier="email"/>
-          <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login"
-                       placeholder="Mot de passe"
-                       type="password" identifier="password"/>
-          <StyledInput icone="eye.svg" :passwordConfirm.sync="passwordConfirm" var-to-update="passwordConfirm"
-                       class="input-login"
-                       placeholder="Confirmer le mot de passe"
-                       type="password" identifier="passwordConfirm"/>
-          <Alert style="margin-top: -20px" :msg="alertMsg" :type="alertType" v-show="showAlert"/>
-          <div @click="submit()">
-            <AuthButton text="Inscription"/>
-          </div>
+          <form @submit.prevent="submit()">
+            <StyledInput :prenom.sync="prenom" var-to-update="prenom" class="input-login" placeholder="Prenom"
+                         type="text" identifier="Prenom"/>
+            <StyledInput :nom.sync="nom" var-to-update="nom" class="input-login" placeholder="Nom"
+                         type="text" identifier="nom"/>
+            <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
+                         identifier="email"/>
+            <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login"
+                         placeholder="Mot de passe"
+                         type="password" identifier="password"/>
+            <StyledInput icone="eye.svg" :passwordConfirm.sync="passwordConfirm" var-to-update="passwordConfirm"
+                         class="input-login"
+                         placeholder="Confirmer le mot de passe"
+                         type="password" identifier="passwordConfirm"/>
+            <Alert style="margin-top: -20px" :msg="alertMsg" :type="alertType" v-show="showAlert"/>
+            <div @click="submit()">
+              <AuthButton text="Inscription"/>
+            </div>
+          </form>
           <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
-          <nuxt-link to="/login">
-            <AuthRedirection class="auth-redirection"
-                             text="Se connecter"/>
-          </nuxt-link>
+            <nuxt-link to="/login">
+              <AuthRedirection class="auth-redirection"
+                               text="Se connecter"/>
+            </nuxt-link>
         </b-col>
       </b-col>
     </div>
-    <ModalSuccess :is-centered="true" route="/login" message="Votre compte a bien été crée" id="modal-succ"/>
+    <ModalSuccess :is-centered="true" route="/" message="Votre compte a bien été crée" id="modal-succ"/>
   </b-container>
 </template>
 
@@ -83,7 +85,7 @@ export default {
               params.append('email', this.email)
               params.append('password', this.password)
 
-              ajaxServices.pushInformations('register', params).then(({token, expiresIn,statusCode}) => {
+              ajaxServices.pushInformations('register', params).then(({token, expiresIn, statusCode}) => {
                 console.log({token, expiresIn, statusCode})
                 this.$store.dispatch('setToken', {token, expiresIn});
 
