@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Offre;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class OffreController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,19 +22,44 @@ class OffreController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
+        if ($request['image']) {
+            $filename = time() . '.' . $request['image']->getClientOriginalExtension();
+        }
+
+        dd($request['image']);
+
+        if (Offre::create([
+            'nom' => $request['nom'],
+            'code_ville' => $request['codeVille'],
+            'ville' => $request['ville'],
+            'code_departement' => $request['codeDepartement'],
+            'shortDescription' => $request['shortDescription'],
+            'description' => $request['description'],
+            'image' => $request['image']['name'],
+            'entreprise' => $request['entreprise'],
+            'tag' => $request['tag'],
+            'offretype' => $request['offretype'],
+        ])) {
+            if ($request['image']) {
+                $request['image']->move(public_path('images'), $filename);
+            }
+            return response(1);
+        } else {
+            return response(0);
+        }
 
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Offre $offre
-     * @return \Illuminate\Http\Response
+     * @param Offre $offre
+     * @return Response
      */
     public function show(Offre $offre)
     {
@@ -43,20 +69,20 @@ class OffreController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Response
      */
     public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function destroy($id)
     {

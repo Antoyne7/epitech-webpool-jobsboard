@@ -160,6 +160,9 @@ export default {
         selected: null,
         showList: false
       },
+      entreprise: {
+        nom: ''
+      },
       offre: {
         nom: 'Titre de l\'offre',
         entreprise: {
@@ -176,9 +179,6 @@ export default {
           codeVille: null,
           ville: ''
         }
-      },
-      entreprise: {
-        nom: ''
       }
     }
   },
