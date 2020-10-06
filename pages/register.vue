@@ -83,10 +83,11 @@ export default {
               params.append('email', this.email)
               params.append('password', this.password)
 
-              ajaxServices.pushInformations('ajoutUtilisateur', params).then((promise) => {
-                console.log(promise)
-                if (promise.success == 1) {
-                  console.log('salut')
+              ajaxServices.pushInformations('register', params).then(({token, expiresIn,statusCode}) => {
+                console.log({token, expiresIn, statusCode})
+                this.$store.dispatch('setToken', {token, expiresIn});
+
+                if (statusCode === 200) {
                   this.$bvModal.show('modal-succ')
                 } else {
                   this.showAlertGlobal = true
@@ -94,6 +95,9 @@ export default {
                   this.alertMsgGlobal = param.message.errDefault
                 }
               }).catch((error) => {
+                this.showAlertGlobal = true
+                this.alertTypeGlobal = "error"
+                this.alertMsgGlobal = param.message.errDefault
                 console.log(error)
               })
             }

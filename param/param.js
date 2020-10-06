@@ -12,6 +12,7 @@ export default {
   listeCandidatures: host + 'candidatures',
   listeOffres: host + 'offres',
   ajoutUtilisateur: host + 'utilisateurs',
+  register: host + 'register',
 
   //Messages d'erreur
   message: {

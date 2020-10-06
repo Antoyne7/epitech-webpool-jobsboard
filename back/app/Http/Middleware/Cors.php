@@ -16,9 +16,9 @@ class Cors
      */
     public function handle($request, Closure $next)
     {
-//On note ici les url acceptées dans l'api
+        //On note ici les url acceptées dans l'api
         $allowedOrigins = [
-            'http://localhost:3000',
+            "http://localhost:3000"
         ];
         $requestOrigin = $request->headers->get('origin');
 
