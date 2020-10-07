@@ -28,7 +28,6 @@ export const actions = {
       }
     );
     dispatch('setToken', {token, expiresIn});
-
   },
 
   logout({commit}) {

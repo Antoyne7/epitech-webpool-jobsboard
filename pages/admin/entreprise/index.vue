@@ -5,7 +5,7 @@
         <b-button :to="{ name: 'admin' }" block variant="primary" size="lg">
           back
         </b-button>
-        <b-button>
+        <b-button :to="{ name: 'admin-entreprise-add' }">
           Ajout nouvelle entreprise
         </b-button>
       </b-row>

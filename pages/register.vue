@@ -82,7 +82,6 @@ export default {
               params.append('prenom', this.prenom)
               params.append('email', this.email)
               params.append('password', this.password)
-
               ajaxServices.pushInformations('register', params).then(({token, expiresIn, statusCode}) => {
                 this.$store.dispatch('setToken', {token, expiresIn});
 
@@ -133,10 +132,8 @@ export default {
   },
   //Écoute de la modification de la variable passwordConfirm pour vérifier si elle correspon à Password
   watch: {
-
     passwordConfirm(val) {
       this.passwordConfirmer(val)
-
     },
     password() {
       this.passwordConfirmer(this.passwordConfirm)

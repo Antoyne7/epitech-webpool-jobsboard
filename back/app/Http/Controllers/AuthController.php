@@ -8,7 +8,6 @@ use App\Utilities\ProxyRequest;
 
 class AuthController extends Controller
 {
-    //
     protected $proxy;
 
     public function __construct(ProxyRequest $proxy)
@@ -46,7 +45,6 @@ class AuthController extends Controller
 
     }
 
-
     public function login()
     {
         $user = Utilisateur::where('email', request('email'))->first();
@@ -81,7 +79,6 @@ class AuthController extends Controller
 
     public function logout()
     {
-
         $token = request()->user()->token();
         $token->delete();
 
