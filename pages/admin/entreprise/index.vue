@@ -11,7 +11,7 @@
       </b-row>
     </b-container>
     <b-container class="container-cards">
-        <DataCard v-for="entreprise in entreprises" v-bind:key="entreprise.id">
+        <DataCard v-for="entreprise in entreprises" v-bind:key="entreprise.id" :to="'./entreprise/edit/' + entreprise.id">
           {{ entreprise.nom }}
         </DataCard>
     </b-container>

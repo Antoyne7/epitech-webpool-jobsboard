@@ -4,15 +4,16 @@
       <slot></slot>
     </div>
     <div>
-      <button>EDIT</button>
-      <button>DEL</button>
+      <b-button :to="to">EDIT</b-button>
+      <b-button>DEL</b-button>
     </div>
   </b-row>
 </template>
 
 <script>
 export default {
-  name: "DataCard"
+  name: "DataCard",
+  props: ['to', 'data']
 }
 </script>
 
