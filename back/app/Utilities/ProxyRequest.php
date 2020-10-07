@@ -46,7 +46,7 @@ class ProxyRequest
         return $resp;
     }
 
-    protected function setHttpOnlyCookie($refreshToken)
+    protected function setHttpOnlyCookie(string $refreshToken)
     {
         cookie()->queue(
             'refresh_token',

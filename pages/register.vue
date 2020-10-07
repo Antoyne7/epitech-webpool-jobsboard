@@ -19,7 +19,7 @@
                          placeholder="Confirmer le mot de passe"
                          type="password" identifier="passwordConfirm"/>
             <Alert style="margin-top: -20px" :msg="alertMsg" :type="alertType" v-show="showAlert"/>
-              <AuthButton type="submit" text="Inscription"/>
+            <AuthButton type="submit" text="Inscription"/>
           </form>
           <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
           <nuxt-link to="/login">
@@ -68,6 +68,7 @@ export default {
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(email).toLowerCase());
     },
+
     submit() {
       if (this.prenom && this.prenom !== "" && this.nom && this.nom !== "" &&
         this.email && this.email !== "" && this.password) {
@@ -85,7 +86,6 @@ export default {
 
               ajaxServices.pushInformations('register', params).then(({token, expiresIn, statusCode}) => {
                 this.$store.dispatch('setToken', {token, expiresIn});
-
                 if (statusCode === 200) {
                   this.$bvModal.show('modal-succ')
                 } else {
@@ -94,14 +94,19 @@ export default {
                   this.alertMsgGlobal = param.message.errDefault
                 }
               }).catch((error) => {
-                this.showAlertGlobal = true
-                this.alertTypeGlobal = "error"
-                this.alertMsgGlobal = param.message.errMail
                 console.dir(error)
+                if (error.response.status === 422) {
+                  this.showAlertGlobal = true
+                  this.alertTypeGlobal = "error"
+                  this.alertMsgGlobal = param.message.errMail
+                } else {
+                  this.showAlertGlobal = true
+                  this.alertTypeGlobal = "error"
+                  this.alertMsgGlobal = param.message.errDefault
+                }
               })
             }
           } else {
-            console.log('ERR MDP')
             this.showAlertGlobal = true
             this.alertMsgGlobal = param.message.errMdp
             this.alertTypeGlobal = "error"

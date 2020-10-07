@@ -21,7 +21,7 @@ export default {
   },
   //Refresh token pour l'authentification
   router: {
-    middleware: 'refreshToken',
+    // middleware: 'refreshToken',
   },
 
 

@@ -63,8 +63,7 @@ export default {
           this.$store.dispatch('setToken', {token, expiresIn});
           this.$router.push('/')
         }).catch((error) => {
-          console.log(error)
-          this.alertMsgGlobal = param.message.errDefault;
+          this.alertMsgGlobal = param.message.errCnx;
           this.alertTypeGlobal = "error";
           this.showAlertGlobal = true;
         })

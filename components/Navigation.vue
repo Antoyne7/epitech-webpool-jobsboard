@@ -35,7 +35,7 @@ export default {
       this.isShowed = !this.isShowed
     },
     disconnect() {
-      this.$axios.$post('logout')
+      this.$axios.post('logout')
         .then(resp => {
           console.log(resp)
           // this.$store.dispatch('logout');

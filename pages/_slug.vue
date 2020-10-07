@@ -61,7 +61,7 @@
       </div>
       <div class="msg">
         <textarea placeholder="Votre message" name="message" id="message" cols="30" rows="10"></textarea>
-        <label v-show="profilCv" for="image">Chargez votre CV <img src="/icons/ic_file_upload_48px.svg"
+        <label v-show="!profilCv" for="image">Chargez votre CV <img src="/icons/ic_file_upload_48px.svg"
                                                            alt="Icône upload de fichier"></label>
 
         <input type="file" name="image" id="image" accept="image/gif, image/jpeg, image/png, application/pdf"/>
