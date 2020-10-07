@@ -5,39 +5,37 @@
         <b-button :to="{ name: 'admin' }" block variant="primary" size="lg">
           back
         </b-button>
+        <b-button :to="{ name: 'admin-offretype-add' }">
+          Ajout nouveau type offre
+        </b-button>
       </b-row>
     </b-container>
     <b-container class="container-cards">
-      <b-row>
-        les types
-        <div>
-
-        </div>
-      </b-row>
+        <DataCard v-for="typeOffre in listeTypeOffres" v-bind:key="typeOffre.id">
+          {{ typeOffre.nom }}
+        </DataCard>
     </b-container>
   </div>
 </template>
 
 <script>
-import JobCard from "@/components/JobCard"
-import SearchBar from "@/components/SearchBar"
+import DataCard from "@/components/DataCard"
 import AjaxServices from "@/services/ajaxServices";
 
 export default {
   name: "Index",
   components: {
-    JobCard,
-    SearchBar
+    DataCard
   },
   data() {
     return {
-      listeOffres: [],
+      listeTypeOffres: [],
     }
   },
   created() {
-    AjaxServices.getListe('listeOffres').then(promise => {
+    AjaxServices.getListe('typeOffres').then(promise => {
       console.log(promise)
-      this.listeOffres = promise;
+      this.listeTypeOffres = promise;
     })
   }
 }

@@ -32,4 +32,26 @@ export default {
         return response.data
       })
   },
+
+  updateInformations(type, id, params) {
+    return axios.patch(param[type] + '/' + id, params, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(response => {
+        return response.data
+      })
+  },
+
+  deleteInformations(type, id) {
+    return axios.delete(param[type] + '/' + id, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(response => {
+        return response.data
+      })
+  },
 }

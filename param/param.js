@@ -19,6 +19,7 @@ export default {
 
   typeOffres: host + 'typeoffres',
   tags: host + 'tags',
+  entreprises: host + 'entreprises',
 
   //Messages d'erreur
   message: {

@@ -9,6 +9,8 @@ class TypeOffre extends Model
 {
     use HasFactory;
 
+    protected $visible = ['id', 'nom'];
+
     public function offres()
     {
         return $this->belongsToMany(Offre::class);

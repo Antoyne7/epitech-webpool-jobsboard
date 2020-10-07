@@ -1,21 +1,16 @@
 <template>
   <div>
-    <b-container>
-      liste des differentes offres avec bouton d'édition (bouton pour dire que l'offre est pourvu ?)
-      <div>
-        bouton pour creer une nouvelle offre
-      </div>
-      sidebar pour voir les dernieres candidatures ?
-      navigation a gauche avec candidatures ajout d'offre gestion des tags et gestion type offre ?
-    </b-container>
     <SearchBar/>
     <b-container>
       <b-row>
         <b-button :to="{ name: 'admin-offre-add' }" block variant="primary" size="lg">
           Ajouter une nvl offre
         </b-button>
-        <b-button :to="{ name: 'admin-offretypes' }" block variant="primary" size="lg">
+        <b-button :to="{ name: 'admin-offretype' }" block variant="primary" size="lg">
           Gestion types de contrats
+        </b-button>
+        <b-button :to="{ name: 'admin-entreprise' }" block variant="primary" size="lg">
+          Gestion des entreprises
         </b-button>
       </b-row>
     </b-container>
@@ -26,6 +21,7 @@
                  :linkId="offre.id"
                  :img="offre.image"
                  :localisation="offre.localisation"
+                 admin-view="true"
         />
       </b-row>
     </b-container>

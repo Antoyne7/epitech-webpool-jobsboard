@@ -9,7 +9,7 @@ class Entreprise extends Model
 {
     use HasFactory;
 
-    protected $visible = ['nom'];
+    protected $visible = ['id', 'nom'];
 
     public function offres()
     {
