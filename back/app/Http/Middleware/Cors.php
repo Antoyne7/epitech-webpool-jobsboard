@@ -19,7 +19,8 @@ class Cors
         //On note ici les url acceptées dans l'api
         $allowedOrigins = [
             "http://localhost:3000",
-            "http://localhost:8888"
+            "http://localhost:8888",
+            "http://jobs.epitech.fr/back/public/api/",
         ];
         $requestOrigin = $request->headers->get('origin');
 
