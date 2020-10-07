@@ -1,11 +1,13 @@
 <template>
   <b-container>
-    <h2>Ajout {{ classe }}</h2>
-    <b-form @submit="preSubmit($event)">
+    <b-button class="mb-4" @click="$router.back()">
+      back
+    </b-button>
+    <h2><slot></slot></h2>
+    <b-form @submit.prevent="submitFunction({ id: id, nom: nom })">
       <label for="nom">Nom</label>
-      <input type="text" id="nom" name="nom" placeholder="Entrez un nom">
-
-      <b-button variant="primary">Enregistrer</b-button>
+      <input v-model="nom" type="text" id="nom" name="nom" placeholder="Entrez un nom">
+      <b-button type="submit" variant="primary">Enregistrer</b-button>
     </b-form>
   </b-container>
 </template>
@@ -13,20 +15,27 @@
 <script>
 export default {
   name: "BasicDataForm",
-  props: [
-    'classe',
-    'submitFunction'
-  ],
+  props: {
+    dataObject: {
+      type: Object,
+      required: false,
+      default: null
+    },
+    submitFunction: {
+      type: Function,
+      required: true
+    }
+  },
   data () {
     return {
+      id: null,
       nom: ''
     }
   },
-  methods: {
-    preSubmit (event) {
-      event.preventDefault()
-      console.log()
-      this.submitFunction()
+  mounted() {
+    if (this.dataObject) {
+      this.id = this.dataObject.id
+      this.nom = this.dataObject.nom
     }
   }
 }

@@ -48,6 +48,7 @@ class ProxyRequest
 
     protected function setHttpOnlyCookie($refreshToken)
     {
+        dd('ekzapazkepazkazopekazpeazk');
         cookie()->queue(
             'refresh_token',
             $refreshToken,
@@ -55,7 +56,7 @@ class ProxyRequest
             null,
             null,
             false,
-            true // httponly
+            false // httponly
         );
     }
 }
