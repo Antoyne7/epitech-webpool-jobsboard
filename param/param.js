@@ -1,5 +1,7 @@
 // Serveur fournisseur des données
-const host = 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/';
+const local = 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/'
+const server = 'https://backend.antoinebraillard.tech/jobboard/public/index.php/api/'
+const host = local;
 
 export default {
 

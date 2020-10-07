@@ -49,7 +49,9 @@ export default {
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {
+  // Serveur : https://backend.antoinebraillard.tech/jobboard/public/index.php/api/
+  // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/
+  axios: { //
     baseURL: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/',
     credentials: true,
   },
