@@ -19,15 +19,13 @@
                          placeholder="Confirmer le mot de passe"
                          type="password" identifier="passwordConfirm"/>
             <Alert style="margin-top: -20px" :msg="alertMsg" :type="alertType" v-show="showAlert"/>
-            <div @click="submit()">
-              <AuthButton text="Inscription"/>
-            </div>
+              <AuthButton type="submit" text="Inscription"/>
           </form>
           <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
-            <nuxt-link to="/login">
-              <AuthRedirection class="auth-redirection"
-                               text="Se connecter"/>
-            </nuxt-link>
+          <nuxt-link to="/login">
+            <AuthRedirection class="auth-redirection"
+                             text="Se connecter"/>
+          </nuxt-link>
         </b-col>
       </b-col>
     </div>
@@ -86,7 +84,6 @@ export default {
               params.append('password', this.password)
 
               ajaxServices.pushInformations('register', params).then(({token, expiresIn, statusCode}) => {
-                console.log({token, expiresIn, statusCode})
                 this.$store.dispatch('setToken', {token, expiresIn});
 
                 if (statusCode === 200) {
@@ -99,8 +96,8 @@ export default {
               }).catch((error) => {
                 this.showAlertGlobal = true
                 this.alertTypeGlobal = "error"
-                this.alertMsgGlobal = param.message.errDefault
-                console.log(error)
+                this.alertMsgGlobal = param.message.errMail
+                console.dir(error)
               })
             }
           } else {
@@ -120,11 +117,7 @@ export default {
         this.alertTypeGlobal = "error"
       }
     },
-  },
-  //Écoute de la modification de la variable passwordConfirm pour vérifier si elle correspon à Password
-  watch: {
-    passwordConfirm(val) {
-      //do something when the data changes.
+    passwordConfirmer(val) {
       if (val) {
         //Si les mots de passe sont les mêmes alors on affiche un success, sinon une alert
         if (val === this.password) {
@@ -135,13 +128,19 @@ export default {
           this.alertType = "error"
         }
         this.showAlert = true;
-
-        // setTimeout(() => {
-        //   this.showAlert = false
-        // }, 6000)
-
       }
     }
+  },
+  //Écoute de la modification de la variable passwordConfirm pour vérifier si elle correspon à Password
+  watch: {
+
+    passwordConfirm(val) {
+      this.passwordConfirmer(val)
+
+    },
+    password() {
+      this.passwordConfirmer(this.passwordConfirm)
+    },
   }
 
 }

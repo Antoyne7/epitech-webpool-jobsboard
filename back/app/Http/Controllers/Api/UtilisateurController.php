@@ -29,24 +29,24 @@ class UtilisateurController extends Controller
      */
     public function store(Request $request)
     {
-        if (Utilisateur::create
-        ([
-            'nom' => $request['nom'],
-            'prenom' => $request['prenom'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
-            'image' => 'imageURL',
-            'cv' => 'cvURL'
-        ])
-        ) {
-            return response()->json([
-                'success' => '1'
-            ]);
-        } else {
-            return response()->json([
-                'success' => '-1'
-            ]);
-        }
+//        if (Utilisateur::create
+//        ([
+//            'nom' => $request['nom'],
+//            'prenom' => $request['prenom'],
+//            'email' => $request['email'],
+//            'password' => Hash::make($request['password']),
+//            'image' => 'imageURL',
+//            'cv' => 'cvURL'
+//        ])
+//        ) {
+//            return response()->json([
+//                'success' => '1'
+//            ]);
+//        } else {
+//            return response()->json([
+//                'success' => '-1'
+//            ]);
+//        }
     }
 
     /**

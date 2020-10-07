@@ -29,6 +29,7 @@ export default {
     errEmail: "Veuillez entrer un email valide",
     errMdp: "Veuillez entrer un mot de passe de plus de 5 caractères",
     errNoInfo: "Veuillez remplir les informations",
+    errMail: "Un compte est déjà lié à cette adresse mail.",
 
     sucProfil: 'Vos informations ont bien été mises à jour !',
     sucPasswords: "Les mots de passe correspondent"
