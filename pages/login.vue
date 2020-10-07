@@ -11,9 +11,7 @@
                          placeholder="Mot de passe"
                          type="password" identifier="password"/>
             <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
-            <div @click="submit()">
-              <AuthButton text="Connexion"/>
-            </div>
+              <AuthButton type="submit" text="Connexion"/>
           </form>
           <nuxt-link to="/register">
             <AuthRedirection class="auth-redirection"

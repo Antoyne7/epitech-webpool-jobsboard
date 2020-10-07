@@ -35,10 +35,11 @@ export default {
       this.isShowed = !this.isShowed
     },
     disconnect() {
-      this.$axios.post('logout')
+      this.$axios.$post('logout')
         .then(resp => {
-          this.$store.dispatch('logout');
-          this.$router.push('/login');
+          console.log(resp)
+          // this.$store.dispatch('logout');
+          // this.$router.push('/login');
         })
         .catch(errors => {
           console.dir(errors);

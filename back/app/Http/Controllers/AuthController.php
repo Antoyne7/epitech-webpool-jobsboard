@@ -21,7 +21,7 @@ class AuthController extends Controller
         $this->validate(request(), [
             'nom' => 'required',
             'prenom' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:utilisateurs',
             'password' => 'required',
         ]);
 
@@ -40,9 +40,10 @@ class AuthController extends Controller
         return response([
             'token' => $resp->access_token,
             'expiresIn' => $resp->expires_in,
-            'statusCode'=> 200,
+            'statusCode' => 200,
             'message' => 'Your account has been created',
         ], 201);
+
     }
 
 
@@ -80,6 +81,7 @@ class AuthController extends Controller
 
     public function logout()
     {
+
         $token = request()->user()->token();
         $token->delete();
 

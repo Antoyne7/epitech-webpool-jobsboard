@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Utilities;
+use \Illuminate\Http\Request;
 
 class ProxyRequest
 {
@@ -37,7 +38,7 @@ class ProxyRequest
             'scope' => '*',
         ], $params);
 
-        $proxy = \Request::create('oauth/token', 'post', $params);
+        $proxy = Request::create('oauth/token', 'post', $params);
         $resp = json_decode(app()->handle($proxy)->getContent());
 
         $this->setHttpOnlyCookie($resp->refresh_token);
@@ -45,7 +46,7 @@ class ProxyRequest
         return $resp;
     }
 
-    protected function setHttpOnlyCookie(string $refreshToken)
+    protected function setHttpOnlyCookie($refreshToken)
     {
         cookie()->queue(
             'refresh_token',

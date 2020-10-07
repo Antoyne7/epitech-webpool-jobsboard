@@ -23,8 +23,12 @@ export const actions = {
   },
 
   async refreshToken({dispatch}) {
-    const {token, expiresIn} = await this.$axios.$post('refresh-token');
+    const {token, expiresIn} = await this.$axios.$post('refresh-token').then((resp) => {
+        console.log(resp)
+      }
+    );
     dispatch('setToken', {token, expiresIn});
+
   },
 
   logout({commit}) {

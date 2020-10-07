@@ -1,11 +1,11 @@
 <template>
-  <button>{{ text }}</button>
+  <button :type="type">{{ text }}</button>
 </template>
 
 <script>
 export default {
   name: "AuthButton",
-  props: ['text']
+  props: ['text', 'type']
 }
 </script>
 
