@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Offre;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -30,8 +31,6 @@ class OffreController extends Controller
         if ($request['image']) {
             $filename = time() . '.' . $request['image']->getClientOriginalExtension();
         }
-
-        dd($request['image']);
 
         if (Offre::create([
             'nom' => $request['nom'],
@@ -70,22 +69,23 @@ class OffreController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param int $id
+     * @param Offre $offre
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Offre $offre)
     {
-
+        return response("pas fait encore");
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param Offre $offre
      * @return Response
+     * @throws Exception
      */
-    public function destroy($id)
+    public function destroy(Offre $offre)
     {
-        //
+        return response($offre->delete());
     }
 }

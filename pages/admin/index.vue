@@ -11,8 +11,11 @@
     <SearchBar/>
     <b-container>
       <b-row>
-        <b-button :to="{ name: 'admin-offer-add' }" block variant="primary" size="lg">
+        <b-button :to="{ name: 'admin-offre-add' }" block variant="primary" size="lg">
           Ajouter une nvl offre
+        </b-button>
+        <b-button :to="{ name: 'admin-offretypes' }" block variant="primary" size="lg">
+          Gestion types de contrats
         </b-button>
       </b-row>
     </b-container>

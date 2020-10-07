@@ -12,9 +12,13 @@ export default {
   listeCandidatures: host + 'candidatures',
   listeOffres: host + 'offres',
   ajoutUtilisateur: host + 'utilisateurs',
+
   register: host + 'register',
   login: host + 'login',
   logout: host + 'logout',
+
+  typeOffres: host + 'typeoffres',
+  tags: host + 'tags',
 
   //Messages d'erreur
   message: {
