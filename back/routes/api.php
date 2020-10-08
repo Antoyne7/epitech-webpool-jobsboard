@@ -19,12 +19,10 @@ Route::apiResource('entreprises', \App\Http\Controllers\Api\EntrepriseController
 Route::apiResource('typeoffres', \App\Http\Controllers\Api\TypeOffreController::class);
 Route::apiResource('candidatures', \App\Http\Controllers\Api\CandidatureController::class);
 
-Route::middleware('guest')->group(function () {
-    Route::post('register', '\App\Http\Controllers\AuthController@register')->name('register');
-    Route::post('login', '\App\Http\Controllers\AuthController@login')->name('login');
-    Route::post('refresh-token', '\App\Http\Controllers\AuthController@refreshToken')->name('refreshToken');
+Route::post('/login', '\App\Http\Controllers\AuthController@login')->name('login');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/utilisateurs', '\App\Http\Controllers\Api\UtilisateurController@index');
+    Route::get('/me', '\App\Http\Controllers\AuthController@user');
 });
 
-Route::middleware('auth:api')->group(function () {
-    Route::post('logout', '\App\Http\Controllers\AuthController@logout')->name('logout');
-});

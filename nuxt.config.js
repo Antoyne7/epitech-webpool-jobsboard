@@ -21,7 +21,7 @@ export default {
   },
   //Refresh token pour l'authentification
   router: {
-    middleware: 'refreshToken',
+    // middleware: 'refreshToken',
   },
 
 
@@ -45,15 +45,44 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/auth',
 
   ],
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/callback',
+      home: '/'
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/back/api/login', method: 'post', propertyName: false },
+          user: { url: '/back/api/me', method: 'get', propertyName: false }
+        },
+        // tokenRequired: false,
+        // tokenType: false
+      }
+    },
+    localStorage: false
+  },
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   // Serveur : https://backend.antoinebraillard.tech/jobboard/public/index.php/api/
   // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/
   axios: { //
-    baseURL: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/',
+    // baseURL: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/',
     credentials: true,
+    proxy: true
+  },
+
+  proxy: {
+    '/back': {
+      target: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/',
+      pathRewrite: { '^/back': '/' }
+    }
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
