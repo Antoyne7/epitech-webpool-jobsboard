@@ -5,7 +5,7 @@
         <div class="navbar-custom">
           <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
-            <nuxt-link to="">
+            <nuxt-link to="/profil">
               <img src="/icons/ic_person_48px.svg" alt="Icône de personne">
             </nuxt-link>
             <a @click="dropdown()">

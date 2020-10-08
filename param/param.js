@@ -1,4 +1,5 @@
 // Serveur fournisseur des données
+// const host = 'https://backend.antoinebraillard.tech/jobboard/public/index.php/api/';
 const host = 'http://jobs.epitech.fr/back/public/api/';
 
 export default {

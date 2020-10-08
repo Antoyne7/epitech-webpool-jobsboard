@@ -21,7 +21,7 @@ export default {
   },
   //Refresh token pour l'authentification
   router: {
-    // middleware: 'refreshToken',
+    middleware: 'refreshToken',
   },
 
 
@@ -50,8 +50,9 @@ export default {
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
+    // baseURL: 'https://backend.antoinebraillard.tech/jobboard/public/index.php/api/',
     baseURL: 'http://jobs.epitech.fr/back/public/api/',
-    credentials: true,
+    // credentials: true,
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

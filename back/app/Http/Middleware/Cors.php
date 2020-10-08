@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 
 class Cors
 {
@@ -19,8 +18,8 @@ class Cors
         //On note ici les url acceptées dans l'api
         $allowedOrigins = [
             "http://localhost:3000",
-            "http://localhost:8888",
-            "http://jobs.epitech.fr/back/public/api/",
+            "localhost:8888",
+            "jobs.epitech.fr",
         ];
         $requestOrigin = $request->headers->get('origin');
 

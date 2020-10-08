@@ -43,6 +43,7 @@ class ProxyRequest
 
         $this->setHttpOnlyCookie($resp->refresh_token);
 
+
         return $resp;
     }
 
@@ -55,7 +56,7 @@ class ProxyRequest
             null,
             null,
             false,
-            true // httponly
+            false // httponly
         );
     }
 }

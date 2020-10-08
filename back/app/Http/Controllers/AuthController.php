@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Utilisateur;
-use Illuminate\Http\Request;
 use App\Utilities\ProxyRequest;
 
 class AuthController extends Controller
