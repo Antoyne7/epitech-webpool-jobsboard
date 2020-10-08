@@ -32,7 +32,7 @@ export default {
         return response.data
       })
   },
-
+e
   updateInformations(type, id, params) {
     return axios.put(param[type] + '/' + id, params, {
       headers: {
