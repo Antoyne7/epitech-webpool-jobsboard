@@ -33,7 +33,7 @@
 
               <input @change="fileUpload($event)" type="file" name="cv" id="cv"
                      accept="image/gif, image/jpeg, image/png, application/pdf"/>
-              <img @click="show = true" v-show="userInfo.cv !== null" id="cvShow" src="~/static/icons/eye.svg"
+              <img @click="show = true" v-show="cvPreview !== null" id="cvShow" src="~/static/icons/eye.svg"
                    alt="Voir votre cv">
             </div>
             <lightbox v-bind="property" @hide="show = false" v-show="show"></lightbox>
@@ -76,6 +76,7 @@ export default {
       show: false,
       showSync: null,
       open: false,
+      cvPreview: null,
       userInfo: {
         nom: null,
         prenom: null,
@@ -91,13 +92,12 @@ export default {
     //On fait une requête à l'API pour récupérer les informations de l'utilisateur et les affichers
     //TODO: Modifier l'ID pour que ce soit dynamique
     AjaxServices.getInformations('getUser', 10).then((promise) => {
-      console.log(promise)
       this.userInfo = promise;
-      console.log(this.userInfo)
       if (this.userInfo.image) {
         this.preview = this.userInfo.image;
         this.action = "Modifiez"
         this.imgStyle = 'updated'
+        this.cvPreview = promise.cv
       }
     }).catch((err) => {
       console.dir(err)
@@ -109,10 +109,13 @@ export default {
     },
     fileUpload(e) {
       let files = e.target.files || e.dataTransfer.files;
-      if (!files.length)
-        return;
-      console.log(e.target.files)
+      if (!files.length) return;
+      //On change cvPreview pour afficher le nouveau cv
+      this.cvPreview = window.URL.createObjectURL(e.target.files[0])
+      //On charge le CV dans la data pour pouvoir l'upload par la suite
+      this.cv = e.target.files[0]
     },
+
     updatePreviewImg(event) {
       //On change la data preview par l'url du fichier upload
       this.preview = window.URL.createObjectURL(event.target.files[0])
@@ -122,7 +125,7 @@ export default {
   },
   computed: {
     property() {
-      return {cv: this.userInfo.cv}
+      return {cv: this.cvPreview}
     }
   }
 }
