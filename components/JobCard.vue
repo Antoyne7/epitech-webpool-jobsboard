@@ -7,7 +7,18 @@
       <p>{{ descriptionFunc(shortDescription) }}</p>
       <br v-if="shortDescription.length < 100">
       <img :src="img" alt="Image de l'offre">
-      <nuxt-link :to="{name:'slug', params:{slug: linkId}}">
+      <b-row class="admin-buttons w-100 mt-3 justify-content-end" v-if="adminView">
+        <b-button class="mx-2">
+          TOGL
+        </b-button>
+        <b-button class="mx-2">
+          EDIT
+        </b-button>
+        <b-button class="ml-2">
+          VIEW
+        </b-button>
+      </b-row>
+      <nuxt-link v-else :to="{name:'slug', params:{slug: linkId}}">
         <button>En savoir plus</button>
       </nuxt-link>
     </div>
@@ -17,7 +28,7 @@
 <script>
 export default {
   name: "JobCard",
-  props: ['title', 'shortDescription', 'img', 'linkId', 'localisation'],
+  props: ['title', 'shortDescription', 'img', 'linkId', 'localisation', 'adminView'],
   methods: {
     descriptionFunc(desc) {
       if (desc.length > 100) {
@@ -47,7 +58,7 @@ export default {
   }
   margin: 15px 0;
 
-  button {
+  :not(.admin-buttons) button {
     width: 220px;
     height: 50px;
     background: var(--primary-jobs);

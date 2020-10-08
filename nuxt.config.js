@@ -52,7 +52,7 @@ export default {
   axios: {
     // baseURL: 'https://backend.antoinebraillard.tech/jobboard/public/index.php/api/',
     baseURL: 'http://jobs.epitech.fr/back/public/api/',
-    // credentials: true,
+    credentials: true,
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

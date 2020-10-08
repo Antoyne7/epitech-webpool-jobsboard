@@ -2,6 +2,7 @@
 // const host = 'https://backend.antoinebraillard.tech/jobboard/public/index.php/api/';
 const host = 'http://jobs.epitech.fr/back/public/api/';
 
+
 export default {
 
   //Paramétrage du local storage
@@ -13,9 +14,14 @@ export default {
   listeCandidatures: host + 'candidatures',
   listeOffres: host + 'offres',
   ajoutUtilisateur: host + 'utilisateurs',
+
   register: host + 'register',
   login: host + 'login',
   logout: host + 'logout',
+
+  typeOffres: host + 'typeoffres',
+  tags: host + 'tags',
+  entreprises: host + 'entreprises',
 
   //Messages d'erreur
   message: {
