@@ -123,7 +123,10 @@ export default {
   head() {
     return {
       script: [
-        {src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js'}
+        {
+          src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
+          callback: () => (this.markedLoaded = true)
+        }
       ]
     }
   },
@@ -149,6 +152,7 @@ export default {
   },
   data() {
     return {
+      markedLoaded: false,
       preview: camera,
       editIcone: edit,
       types: [],
@@ -227,7 +231,14 @@ export default {
         '- non ordonnées\n' +
         '1. mais aussi\n' +
         '2. ordonnées'
-      this.updateDescriptions()
+      const self = this
+      if (this.markedLoaded) {
+        this.updateDescriptions()
+      } else {
+        setTimeout(function () {
+          self.updateDescriptions()
+        }, 1000)
+      }
     },
     setLocalisation(localisation) {
       this.localisation.search = ''
@@ -256,9 +267,7 @@ export default {
     }
   },
   mounted() {
-    if (marked) {
-      this.initDescription()
-    }
+    this.initDescription()
   }
 }
 </script>

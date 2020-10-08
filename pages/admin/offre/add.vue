@@ -1,6 +1,6 @@
 <template>
   <div>
-    <OfferForm  :on-submit="ajoutOffre"/>
+    <OfferForm :on-submit="ajoutOffre"/>
   </div>
 </template>
 

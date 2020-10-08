@@ -36,37 +36,38 @@ class TypeOffreController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  TypeOffre $typeOffre
+     * @param TypeOffre $typeoffre
      * @return Response
      */
-    public function show(TypeOffre $typeOffre)
+    public function show(TypeOffre $typeoffre)
     {
-        return response($typeOffre);
+        return response($typeoffre);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  TypeOffre $typeOffre
+     * @param  TypeOffre $typeoffre
      * @return Response
      */
-    public function update(Request $request, TypeOffre $typeOffre)
+    public function update(Request $request, TypeOffre $typeoffre)
     {
-        return response($typeOffre->update([
-            'nom' => $request['nom']
+        $data = json_decode($request->getContent());
+        return response($typeoffre->update([
+            'nom' => $data->nom
         ]));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param TypeOffre $typeOffre
+     * @param TypeOffre $typeoffre
      * @return Response
      * @throws Exception
      */
-    public function destroy(TypeOffre $typeOffre)
+    public function destroy(TypeOffre $typeoffre)
     {
-        return response($typeOffre->delete());
+        return response($typeoffre->delete());
     }
 }

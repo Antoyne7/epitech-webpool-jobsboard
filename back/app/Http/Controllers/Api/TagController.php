@@ -39,7 +39,7 @@ class TagController extends Controller
      * @param  Tag  $tag
      * @return Response
      */
-    public function show($tag)
+    public function show(Tag $tag)
     {
         return response($tag);
     }

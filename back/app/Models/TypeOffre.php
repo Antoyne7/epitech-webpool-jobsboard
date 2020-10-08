@@ -11,6 +11,10 @@ class TypeOffre extends Model
 
     protected $visible = ['id', 'nom'];
 
+    protected $fillable = [
+        'nom'
+    ];
+
     public function offres()
     {
         return $this->belongsToMany(Offre::class);
