@@ -22,7 +22,7 @@ import AjaxServices from "~/services/ajaxServices"
 
 export default {
   components: {JobCard, SearchBar},
-  middleware: 'auth',
+  // middleware: 'auth',
   data() {
     return {
       listeOffres: [],

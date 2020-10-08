@@ -83,6 +83,7 @@ label {
 input:checked + label {
   background-color: var(--primary-jobs);
   color: white;
+  border-color: var(--primary-jobs) ;
 }
 
 /*input:checked + label::before {*/

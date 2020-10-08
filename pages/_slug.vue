@@ -77,7 +77,7 @@ import Tag from '~/components/Tag'
 
 export default {
   name: "_slug",
-  middleware: 'auth',
+  // middleware: 'auth',
   data() {
     return {
       id: 0,

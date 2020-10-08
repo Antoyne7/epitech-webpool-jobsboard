@@ -23,6 +23,8 @@ export default {
   tags: host + 'tags',
   entreprises: host + 'entreprises',
 
+  getUser: host + 'utilisateurs',
+
   //Messages d'erreur
   message: {
     //"errDefault" permet de changer le message d'erreur d'un composant simplement, sans passer par des props.
