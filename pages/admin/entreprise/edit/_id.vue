@@ -23,10 +23,12 @@ export default {
   },
   methods: {
     updateData(entreprise) {
-      console.log('init: ', this.entreprise)
-      console.log('updated: ', entreprise)
       // Update, afficher animation success puis retour a la liste des entreprise
-      // ajaxServices.updateInformations()
+      ajaxServices.updateInformations('entreprises', this.entreprise.id, entreprise)
+        .then(() => {
+          this.$router.back()
+        })
+        .catch(e => console.log(e))
     }
   },
   created() {

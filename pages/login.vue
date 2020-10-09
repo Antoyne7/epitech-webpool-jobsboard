@@ -4,14 +4,14 @@
       <b-col class="login-box" lg="8" md="10" cols="12">
         <h2>Se connecter à Jobs</h2>
         <b-col class="fieldset" lg="9" md="10" cols="12">
-          <form @submit.prevent="submit()">
+          <form @submit.prevent="submit()" ref="loginform">
             <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
                          identifier="email"/>
             <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login"
                          placeholder="Mot de passe"
                          type="password" identifier="password"/>
             <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
-              <AuthButton type="submit" text="Connexion"/>
+            <AuthButton type="submit" text="Connexion"/>
           </form>
           <nuxt-link to="/register">
             <AuthRedirection class="auth-redirection"
@@ -48,30 +48,35 @@ export default {
   components: {AuthRedirection, AuthButton, StyledInput},
 
   methods: {
-    submit() {
-      if (this.email === null || this.password === null || this.email == "" || this.password == "") {
-        this.alertMsgGlobal = param.message.errNoInfo;
-        this.alertTypeGlobal = "error";
-        this.showAlertGlobal = true;
-      } else {
-        const params = new FormData();
-        params.append('email', this.email);
-        params.append('password', this.password);
-
-        AjaxServices.pushInformations('login', params).then(({token, expiresIn, statusCode}) => {
-          console.log({token, expiresIn, statusCode})
-          this.$store.dispatch('setToken', {token, expiresIn});
-          this.$router.push('/')
-        }).catch((error) => {
-          this.alertMsgGlobal = param.message.errCnx;
+    async submit() {
+      try {
+        if (this.email === null || this.password === null || this.email == "" || this.password == "") {
+          this.alertMsgGlobal = param.message.errNoInfo;
           this.alertTypeGlobal = "error";
           this.showAlertGlobal = true;
-        })
+        } else {
+          // Prepare form data
+          const formData = new FormData();
+          formData.append('email', this.email)
+          formData.append('password', this.password)
 
+          // Pass form data to `loginWith` function
+          await this.$auth.loginWith('local', {data: formData});
+
+          console.log('user:', this.$auth.user)
+
+        }
+      } catch (err) {
+        this.error = err;
+        console.dir(err)
       }
-    },
-  }
+    }
+  },
+  mounted() {
+    // Before loading login page, obtain csrf cookie from the server.
+    this.$axios.$get('/back/sanctum/csrf-cookie');
 
+  },
 }
 </script>
 

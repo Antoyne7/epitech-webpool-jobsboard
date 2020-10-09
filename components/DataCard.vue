@@ -5,7 +5,8 @@
     </div>
     <div>
       <b-button :to="to">EDIT</b-button>
-      <b-button>DEL</b-button>
+
+      <b-button @click="deleteFunction(data.id)">DEL</b-button>
     </div>
   </b-row>
 </template>
@@ -13,7 +14,7 @@
 <script>
 export default {
   name: "DataCard",
-  props: ['to', 'data']
+  props: ['to', 'data', 'deleteFunction']
 }
 </script>
 

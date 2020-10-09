@@ -45,7 +45,8 @@
               <!-- Localisation -->
               <div class="d-flex flex-wrap mt-5 position-relative">
                 <label for="localisation">Localisation de l'offre</label>
-                <input type="text" v-model="localisation.search" @keyup="updateLocalisation" @focus="localisation.showList = true"
+                <input type="text" v-model="localisation.search" @keyup="updateLocalisation"
+                       @focus="localisation.showList = true"
                        name="localisation" id="localisation" placeholder="Strasbourg">
                 <ul id="localisation-autocomplete" class="position-absolute w-100 bg-white rounded"
                     v-if="localisationFilter.length > 0 && localisation.showList"> <!-- Autocomplete list -->
@@ -55,7 +56,9 @@
                   </li>
                 </ul>
                 <p>Localisation:
-                  <span v-if="localisation.selected">{{ localisation.selected.nom }} {{ localisation.selected.codesPostaux[0] }}, {{ localisation.selected.departement.nom }}</span>
+                  <span v-if="localisation.selected">{{
+                      localisation.selected.nom
+                    }} {{ localisation.selected.codesPostaux[0] }}, {{ localisation.selected.departement.nom }}</span>
                   <span v-else>Toute la France</span>
                 </p>
               </div>
@@ -123,7 +126,10 @@ export default {
   head() {
     return {
       script: [
-        {src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js'}
+        {
+          src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
+          callback: () => (this.markedLoaded = true)
+        }
       ]
     }
   },
@@ -149,6 +155,7 @@ export default {
   },
   data() {
     return {
+
       preview: camera,
       editIcone: edit,
       types: [],
@@ -227,7 +234,15 @@ export default {
         '- non ordonnées\n' +
         '1. mais aussi\n' +
         '2. ordonnées'
-      this.updateDescriptions()
+
+      const self = this
+      if (this.markedLoaded) {
+        this.updateDescriptions()
+      } else {
+        setTimeout(function () {
+          self.updateDescriptions()
+        }, 1000)
+      }
     },
     setLocalisation(localisation) {
       this.localisation.search = ''
@@ -249,16 +264,14 @@ export default {
       const sorted = this.localisation.list.filter(localisation =>
         localisation.nom.toLowerCase().includes(this.localisation.search.toLowerCase().trim()))
       if (sorted.length > 6) {
-        return sorted.slice(0,6)
+        return sorted.slice(0, 6)
       } else {
         return sorted
       }
     }
   },
   mounted() {
-    if (marked) {
-      this.initDescription()
-    }
+    this.initDescription()
   }
 }
 </script>
@@ -365,6 +378,7 @@ div#file-container {
   z-index: 100;
   list-style: none;
   padding: 6px 0;
+
   li {
     padding: 4px 12px;
     cursor: pointer;

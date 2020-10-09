@@ -32,8 +32,9 @@ export default {
       nom: ''
     }
   },
-  mounted() {
-    if (this.dataObject) {
+
+  updated () {
+    if (this.dataObject != null && this.nom === '') {
       this.id = this.dataObject.id
       this.nom = this.dataObject.nom
     }

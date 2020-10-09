@@ -15,8 +15,16 @@ export default {
   },
   methods: {
     create (offretype) {
-      console.log('data:', offretype)
-      // ajaxServices.pushInformations()
+
+      const formdata = new FormData()
+      formdata.append('nom', offretype.nom)
+      ajaxServices.pushInformations('typeOffres', formdata)
+        .then(data => {
+          if (data.id) {
+            this.$router.back()
+          }
+        })
+        .catch(e => console.log(e))
     }
   }
 }

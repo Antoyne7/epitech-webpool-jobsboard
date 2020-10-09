@@ -15,8 +15,15 @@ export default {
   },
   methods: {
     create(entreprise) {
-      console.log('creer l\'entreprise:', entreprise)
-      // ajaxServices.pushInformations()
+      const formdata = new FormData()
+      formdata.append('nom', entreprise.nom)
+      ajaxServices.pushInformations('entreprises', formdata)
+        .then(data => {
+          if (data.id) {
+            this.$router.back()
+          }
+        })
+        .catch(e => console.log(e))
     }
   }
 }
