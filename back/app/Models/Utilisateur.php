@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens;
 
 class Utilisateur extends Authenticatable
 {
@@ -32,7 +32,11 @@ class Utilisateur extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'api_token'
+        'api_token',
+        'created_at',
+        'updated_at',
+        'email_verified_at',
+        'id'
     ];
 
     /**

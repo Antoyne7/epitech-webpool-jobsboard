@@ -34,7 +34,7 @@ export default {
   },
 
   updateInformations(type, id, params) {
-    return axios.patch(param[type] + '/' + id, params, {
+    return axios.put(param[type] + '/' + id, params, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

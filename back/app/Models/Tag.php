@@ -13,6 +13,8 @@ class Tag extends Model
         'created_at'
     ];
 
+    protected $visible = ['id', 'nom'];
+
     public function offres()
     {
         return $this->belongsToMany(Offre::class);
