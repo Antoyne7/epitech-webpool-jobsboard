@@ -29,7 +29,7 @@
         </b-col>
       </b-col>
     </div>
-    <ModalSuccess :is-centered="true" route="/" message="Votre compte a bien été crée" id="modal-succ"/>
+    <ModalSuccess :is-centered="true" route="/login" message="Votre compte a bien été crée" id="modal-succ"/>
   </b-container>
 </template>
 
@@ -43,8 +43,7 @@ import ajaxServices from "~/services/ajaxServices";
 import ModalSuccess from "@/components/modalSuccess";
 
 export default {
-
-  name: "login.vue",
+  name: "Register",
   layout: 'auth',
   data() {
     return {
@@ -69,7 +68,7 @@ export default {
       return re.test(String(email).toLowerCase());
     },
 
-    submit() {
+    submit(){
       if (this.prenom && this.prenom !== "" && this.nom && this.nom !== "" &&
         this.email && this.email !== "" && this.password) {
         this.showAlertGlobal = false
@@ -83,8 +82,7 @@ export default {
               params.append('prenom', this.prenom)
               params.append('email', this.email)
               params.append('password', this.password)
-              ajaxServices.pushInformations('register', params).then(({token, expiresIn, statusCode}) => {
-                this.$store.dispatch('setToken', {token, expiresIn});
+              ajaxServices.pushInformations('register', params).then(({statusCode}) => {
                 if (statusCode === 200) {
                   this.$bvModal.show('modal-succ')
                 } else {

@@ -21,8 +21,9 @@ import JobCard from "~/components/JobCard";
 import AjaxServices from "~/services/ajaxServices"
 
 export default {
+  name: 'Index',
   components: {JobCard, SearchBar},
-  // middleware: 'auth',
+  middleware: 'auth',
   data() {
     return {
       listeOffres: [],
@@ -66,8 +67,6 @@ export default {
       return this.listeToShow
     }
   }
-  ,
-
 }
 </script>
 <style lang="scss">

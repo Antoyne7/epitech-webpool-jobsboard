@@ -62,12 +62,12 @@ export default {
 
           // Pass form data to `loginWith` function
           await this.$auth.loginWith('local', {data: formData});
-
           console.log('user:', this.$auth.user)
-
         }
       } catch (err) {
-        this.error = err;
+        this.alertMsgGlobal = param.message.errSignIn;
+        this.alertTypeGlobal = "error";
+        this.showAlertGlobal = true;
         console.dir(err)
       }
     }

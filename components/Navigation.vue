@@ -8,12 +8,12 @@
             <nuxt-link to="/profil">
               <img src="/icons/ic_person_48px.svg" alt="Icône de personne">
             </nuxt-link>
-            <a @click="dropdown()">
+            <button @click="dropdown()">
               <img src="/icons/disconnect.svg" alt="Icône deconnexion">
-              <div class="drop-d" v-show="isShowed">
+              <span class="drop-d" v-show="isShowed">
                 <a @click="disconnect()">Deconnexion</a>
-              </div>
-            </a>
+              </span>
+            </button>
           </div>
         </div>
       </b-container>
@@ -35,10 +35,9 @@ export default {
       this.isShowed = !this.isShowed
     },
     disconnect() {
-
       this.$auth.logout()
         .then(() => {
-          this.$router.push('/')
+          this.$router.push('/login')
         })
     }
   }
@@ -77,6 +76,12 @@ nav {
 
     a {
       cursor: pointer;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      outline: none;
     }
 
     .drop-d {

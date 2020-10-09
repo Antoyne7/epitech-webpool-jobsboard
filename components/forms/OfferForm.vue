@@ -22,11 +22,19 @@
               <!-- Entreprise -->
               <div class="d-flex flex-wrap mt-5">
                 <label for="entreprise">Entreprise</label>
-                <input class="col-10" type="text" v-model="offre.entreprise.nom" name="entreprise" id="entreprise"
+                <input class="col-10" type="text" v-model="entreprise.search" name="entreprise" id="entreprise"
+                       @focus="entreprise.showList = true"
                        placeholder="entreprise">
                 <div class="px-2 col-2">
                   <button v-b-modal.modal-entreprise class="bg-jobs h-100 rounded-lg w-100 btn btn-primary">+</button>
                 </div>
+                <ul id="entreprise-autocomplete" class="position-absolute w-100 bg-white rounded"
+                    v-if="entrepriseFilter.length > 0 && entreprise.showList"> <!-- Autocomplete list -->
+                  <li class="localisation-item" v-for="entreprise in entrepriseFilter" v-bind:key="entreprise.id"
+                      @click="setEntreprise(entreprise)">
+                    {{ entreprise.nom }}
+                  </li>
+                </ul>
                 <p>Entreprise séléctionné: {{ offre.entreprise.nom }}</p>
               </div>
 
@@ -50,7 +58,8 @@
                        name="localisation" id="localisation" placeholder="Strasbourg">
                 <ul id="localisation-autocomplete" class="position-absolute w-100 bg-white rounded"
                     v-if="localisationFilter.length > 0 && localisation.showList"> <!-- Autocomplete list -->
-                  <li class="localisation-item" v-for="localisation in localisationFilter" v-bind:key="localisation.key"
+                  <li class="localisation-item" v-for="localisation in localisationFilter"
+                      v-bind:key="localisation.code"
                       @click="setLocalisation(localisation)">
                     {{ localisation.nom }} {{ localisation.codesPostaux[0] }}, {{ localisation.departement.nom }}
                   </li>
@@ -120,6 +129,7 @@ import Tag from '~/components/Tag'
 import CheckboxButton from "~/components/forms/CheckboxButton";
 import camera from '~/static/icons/camera.svg'
 import edit from '~/static/icons/edit.svg'
+import AjaxServices from '~/services/ajaxServices'
 
 export default {
   name: "OfferForm",
@@ -168,7 +178,10 @@ export default {
         showList: false
       },
       entreprise: {
-        nom: ''
+        search: '',
+        list: [],
+        selected: null,
+        showList: false
       },
       offre: {
         nom: 'Titre de l\'offre',
@@ -252,6 +265,12 @@ export default {
       this.offre.localisation.ville = localisation.nom
       this.localisation.showList = false
     },
+    setEntreprise(entreprise) {
+      this.entreprise.search = ''
+      this.entreprise.selected = entreprise
+      this.offre.entreprise.nom = entreprise.nom
+      this.entreprise.showList = false
+    }
   },
   computed: {
     compiledDescription() {
@@ -265,13 +284,25 @@ export default {
         localisation.nom.toLowerCase().includes(this.localisation.search.toLowerCase().trim()))
       if (sorted.length > 6) {
         return sorted.slice(0, 6)
+
+      } else {
+        return sorted
+      }
+    },
+    entrepriseFilter() {
+      const sorted = this.entreprise.list.filter(entreprise =>
+        entreprise.nom.toLowerCase().includes(this.entreprise.search.toLowerCase().trim()))
+      if (sorted.length > 6) {
+        return sorted.slice(0, 6)
       } else {
         return sorted
       }
     }
   },
-  mounted() {
+  async mounted() {
     this.initDescription()
+    this.entreprise.list = await AjaxServices.getListe('entreprises')
+
   }
 }
 </script>

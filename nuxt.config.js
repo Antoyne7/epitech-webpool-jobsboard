@@ -20,11 +20,9 @@ export default {
     ]
   },
   //Refresh token pour l'authentification
-  router: {
-    // middleware: 'refreshToken',
-  },
+  router:[
 
-
+  ],
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
 
@@ -54,13 +52,15 @@ export default {
       login: '/login',
       logout: '/login',
       callback: '/callback',
-      home: '/'
+      home: '/home'
     },
     strategies: {
       local: {
         endpoints: {
+
           login: {url: '/back/api/login', method: 'post', propertyName: false},
-          user: {url: '/back/api/me', method: 'get', propertyName: false}
+          user: {url: '/back/api/me', method: 'get', propertyName: false},
+          logout: {url: '/back/api/logout', method: 'post', propertyName: false}
         },
         // tokenRequired: false,
         // tokenType: false
@@ -82,7 +82,7 @@ export default {
 
   proxy: {
     '/back': {
-      target: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/',
+      target: 'http://jobs.epitech.fr/back/public/',
       pathRewrite: {'^/back': '/'}
     }
   },

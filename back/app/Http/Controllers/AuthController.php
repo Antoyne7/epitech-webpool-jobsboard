@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Utilisateur;
-use App\Utilities\ProxyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +13,7 @@ class AuthController extends Controller
     {
         try {
             $request->validate([
-                'email' => 'email|required|unique',
+                'email' => 'email|required',
                 'password' => 'required'
             ]);
             $credentials = request(['email', 'password']);
@@ -49,9 +48,33 @@ class AuthController extends Controller
         return $request->user();
     }
 
-    public function logout(Request $request)
+
+    public function logout (Request $request) {
+//        return $request->user()->currentAccessToken()->delete();
+        return $request->getContent();
+    }
+
+    public function register()
     {
-        return $request->user()->currentAccessToken()->delete();
+        $this->validate(request(), [
+            'nom' => 'required',
+            'prenom' => 'required',
+            'email' => 'required|email|unique:utilisateurs',
+            'password' => 'required',
+        ]);
+
+        $user = Utilisateur::create([
+            'nom' => request('nom'),
+            'prenom' => request('prenom'),
+            'email' => request('email'),
+            'password' => bcrypt(request('password')),
+        ]);
+
+        return response([
+            'statusCode' => 200,
+            'message' => 'Your account has been created',
+        ], 201);
+
     }
 
     // // Revoke all tokens...
