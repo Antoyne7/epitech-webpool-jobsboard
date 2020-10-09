@@ -17,12 +17,12 @@ class CreateOffresTable extends Migration
         Schema::create('offres', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->integer('code_ville');
-            $table->string('ville');
-            $table->integer('code_departement');
-            $table->text('short_description');
-            $table->longText('description');
-            $table->string('image');
+            $table->integer('code_ville')->nullable();
+            $table->string('ville')->nullable();
+            $table->integer('code_departement')->nullable();
+            $table->text('short_description')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('entreprise_id');
             $table->foreign('entreprise_id')

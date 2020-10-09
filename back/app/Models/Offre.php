@@ -10,6 +10,17 @@ class Offre extends Model
     use HasFactory;
 
     protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = [
+        'nom',
+        'code_ville',
+        'ville',
+        'code_departement',
+        'short_description',
+        'description',
+        'entreprise',
+        'tag',
+        'offretype'
+    ];
 
     public function tags()
     {

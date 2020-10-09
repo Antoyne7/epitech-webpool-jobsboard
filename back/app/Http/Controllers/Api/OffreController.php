@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Entreprise;
 use App\Models\Offre;
+use App\Models\Tag;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -28,24 +30,39 @@ class OffreController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request['image']) {
-            $filename = time() . '.' . $request['image']->getClientOriginalExtension();
-        }
+//        if ($request['image']) {
+//            $filename = time() . '.' . $request['image']->getClientOriginalExtension();
+//        }
 
-        if (Offre::create([
-            'nom' => $request['nom'],
-            'code_ville' => $request['codeVille'],
-            'ville' => $request['ville'],
-            'code_departement' => $request['codeDepartement'],
-            'shortDescription' => $request['shortDescription'],
-            'description' => $request['description'],
-            'image' => $request['image']['name'],
-            'entreprise' => $request['entreprise'],
-            'tag' => $request['tag'],
-            'offretype' => $request['offretype'],
-        ])) {
-            if ($request['image']) {
-                $request['image']->move(public_path('images'), $filename);
+        // https://laravel.com/docs/8.x/eloquent-relationships#inserting-and-updating-related-models
+
+        $entreprise = Entreprise::find($request->entreprise);
+
+        $offre = new Offre();
+        $offre->nom = $request['nom'];
+        $offre->description = $request['description'];
+        $offre->code_ville = $request['codeVille'];
+        $offre->ville = $request['ville'];
+        $offre->code_departement = $request['codeDepartement'];
+        $offre->short_description = $request['shortDescription'];
+        $offre->entreprise()->associate($entreprise);
+
+
+        if ($offre->save()) {
+//            if ($request['image']) {
+//                $request['image']->move(public_path('images'), $filename);
+//            }
+
+            foreach (json_decode($request['tags']) as $tagNom) {
+                $tagsTemp = Tag::where('nom', $tagNom)->get();
+                if (sizeof($tagsTemp) > 0) {
+                    $tag = $tagsTemp[0];
+                } else {
+                    $tag = Tag::create([
+                        'nom' => $tagNom
+                    ]);
+                }
+                $offre->tags()->save($tag);
             }
             return response(1);
         } else {

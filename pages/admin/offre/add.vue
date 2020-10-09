@@ -6,6 +6,7 @@
 
 <script>
 import OfferForm from "~/components/forms/OfferForm";
+import AjaxServices from "@/services/ajaxServices";
 export default {
   name: "Add",
   components: {
@@ -15,16 +16,19 @@ export default {
     ajoutOffre (data) {
       console.log('data:', data)
       const formdata = new FormData()
+
       formdata.append('nom', data.nom)
       formdata.append('ville', data.localisation.ville)
       formdata.append('codeVille', data.localisation.codeVille)
       formdata.append('codeDepartement', data.localisation.codeDepartement)
       formdata.append('image', data.image)
-      formdata.append('tags', data.tags)
+      formdata.append('tags', JSON.stringify(data.tags))
       formdata.append('offretype', data.offreType)
       formdata.append('entreprise', data.entreprise.id)
+      formdata.append('shortDescription', data.shortDescription)
+      formdata.append('description', data.description )
 
-      this.$axios.$post('http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/offres', formdata)
+      AjaxServices.pushInformations('listeOffres', formdata)
         .then(data => {
           console.log(data)
         })

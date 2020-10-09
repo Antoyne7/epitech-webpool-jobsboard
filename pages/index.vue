@@ -32,7 +32,7 @@ export default {
     }
   },
   created() {
-    AjaxServices.getListe('listeOffres').then(promise => {
+    this.$axios.$get('/back/api/offres').then(promise => {
       console.log(promise)
       this.listeOffres = promise;
     })

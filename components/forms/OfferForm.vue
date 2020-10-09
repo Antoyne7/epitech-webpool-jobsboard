@@ -20,7 +20,7 @@
 
             <div class="col-md-6 px-0 pr-md-4">
               <!-- Entreprise -->
-              <div class="d-flex flex-wrap mt-5">
+              <div class="d-flex flex-wrap mt-5 position-relative">
                 <label for="entreprise">Entreprise</label>
                 <input class="col-10" type="text" v-model="entreprise.search" name="entreprise" id="entreprise"
                        @focus="entreprise.showList = true"
@@ -137,7 +137,7 @@ export default {
       script: [
         {
           src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
-          callback: () => (this.markedLoaded = true)
+          callback: () => this.markedLoaded = true
         }
       ]
     }
@@ -267,6 +267,7 @@ export default {
       this.entreprise.search = ''
       this.entreprise.selected = entreprise
       this.offre.entreprise.nom = entreprise.nom
+      this.offre.entreprise.id = entreprise.id
       this.entreprise.showList = false
     }
   },
@@ -401,11 +402,12 @@ div#file-container {
   }
 }
 
-#localisation-autocomplete {
+#localisation-autocomplete, #entreprise-autocomplete {
   top: 40px;
   z-index: 100;
   list-style: none;
   padding: 6px 0;
+  position: relative;
 
   li {
     padding: 4px 12px;
