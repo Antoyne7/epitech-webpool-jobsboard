@@ -62,13 +62,19 @@ export default {
     }
   },
   components: {ModalSuccess, Alert, AuthRedirection, AuthButton, StyledInput},
+  mounted() {
+    this.$axios.$get('/back/sanctum/csrf-cookie');
+    if (this.$auth.loggedIn) {
+      this.$router.push('/')
+    }
+  },
   methods: {
     validateEmail(email) {
       const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(email).toLowerCase());
     },
 
-    submit(){
+    submit() {
       if (this.prenom && this.prenom !== "" && this.nom && this.nom !== "" &&
         this.email && this.email !== "" && this.password) {
         this.showAlertGlobal = false

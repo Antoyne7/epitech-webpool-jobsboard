@@ -55,17 +55,16 @@ export default {
           this.alertTypeGlobal = "error";
           this.showAlertGlobal = true;
         } else {
-          // Prepare form data
           const formData = new FormData();
           formData.append('email', this.email)
           formData.append('password', this.password)
-
-          // Pass form data to `loginWith` function
-          await this.$auth.loginWith('local', {data: formData});
+          await this.$auth.loginWith('local', {data: formData}).then((res)=>{
+            console.log(res)
+          });
           console.log('user:', this.$auth.user)
         }
       } catch (err) {
-        this.alertMsgGlobal = param.message.errSignIn;
+        this.alertMsgGlobal = param.message.errCnx;
         this.alertTypeGlobal = "error";
         this.showAlertGlobal = true;
         console.dir(err)
@@ -73,9 +72,11 @@ export default {
     }
   },
   mounted() {
-    // Before loading login page, obtain csrf cookie from the server.
     this.$axios.$get('/back/sanctum/csrf-cookie');
-
+    //Si l'utilisateur est loggé, on le redirige sur la page d'accueil
+    if (this.$auth.loggedIn) {
+      this.$router.push('/')
+    }
   },
 }
 </script>

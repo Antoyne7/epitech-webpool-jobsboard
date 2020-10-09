@@ -25,7 +25,8 @@
               <input placeholder="Votre nouveau mot de passe" v-model="userInfo.password" type="password">
             </label>
             <label>
-              <input placeholder="Confirmez votre mot de passe" v-model="userInfo.passwordConfirm" type="password">
+              <input placeholder="Confirmez votre nouveau mot de passe" v-model="passwordConfirm"
+                     type="password">
             </label>
             <div class="d-flex justify-content-center align-items-center mt-3">
               <label for="cv">{{ action }} votre CV <img src="/icons/ic_file_upload_48px.svg"
@@ -38,6 +39,9 @@
             </div>
             <lightbox v-bind="property" @hide="show = false" v-show="show"></lightbox>
           </fieldset>
+          <Alert style="margin-top: 20px;text-align: center;" v-show="alert.alertShow" :msg="alert.alertMsg"
+                 :type="alert.alertType"/>
+          <ModalSuccess route="/profil" id="success_profil" :is-centered="true" message="Modifications effectuées"/>
           <button>Valider</button>
         </form>
       </b-col>
@@ -59,13 +63,18 @@
 
 <script>
 import camera from "static/icons/camera.svg";
-import AjaxServices from "~/services/ajaxServices"
 import Lightbox from "@/components/Lightbox";
+import Alert from "@/components/Alert";
+import param from "@/param/param";
+import ModalSuccess from "@/components/modalSuccess";
 
 
 export default {
   name: "profil",
+
   components: {
+    ModalSuccess,
+    Alert,
     Lightbox,
   },
   data() {
@@ -77,34 +86,86 @@ export default {
       showSync: null,
       open: false,
       cvPreview: null,
+      alert: {
+        alertShow: false,
+        alertMsg: null,
+        alertType: null,
+      },
+      passwordConfirm: null,
       userInfo: {
+        id: null,
         nom: null,
         prenom: null,
         email: null,
         password: null,
-        passwordConfirm: null,
-        cv: null
+        cv: null,
+        image: null,
       },
 
     }
   },
-  created() {
-    //On fait une requête à l'API pour récupérer les informations de l'utilisateur et les affichers
-    //TODO: Modifier l'ID pour que ce soit dynamique
-    AjaxServices.getInformations('getUser', 10).then((promise) => {
-      this.userInfo = promise;
-      if (this.userInfo.image) {
-        this.preview = this.userInfo.image;
-        this.action = "Modifiez"
-        this.imgStyle = 'updated'
-        this.cvPreview = promise.cv
-      }
-    }).catch((err) => {
+  mounted() {
+    this.$axios.$get('/back/api/utilisateurs/' + this.$auth.user.id)
+      .then((promise) => {
+        this.userInfo = promise;
+        if (this.userInfo.image) {
+          this.preview = param.cheminPhoto + this.userInfo.image;
+          this.action = "Modifiez"
+          this.imgStyle = 'updated'
+          this.cvPreview = param.cheminPhoto + promise.cv
+          console.log(this.userInfo)
+        }
+      }).catch((err) => {
       console.dir(err)
     })
   },
+
   methods: {
     submit() {
+      console.log(this.userInfo)
+      if (this.userInfo.password === this.passwordConfirm) {
+        const params = new FormData();
+        params.append('email', this.userInfo.email)
+        params.append('nom', this.userInfo.nom)
+        params.append('prenom', this.userInfo.prenom)
+        params.append('cv', this.userInfo.cv)
+        params.append('image', this.userInfo.image)
+        params.append('password', this.userInfo.password)
+        //On ajoute cela aux informations afin de simuler une requête "put"
+        params.append('_method', 'put')
+        this.$axios.$post('back/api/utilisateurs/' + this.userInfo.id, params).then((resp) => {
+          console.log(resp)
+          if (resp.status_code === 422) {
+            if (resp.error_code === 10) {
+              this.alert.alertMsg = param.message.errPasswordLength
+              this.alert.alertType = "error";
+              this.alert.alertShow = true;
+            } else if (resp.error_code === 11) {
+              this.alert.alertMsg = param.message.errMailused
+              this.alert.alertType = "error";
+              this.alert.alertShow = true;
+            } else {
+              this.alert.alertMsg = param.message.errDefault
+              this.alert.alertType = "error";
+              this.alert.alertShow = true;
+            }
+          } else {
+            this.alert.alertShow = false;
+            this.$bvModal.show('success_profil')
+            this.userInfo.password = null
+            this.passwordConfirm = null
+          }
+        }).catch((err) => {
+          console.dir(err)
+          this.alert.alertMsg = param.message.errDefault
+          this.alert.alertType = "error";
+          this.alert.alertShow = true;
+        })
+      } else {
+        this.alert.alertMsg = param.message.errPasswords
+        this.alert.alertType = "error";
+        this.alert.alertShow = true;
+      }
 
     },
     fileUpload(e) {
@@ -113,7 +174,7 @@ export default {
       //On change cvPreview pour afficher le nouveau cv
       this.cvPreview = window.URL.createObjectURL(e.target.files[0])
       //On charge le CV dans la data pour pouvoir l'upload par la suite
-      this.cv = e.target.files[0]
+      this.userInfo.cv = e.target.files[0]
     },
 
     updatePreviewImg(event) {
@@ -121,6 +182,7 @@ export default {
       this.preview = window.URL.createObjectURL(event.target.files[0])
       //On change la classe de l'image pour enlever les styles liés à la caméra
       this.imgStyle = 'updated'
+      this.userInfo.image = event.target.files[0];
     },
   },
   computed: {

@@ -6,6 +6,7 @@ use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -16,6 +17,15 @@ class AuthController extends Controller
                 'email' => 'email|required',
                 'password' => 'required'
             ]);
+
+            if (strlen($request['password']) < 5) {
+                return response()->json([
+                    'status_code' => 422,
+                    'error_code' => 10,
+                    'message' => 'Le mot de passe rentré est trop court',
+                ]);
+            }
+
             $credentials = request(['email', 'password']);
             if (!Auth::attempt($credentials)) {
                 return response()->json([
@@ -49,19 +59,23 @@ class AuthController extends Controller
     }
 
 
-    public function logout (Request $request) {
+    public function logout(Request $request)
+    {
 //        return $request->user()->currentAccessToken()->delete();
         return $request->getContent();
     }
 
     public function register()
     {
-        $this->validate(request(), [
-            'nom' => 'required',
-            'prenom' => 'required',
-            'email' => 'required|email|unique:utilisateurs',
-            'password' => 'required',
-        ]);
+        try {
+            $this->validate(request(), [
+                'nom' => 'required',
+                'prenom' => 'required',
+                'email' => 'required|email|unique:utilisateurs',
+                'password' => 'required',
+            ]);
+        } catch (ValidationException $e) {
+        }
 
         $user = Utilisateur::create([
             'nom' => request('nom'),
