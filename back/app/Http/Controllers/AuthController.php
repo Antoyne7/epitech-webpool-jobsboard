@@ -48,7 +48,31 @@ class AuthController extends Controller
     }
 
     public function logout (Request $request) {
-        return $request->user()->currentAccessToken()->delete();
+//        return $request->user()->currentAccessToken()->delete();
+        return $request->getContent();
+    }
+
+    public function register()
+    {
+        $this->validate(request(), [
+            'nom' => 'required',
+            'prenom' => 'required',
+            'email' => 'required|email|unique:utilisateurs',
+            'password' => 'required',
+        ]);
+
+        $user = Utilisateur::create([
+            'nom' => request('nom'),
+            'prenom' => request('prenom'),
+            'email' => request('email'),
+            'password' => bcrypt(request('password')),
+        ]);
+
+        return response([
+            'statusCode' => 200,
+            'message' => 'Your account has been created',
+        ], 201);
+
     }
 
     // // Revoke all tokens...

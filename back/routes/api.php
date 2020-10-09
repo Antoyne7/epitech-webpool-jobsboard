@@ -20,6 +20,9 @@ Route::apiResource('typeoffres', \App\Http\Controllers\Api\TypeOffreController::
 Route::apiResource('candidatures', \App\Http\Controllers\Api\CandidatureController::class);
 
 Route::post('/login', '\App\Http\Controllers\AuthController@login')->name('login');
+Route::post('/register', '\App\Http\Controllers\AuthController@register')->name('register');
+
+Route::post('/logout', '\App\Http\Controllers\AuthController@logout')->name('logout');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/utilisateurs', '\App\Http\Controllers\Api\UtilisateurController@index');

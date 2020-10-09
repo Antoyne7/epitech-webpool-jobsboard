@@ -20,10 +20,6 @@ export default {
     ]
   },
   //Refresh token pour l'authentification
-  router: {
-    // middleware: 'refreshToken',
-  },
-
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
@@ -54,13 +50,14 @@ export default {
       login: '/login',
       logout: '/login',
       callback: '/callback',
-      home: '/'
+      home: '/home'
     },
     strategies: {
       local: {
         endpoints: {
           login: { url: '/back/api/login', method: 'post', propertyName: false },
-          user: { url: '/back/api/me', method: 'get', propertyName: false }
+          user: { url: '/back/api/me', method: 'get', propertyName: false },
+          logout: { url: '/back/api/logout', method: 'post', propertyName: false }
         },
         // tokenRequired: false,
         // tokenType: false
