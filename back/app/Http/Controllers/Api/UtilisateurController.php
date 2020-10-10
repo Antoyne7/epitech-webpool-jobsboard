@@ -54,15 +54,11 @@ class UtilisateurController extends Controller
     {
         try {
 
-//            On établit les rêgles du validator email, en lui disant d'ignorer l'id de l'user faisant la requête
-            $rules = [
-                'email' => 'email|unique:utilisateurs,email,' . $request['id'] . ''
-            ];
-
-            $validator = Validator::make((array)$request, $rules);
-
-//           On test si le mail passe le validator
-            if (!$validator->passes()) {
+            try {
+                $request->validate([
+                    'email' => 'email|unique:utilisateurs,email,' . $request['id']
+                ]);
+            } catch (\Exception $err) {
                 return response()->json([
                     'status_code' => 422,
                     'error_code' => 11,
@@ -70,9 +66,10 @@ class UtilisateurController extends Controller
                 ]);
             }
 
+
 //           Navré pour tous ces if imbriqués mais je savais pas comment faire autrement
 //            On test d'abord si un mot de passe est présent dans la reqûete
-            if (isset($request['password']) && $request['password'] !== "") {
+            if (isset($request['password']) && $request['password'] !== "" && $request['password'] !== 'null') {
 //                On vérifie si le mdp est assez long
                 if (strlen($request['password']) > 5) {
 //                    Puis on vérifie si l'utilisateur upload un CV ou une photo ou les deux

@@ -123,7 +123,8 @@ export default {
   methods: {
     submit() {
       console.log(this.userInfo)
-      if (this.userInfo.password === this.passwordConfirm) {
+      console.log(this.userInfo.password)
+      if (this.userInfo.password === this.passwordConfirm || (!this.password && this.passwordConfirm === null)) {
         const params = new FormData();
         params.append('email', this.userInfo.email)
         params.append('nom', this.userInfo.nom)
@@ -131,6 +132,7 @@ export default {
         params.append('cv', this.userInfo.cv)
         params.append('image', this.userInfo.image)
         params.append('password', this.userInfo.password)
+        params.append('id', this.userInfo.id)
         //On ajoute cela aux informations afin de simuler une requête "put"
         params.append('_method', 'put')
         this.$axios.$post('back/api/utilisateurs/' + this.userInfo.id, params).then((resp) => {
