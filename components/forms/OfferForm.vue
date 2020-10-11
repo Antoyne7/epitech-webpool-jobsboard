@@ -2,7 +2,7 @@
   <div>
     <b-modal id="modal-entreprise" title="Nouvelle entreprise" hide-footer hide-header centered>
       <label class="d-block" for="nom-entreprise">Ajoutez une nouvelle entreprise</label>
-      <input v-model="entreprise.nom" type="text" name="nom-entreprise" id="nom-entreprise"
+      <input v-model="entreprise.add" type="text" name="nom-entreprise" id="nom-entreprise"
              placeholder="Nom de l'entreprise">
       <button class="btn bg-jobs mt-4 mr-2" @click="entrepriseSubmit">Enregistrer</button>
       <button class="btn btn-danger mt-4" @click="hideEntrepriseModal">Annuler</button>
@@ -86,7 +86,6 @@
               <CheckboxButton class="d-inline-block" value="stage" label="stage"/>
             </div>
 
-
             <div class="col-md-6 px-0 my-4">
               <label class="d-block" for="shortDescription">Description courte</label>
               <textarea class="d-block w-100" rows="5" v-model="offre.shortDescription" name="shortDescription"
@@ -100,7 +99,6 @@
                 pour écrire votre description, plus d’information sur l’utilisation de Markdown
                 <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">ici</a>.
               </p>
-
               <div class="col-md-6 px-0">
                 <textarea class="d-block w-100"
                           rows="12"
@@ -180,7 +178,8 @@ export default {
         search: '',
         list: [],
         selected: null,
-        showList: false
+        showList: false,
+        add: ''
       },
       offre: {
         nom: 'Titre de l\'offre',
@@ -228,9 +227,13 @@ export default {
       }
     },
     entrepriseSubmit() {
-      console.log('Creation nouvelle entreprise avec pour nom:', this.entreprise.nom)
-      // this.$axios.$post()
-      this.hideEntrepriseModal()
+      const entrepriseFormdata = new FormData()
+      entrepriseFormdata.append('nom', this.entreprise.add)
+      AjaxServices.pushInformations('entreprises', entrepriseFormdata)
+        .then(data => {
+          this.hideEntrepriseModal()
+        })
+        .catch(e => console.log(e))
     },
     hideEntrepriseModal() {
       this.$bvModal.hide('modal-entreprise')
@@ -300,7 +303,6 @@ export default {
   async mounted() {
     this.initDescription()
     this.entreprise.list = await AjaxServices.getListe('entreprises')
-
   }
 }
 </script>

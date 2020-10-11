@@ -9,5 +9,5 @@ export const mutations = {
     } else {
       state.types.push(type)
     }
-  }
+  },
 }

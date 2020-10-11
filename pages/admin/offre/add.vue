@@ -14,7 +14,6 @@ export default {
   },
   methods: {
     ajoutOffre (data) {
-      console.log('data:', data)
       const formdata = new FormData()
 
       formdata.append('nom', data.nom)
@@ -23,10 +22,12 @@ export default {
       formdata.append('codeDepartement', data.localisation.codeDepartement)
       formdata.append('image', data.image)
       formdata.append('tags', JSON.stringify(data.tags))
-      formdata.append('offretype', data.offreType)
+      formdata.append('offretype', JSON.stringify(data.offreType))
       formdata.append('entreprise', data.entreprise.id)
       formdata.append('shortDescription', data.shortDescription)
       formdata.append('description', data.description )
+
+      console.log('data:', data)
 
       AjaxServices.pushInformations('listeOffres', formdata)
         .then(data => {

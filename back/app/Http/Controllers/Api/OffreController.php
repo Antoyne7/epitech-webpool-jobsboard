@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Entreprise;
 use App\Models\Offre;
 use App\Models\Tag;
+use App\Models\TypeOffre;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -30,10 +31,6 @@ class OffreController extends Controller
      */
     public function store(Request $request)
     {
-//        if ($request['image']) {
-//            $filename = time() . '.' . $request['image']->getClientOriginalExtension();
-//        }
-
         // https://laravel.com/docs/8.x/eloquent-relationships#inserting-and-updating-related-models
 
         $entreprise = Entreprise::find($request->entreprise);
@@ -45,14 +42,10 @@ class OffreController extends Controller
         $offre->ville = $request['ville'];
         $offre->code_departement = $request['codeDepartement'];
         $offre->short_description = $request['shortDescription'];
+        $offre->image = $request->file('image')->store('offreimgs');
         $offre->entreprise()->associate($entreprise);
 
-
         if ($offre->save()) {
-//            if ($request['image']) {
-//                $request['image']->move(public_path('images'), $filename);
-//            }
-
             foreach (json_decode($request['tags']) as $tagNom) {
                 $tagsTemp = Tag::where('nom', $tagNom)->get();
                 if (sizeof($tagsTemp) > 0) {
@@ -63,6 +56,17 @@ class OffreController extends Controller
                     ]);
                 }
                 $offre->tags()->save($tag);
+            }
+            foreach (json_decode($request['offretype']) as $typeOffreNom) {
+                $typeOffreTemp = TypeOffre::where('nom', $typeOffreNom)->get();
+                if (sizeof($typeOffreTemp) > 0) {
+                    $typeOffre = $typeOffreTemp[0];
+                } else {
+                    $typeOffre = TypeOffre::create([
+                        'nom' => $typeOffreNom
+                    ]);
+                }
+                $offre->typeOffres()->save($typeOffre);
             }
             return response(1);
         } else {
