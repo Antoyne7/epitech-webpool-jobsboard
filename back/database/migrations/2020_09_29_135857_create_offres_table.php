@@ -23,6 +23,7 @@ class CreateOffresTable extends Migration
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
             $table->string('image')->nullable();
+            $table->boolean('pourvu')->default(false);
             $table->timestamps();
             $table->unsignedBigInteger('entreprise_id');
             $table->foreign('entreprise_id')

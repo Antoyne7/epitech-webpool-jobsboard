@@ -109,4 +109,17 @@ class OffreController extends Controller
     {
         return response($offre->delete());
     }
+
+    /**
+     * Toggle pourvu on offer.
+     *
+     * @param Offre $offre
+     * @return Response
+     * @throws Exception
+     */
+    public function toggle(Offre $offre)
+    {
+        $offre->pourvu = !$offre->pourvu;
+        return response($offre->save());
+    }
 }

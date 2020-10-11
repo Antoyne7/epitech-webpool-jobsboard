@@ -20,6 +20,7 @@
                  :short-description="offre.short_description"
                  :linkId="offre.id"
                  :img="offre.image"
+                 :pourvu="offre.pourvu"
                  :localisation="offre.localisation"
                  admin-view="true"
         />

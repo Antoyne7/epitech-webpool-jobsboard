@@ -5,17 +5,17 @@
       <br v-if="title.length < 22">
       <!--      <p>{{localisation}}</p>-->
       <p>{{ descriptionFunc(shortDescription) }}</p>
-      <br v-if="shortDescription.length < 100">
+      <br v-if="shortDescription && shortDescription.length < 100">
       <img :src="img" alt="Image de l'offre">
       <b-row class="admin-buttons w-100 mt-3 justify-content-end" v-if="adminView">
-        <b-button class="mx-2">
-          TOGL
+        <b-button class="mx-2" :class="Number(pourvuValue) === 1 ? '' : 'btn-success'" @click="toggleOffre">
+          <b-icon-zoom-in></b-icon-zoom-in>
         </b-button>
         <b-button class="mx-2">
-          EDIT
+          <b-icon-app></b-icon-app>
         </b-button>
         <b-button class="ml-2">
-          VIEW
+          <b-icon-trash></b-icon-trash>
         </b-button>
       </b-row>
       <nuxt-link v-else :to="{name:'slug', params:{slug: linkId}}">
@@ -28,14 +28,23 @@
 <script>
 export default {
   name: "JobCard",
-  props: ['title', 'shortDescription', 'img', 'linkId', 'localisation', 'adminView'],
+  props: ['title', 'shortDescription', 'img', 'linkId', 'localisation', 'adminView', 'pourvu'],
+  data () {
+    return {
+      pourvuValue: this.pourvu
+    }
+  },
   methods: {
     descriptionFunc(desc) {
-      if (desc.length > 100) {
+      if (desc && desc.length > 100) {
         return desc.slice(0, 100) + "..."
       } else {
         return desc
       }
+    },
+    toggleOffre() {
+      this.$axios.$put(`/back/api/offres/${this.linkId}/toggle`)
+        .then(() => this.pourvuValue = !this.pourvuValue)
     }
   }
 }

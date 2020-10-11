@@ -29,6 +29,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/utilisateurs', '\App\Http\Controllers\Api\UtilisateurController@index');
     Route::get('/me', '\App\Http\Controllers\AuthController@user');
     Route::apiResource('utilisateurs', \App\Http\Controllers\Api\UtilisateurController::class);
-
+    Route::put('/offres/{offre}/toggle', '\App\Http\Controllers\Api\OffreController@toggle');
 });
 

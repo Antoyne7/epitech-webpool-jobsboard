@@ -1,5 +1,7 @@
 <template>
   <div>
+    <ModalSuccess :is-centered="true" route="/admin/offre/add" message="L'entreprise à bien été créer" id="modal-succ-entreprise"/>
+    <ModalSuccess :is-centered="true" route="/admin" message="L'offre à bien été créer" id="modal-succ-offre"/>
     <b-modal id="modal-entreprise" title="Nouvelle entreprise" hide-footer hide-header centered>
       <label class="d-block" for="nom-entreprise">Ajoutez une nouvelle entreprise</label>
       <input v-model="entreprise.add" type="text" name="nom-entreprise" id="nom-entreprise"
@@ -26,7 +28,7 @@
                        @focus="entreprise.showList = true"
                        placeholder="entreprise">
                 <div class="px-2 col-2">
-                  <button v-b-modal.modal-entreprise class="bg-jobs h-100 rounded-lg w-100 btn btn-primary">+</button>
+                  <button type="button" v-b-modal.modal-entreprise class="bg-jobs h-100 rounded-lg w-100 btn btn-primary">+</button>
                 </div>
                 <ul id="entreprise-autocomplete" class="position-absolute w-100 bg-white rounded"
                     v-if="entrepriseFilter.length > 0 && entreprise.showList"> <!-- Autocomplete list -->
@@ -128,6 +130,7 @@ import CheckboxButton from "~/components/forms/CheckboxButton";
 import camera from '~/static/icons/camera.svg'
 import edit from '~/static/icons/edit.svg'
 import AjaxServices from '~/services/ajaxServices'
+import modalSuccess from "@/components/modalSuccess";
 
 export default {
   name: "OfferForm",
@@ -143,7 +146,8 @@ export default {
   },
   components: {
     Tag,
-    CheckboxButton
+    CheckboxButton,
+    modalSuccess
   },
   props: {
     onSubmit: {
@@ -207,6 +211,7 @@ export default {
       console.log('pre submit de l\'ajout d\'offre')
       this.offre.offreType = this.$store.state.offretype.types
       this.offre.image = document.querySelector('input[type="file"]').files[0]
+      this.$bvModal.show('modal-succ-offre')
       this.onSubmit(offre)
     },
     updateDescriptions() {
@@ -233,6 +238,7 @@ export default {
       AjaxServices.pushInformations('entreprises', entrepriseFormdata)
         .then(data => {
           this.hideEntrepriseModal()
+          this.$bvModal.show('modal-succ-entreprise')
         })
         .catch(e => console.log(e))
     },
