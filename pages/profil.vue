@@ -110,10 +110,11 @@ export default {
         this.userInfo = promise;
         if (this.userInfo.image) {
           this.preview = param.cheminPhoto + this.userInfo.image;
-          this.action = "Modifiez"
           this.imgStyle = 'updated'
+        }
+        if (this.userInfo.cv) {
           this.cvPreview = param.cheminPhoto + promise.cv
-          console.log(this.userInfo)
+          this.action = "Modifiez"
         }
       }).catch((err) => {
       console.dir(err)
@@ -131,7 +132,9 @@ export default {
         params.append('prenom', this.userInfo.prenom)
         params.append('cv', this.userInfo.cv)
         params.append('image', this.userInfo.image)
-        params.append('password', this.userInfo.password)
+        if (this.userInfo.password) {
+          params.append('password', this.userInfo.password)
+        }
         params.append('id', this.userInfo.id)
         //On ajoute cela aux informations afin de simuler une requête "put"
         params.append('_method', 'put')
@@ -156,6 +159,7 @@ export default {
             this.$bvModal.show('success_profil')
             this.userInfo.password = null
             this.passwordConfirm = null
+            this.$auth.fetchUser();
           }
         }).catch((err) => {
           console.dir(err)

@@ -32,6 +32,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$auth.user)
     AjaxServices.getListe('listeOffres').then(promise => {
       console.log(promise)
       this.listeOffres = promise;
@@ -47,8 +48,8 @@ export default {
       }
     },
     goto() {
-      if (document.querySelectorAll('.container-cards .row > div').length > 6) {
-        let number = (6 * (this.nbrShowed - 1) + 1);
+      let number = (6 * (this.nbrShowed - 1) + 1);
+      if (document.querySelector(".container-cards .row div:nth-child(" + number + ")")) {
         document.querySelector(".container-cards .row div:nth-child(" + number + ")").scrollIntoView()
       } else {
         setTimeout(this.goto, 50);
@@ -73,6 +74,7 @@ export default {
 html {
   scroll-behavior: smooth;
 }
+
 .container-cards {
   margin: 70px auto 50px;
 }

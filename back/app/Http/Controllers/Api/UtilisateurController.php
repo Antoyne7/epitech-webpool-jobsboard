@@ -69,8 +69,10 @@ class UtilisateurController extends Controller
 
 
 //           Navré pour tous ces if imbriqués mais je savais pas comment faire autrement
+//            Update: J'ai trouvé comment faire mais franchement j'ai la flemme de mettre à jour
+
 //            On test d'abord si un mot de passe est présent dans la reqûete
-            if (isset($request['password']) && $request['password'] !== "" && $request['password'] !== 'null') {
+            if (isset($request['password']) && $request['password'] !== "" && $request['password'] !== 'null' && $request['password'] !== null) {
 //                On vérifie si le mdp est assez long
                 if (strlen($request['password']) > 5) {
 //                    Puis on vérifie si l'utilisateur upload un CV ou une photo ou les deux

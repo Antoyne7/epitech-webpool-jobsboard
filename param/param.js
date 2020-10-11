@@ -40,6 +40,8 @@ export default {
     errNoInfo: "Veuillez remplir les informations",
     errMail: "Un compte est déjà lié à cette adresse mail.",
     errMailused: "Cette addresse mail est déjà utilisée.",
+    errCv: 'Veuillez envoyer un cv avec votre candidature',
+    errText: 'Veuillez renseigner un message de plus de 6 caractères pour la candidature',
 
     sucProfil: 'Vos informations ont bien été mises à jour !',
     sucPasswords: "Les mots de passe correspondent"

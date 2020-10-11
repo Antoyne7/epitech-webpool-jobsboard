@@ -30,10 +30,10 @@
         </p>
       </b-col>
     </b-row>
-    <button v-b-modal.modal>
+    <button v-b-modal.modal_offre>
       Postuler
     </button>
-    <b-modal class="modal-offre" size="lg" id="modal" hide-footer hide-header>
+    <b-modal class="modal-offre" size="lg" id="modal_offre" hide-footer hide-header>
       <h2>{{ offre.nom }}
         <span>
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
@@ -52,49 +52,125 @@
       </div>
       <p>{{ offre.short_description }}</p>
       <h2>Votre candidature</h2>
-      <div class="slider-btn-container">
-        <label class="switch">
-          <input v-model="profilCv" type="checkbox">
-          <span class="slider round"></span>
-        </label>
-        <span>Utiliser le cv du profil<a><img src="/icons/eye.svg" alt="Voir le cv"></a></span>
-      </div>
-      <div class="msg">
-        <textarea placeholder="Votre message" name="message" id="message" cols="30" rows="10"></textarea>
-        <label v-show="!profilCv" for="image">Chargez votre CV <img src="/icons/ic_file_upload_48px.svg"
-                                                           alt="Icône upload de fichier"></label>
+      <form @submit.prevent="submit()">
+        <div v-show="this.$auth.user.cv" class="slider-btn-container">
+          <label class="switch">
+            <input v-model="profilCv" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+          <span>Utiliser le cv du profil<a><img @click="show = true" src="/icons/eye.svg" alt="Voir le cv"></a></span>
+        </div>
+        <lightbox v-bind="property" @hide="show = false" v-show="show"/>
+        <div class="msg">
+          <textarea v-model="candidature.text" placeholder="Votre message" name="message" id="message" cols="30"
+                    rows="10"></textarea>
+          <label v-show="!profilCv" for="image">Chargez votre CV <img src="/icons/ic_file_upload_48px.svg"
+                                                                      alt="Icône upload de fichier"></label>
 
-        <input type="file" name="image" id="image" accept="image/gif, image/jpeg, image/png, application/pdf"/>
-        <button>Envoyer</button>
-      </div>
+          <input @change="fileUpload($event)" type="file" name="image" id="image"
+                 accept="image/gif, image/jpeg, image/png, application/pdf"/>
+          <alert style="margin-top: 20px;" v-show="alert.showAlert" :msg="alert.msgAlert" :type="alert.typeAlert"/>
+          <button>Envoyer</button>
+        </div>
+      </form>
     </b-modal>
+    <modal-success :route="'/'+ this.id" id="success" message="Votre candidature est envoyée !" :is-centered="true"/>
   </b-container>
 </template>
 
 <script>
 import AjaxServices from '~/services/ajaxServices'
 import Tag from '~/components/Tag'
+import Lightbox from "@/components/Lightbox";
+import param from "@/param/param";
+import Alert from "@/components/Alert";
+import ModalSuccess from "@/components/modalSuccess";
 
 export default {
   name: "_slug",
-  // middleware: 'auth',
+  components: {ModalSuccess, Alert, Lightbox},
+  middleware: 'auth',
   data() {
     return {
       id: 0,
       offre: null,
       profilCv: false,
+      show: false,
+      cvUpload: null,
+      iscandidated:false,
+      alert: {
+        typeAlert: null,
+        msgAlert: null,
+        showAlert: false,
+      },
+      candidature: {
+        idProfil: null,
+        idOffre: null,
+        text: null,
+        cv: null,
+        useProfilCv: null,
+      }
+    }
+  },
+  computed: {
+    property() {
+      return {cv: param.cheminPhoto + this.$auth.user.cv}
     }
   },
   methods: {
+    submit() {
+      let params = new FormData;
+      params.append('idUser', this.$auth.user.id);
+      params.append('idOffre', this.id);
+      params.append('text', this.candidature.text);
+      if (this.profilCv) {
+        params.append('cv', this.$auth.user.cv);
+      } else {
+        params.append('cv', this.cvUpload);
+      }
+      this.$axios.$post('back/api/candidatures', params).then((response) => {
+        console.log(response)
+        if (response.status_code === 422) {
+          if (response.error_code === 11) {
+            this.alert.msgAlert = param.message.errText;
+            this.alert.typeAlert = "error";
+            this.alert.showAlert = true;
+          }
+          if (response.error_code === 12) {
+            this.alert.msgAlert = param.message.errCv;
+            this.alert.typeAlert = "error";
+            this.alert.showAlert = true;
+          }
+        } else if (response.statusCode === 200) {
+          this.alert.showAlert = false;
+          this.isCandidated = true;
+          this.$bvModal.hide('modal_offre');
+          this.$bvModal.show('success');
+        }
+      }).catch((err) => {
+        console.dir(err)
+        this.alert.msgAlert = param.message.errDefault;
+        this.alert.typeAlert = "error";
+        this.alert.showAlert = true;
+      })
+    },
+    fileUpload(e) {
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      //On charge le CV dans la data pour pouvoir l'upload par la suite
+      this.cvUpload = e.target.files[0]
+    }
   },
   created() {
+    console.log(this.$auth.user)
     this.id = this.$route.params.slug;
     AjaxServices.getInformations('listeOffres', this.id).then((promise) => {
       console.log(promise)
       this.offre = promise;
       console.log(this.offre.tags)
+    }).catch((err) => {
+      console.dir(err)
     })
-
   }
 }
 </script>

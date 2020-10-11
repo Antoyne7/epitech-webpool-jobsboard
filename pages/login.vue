@@ -50,6 +50,7 @@ export default {
   methods: {
     async submit() {
       try {
+        this.showAlertGlobal = false;
         if (this.email === null || this.password === null || this.email == "" || this.password == "") {
           this.alertMsgGlobal = param.message.errNoInfo;
           this.alertTypeGlobal = "error";
@@ -58,7 +59,7 @@ export default {
           const formData = new FormData();
           formData.append('email', this.email)
           formData.append('password', this.password)
-          await this.$auth.loginWith('local', {data: formData}).then((res)=>{
+          await this.$auth.loginWith('local', {data: formData}).then((res) => {
             console.log(res)
           });
           console.log('user:', this.$auth.user)
