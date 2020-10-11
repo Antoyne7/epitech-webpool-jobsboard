@@ -54,6 +54,7 @@ class UtilisateurController extends Controller
     {
         try {
 
+//            On vérifie ici si l'addresse mail est valide et unique
             try {
                 $request->validate([
                     'email' => 'email|unique:utilisateurs,email,' . $request['id']
