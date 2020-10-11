@@ -5,6 +5,7 @@
     </div>
     <div>
       <b-button :to="to">EDIT</b-button>
+
       <b-button @click="deleteFunction(data.id)">DEL</b-button>
     </div>
   </b-row>

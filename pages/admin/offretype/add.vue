@@ -15,6 +15,7 @@ export default {
   },
   methods: {
     create (offretype) {
+
       const formdata = new FormData()
       formdata.append('nom', offretype.nom)
       ajaxServices.pushInformations('typeOffres', formdata)

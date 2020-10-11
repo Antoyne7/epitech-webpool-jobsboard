@@ -48,7 +48,7 @@ class TypeOffreController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  TypeOffre $typeoffre
+     * @param TypeOffre $typeoffre
      * @return Response
      */
     public function update(Request $request, TypeOffre $typeoffre)

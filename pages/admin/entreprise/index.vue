@@ -1,6 +1,8 @@
 <template>
   <div>
-    <DataDeletion ref="deleteComponent" type="entreprises" :data-id="toDelete">On supprime mon pote entreprise</DataDeletion>
+
+    <DataDeletion ref="deleteComponent" type="entreprises" :data-id="toDelete">On supprime mon pote entreprise
+    </DataDeletion>
 
     <b-container class="mt-4">
       <b-row>
@@ -13,6 +15,7 @@
       </b-row>
     </b-container>
     <b-container class="container-cards">
+
       <DataCard v-for="entreprise in entreprises" v-bind:key="entreprise.id"
                 :data="entreprise" :to="'./entreprise/edit/' + entreprise.id"
                 :delete-function="deleteFunction">
@@ -25,17 +28,20 @@
 <script>
 import DataCard from "@/components/DataCard"
 import AjaxServices from "@/services/ajaxServices";
+
 import DataDeletion from "@/components/DataDeletion";
 
 export default {
   name: "Index",
   components: {
+
     DataCard,
     DataDeletion
   },
   data() {
     return {
       entreprises: [],
+
       toDelete: null
     }
   },
@@ -52,7 +58,7 @@ export default {
       this.toDelete = id
       this.$refs.deleteComponent.deleteModal(this.toDelete)
     },
-    updateList () {
+    updateList() {
       AjaxServices.getListe('entreprises').then(promise => {
         this.entreprises = promise;
       })

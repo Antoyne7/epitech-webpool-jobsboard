@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Entreprise;
+
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -36,6 +37,7 @@ class EntrepriseController extends Controller
     /**
      * Display the specified resource.
      *
+
      * @param Entreprise  $entreprise
      * @return Response
      */
@@ -53,6 +55,7 @@ class EntrepriseController extends Controller
      */
     public function update(Request $request, Entreprise $entreprise)
     {
+
         $data = json_decode($request->getContent());
         return response($entreprise->update([
             'nom' => $data->nom

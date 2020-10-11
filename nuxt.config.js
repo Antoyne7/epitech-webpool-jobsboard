@@ -20,7 +20,7 @@ export default {
     ]
   },
   //Refresh token pour l'authentification
-
+  router: [],
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
 
@@ -40,9 +40,9 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
+
     '@nuxtjs/pwa',
     '@nuxtjs/auth',
-
   ],
 
   auth: {
@@ -50,14 +50,14 @@ export default {
       login: '/login',
       logout: '/login',
       callback: '/callback',
-      home: '/home'
+      home: '/'
     },
     strategies: {
       local: {
         endpoints: {
-          login: { url: '/back/api/login', method: 'post', propertyName: false },
-          user: { url: '/back/api/me', method: 'get', propertyName: false },
-          logout: { url: '/back/api/logout', method: 'post', propertyName: false }
+          login: {url: '/back/api/login', method: 'post', propertyName: false},
+          user: {url: '/back/api/me', method: 'get', propertyName: false},
+          logout: {url: '/back/api/logout', method: 'post', propertyName: false},
         },
         // tokenRequired: false,
         // tokenType: false
@@ -67,18 +67,20 @@ export default {
   },
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
+
   // Serveur : https://backend.antoinebraillard.tech/jobboard/public/index.php/api/
   // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/
   axios: { //
-    // baseURL: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/',
+    // baseURL: 'https://backend.antoinebraillard.tech/jobboard/public/index.php/',
+    baseURL: 'http://jobs.epitech.fr/back/public/',
     credentials: true,
     proxy: true
   },
 
   proxy: {
     '/back': {
-      target: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/',
-      pathRewrite: { '^/back': '/' }
+      target: 'http://jobs.epitech.fr/back/public/',
+      pathRewrite: {'^/back': '/'}
     }
   },
 

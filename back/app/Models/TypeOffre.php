@@ -11,6 +11,7 @@ class TypeOffre extends Model
 
     protected $visible = ['id', 'nom'];
 
+
     protected $fillable = [
         'nom'
     ];

@@ -1,7 +1,7 @@
 <template>
-    <BasicDataForm :submit-function="updateData" :data-object="typeOffre">
-      Editer le contrat: "{{ typeOffre.nom }}"
-    </BasicDataForm>
+  <BasicDataForm :submit-function="updateData" :data-object="typeOffre">
+    Editer le contrat: "{{ typeOffre.nom }}"
+  </BasicDataForm>
 </template>
 
 <script>
@@ -22,6 +22,7 @@ export default {
     }
   },
   methods: {
+
     updateData(typeOffre) {
       // Update, afficher animation success puis retour a la liste des entreprise
       ajaxServices.updateInformations('typeOffres', this.typeOffre.id, typeOffre)
@@ -37,6 +38,7 @@ export default {
     }
     ajaxServices.getInformations('typeOffres', this.$route.params.id)
       .then(data => {
+
         console.log(data)
         this.typeOffre = data
       })

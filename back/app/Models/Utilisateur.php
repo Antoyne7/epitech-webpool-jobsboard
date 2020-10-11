@@ -21,6 +21,8 @@ class Utilisateur extends Authenticatable
         'nom',
         'prenom',
         'email',
+        'cv',
+        'image',
         'password'
     ];
 

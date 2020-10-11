@@ -58,7 +58,8 @@
                        name="localisation" id="localisation" placeholder="Strasbourg">
                 <ul id="localisation-autocomplete" class="position-absolute w-100 bg-white rounded"
                     v-if="localisationFilter.length > 0 && localisation.showList"> <!-- Autocomplete list -->
-                  <li class="localisation-item" v-for="localisation in localisationFilter" v-bind:key="localisation.code"
+                  <li class="localisation-item" v-for="localisation in localisationFilter"
+                      v-bind:key="localisation.code"
                       @click="setLocalisation(localisation)">
                     {{ localisation.nom }} {{ localisation.codesPostaux[0] }}, {{ localisation.departement.nom }}
                   </li>
@@ -162,7 +163,7 @@ export default {
   },
   data() {
     return {
-      markedLoaded: false,
+
       preview: camera,
       editIcone: edit,
       types: [],
@@ -249,6 +250,7 @@ export default {
         '- non ordonnées\n' +
         '1. mais aussi\n' +
         '2. ordonnées'
+
       const self = this
       if (this.markedLoaded) {
         this.updateDescriptions()
@@ -286,6 +288,7 @@ export default {
         localisation.nom.toLowerCase().includes(this.localisation.search.toLowerCase().trim()))
       if (sorted.length > 6) {
         return sorted.slice(0, 6)
+
       } else {
         return sorted
       }
