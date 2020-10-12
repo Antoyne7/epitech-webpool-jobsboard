@@ -8,14 +8,17 @@
       <br v-if="shortDescription && shortDescription.length < 100">
       <img :src="img" alt="Image de l'offre">
       <b-row class="admin-buttons w-100 mt-3 justify-content-end" v-if="adminView">
-        <b-button class="mx-2" :class="Number(pourvuValue) === 1 ? '' : 'btn-success'" @click="toggleOffre">
-          <b-icon-zoom-in></b-icon-zoom-in>
+        <p class="d-flex align-items-center m-0 mr-2" v-if="Number(pourvuValue) === 1">
+          Pourvu !
+        </p>
+        <b-button class="mx-2" :class="Number(pourvuValue) === 0 ? '' : 'btn-success'" @click="toggleOffre">
+          <b-icon-check class="w-100"></b-icon-check>
         </b-button>
-        <b-button class="mx-2">
-          <b-icon-app></b-icon-app>
+        <b-button :to="{ name: 'admin-offre-slug-edit' , params: { 'slug': linkId } }" class="mx-2 my-0 d-flex align-items-center justify-content-center bg-blue-jobs">
+          <b-icon-pencil-square></b-icon-pencil-square>
         </b-button>
-        <b-button class="ml-2">
-          <b-icon-trash></b-icon-trash>
+        <b-button @click="$emit('deleteOffre')" class="ml-2 btn-danger">
+          <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
       </b-row>
       <nuxt-link v-else :to="{name:'slug', params:{slug: linkId}}">
@@ -100,6 +103,17 @@ export default {
     width: fit-content;
     margin: 10px auto;
     align-self: flex-end;
+  }
+
+  .admin-buttons button, .admin-buttons a {
+    width: 42px;
+    svg {
+      width: 70%;
+      height: auto;
+    }
+  }
+  .admin-buttons a {
+    height: 100%;
   }
 }
 </style>

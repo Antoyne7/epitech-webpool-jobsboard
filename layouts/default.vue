@@ -50,4 +50,8 @@ header {
   margin: 0;
 }
 
+.bg-blue-jobs {
+  background: var(--primary-jobs);
+}
+
 </style>

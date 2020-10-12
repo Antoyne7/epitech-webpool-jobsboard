@@ -1,7 +1,7 @@
 <template>
   <b-modal id="delete-modal" title="Modal de suppression" hide-footer hide-header>
     <p class="my-4">
-      <slot></slot> id:   {{ toDelete }}
+      <slot></slot>
     </p>
     <b-button @click="deleteData">del</b-button>
   </b-modal>
@@ -13,8 +13,7 @@ import ajaxServices from "@/services/ajaxServices";
 export default {
   name: "BasicDataDeletion",
   props: [
-    'type',
-    'dataId'
+    'type'
   ],
   data () {
     return {
@@ -27,12 +26,10 @@ export default {
       this.$bvModal.show('delete-modal')
     },
     deleteData() {
-      // ajaxpost
-      ajaxServices.deleteInformations(this.type, this.toDelete)
+      this.$axios.$delete('/back/api/' + this.type + '/' + this.toDelete)
         .then(() => {
           this.$bvModal.hide('delete-modal')
-          this.$nuxt.$emit('deletion')
-
+          this.$emit('deletion')
           console.log('jai emit')
         })
         .catch(e => console.log(e))
@@ -42,5 +39,8 @@ export default {
 </script>
 
 <style scoped>
+  p {
+    font-size: 1.6rem;
+  }
 
 </style>

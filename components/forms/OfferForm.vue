@@ -1,7 +1,8 @@
 <template>
   <div>
-    <ModalSuccess :is-centered="true" route="/admin/offre/add" message="L'entreprise à bien été créer" id="modal-succ-entreprise"/>
-    <ModalSuccess :is-centered="true" route="/admin" message="L'offre à bien été créer" id="modal-succ-offre"/>
+    <ModalSuccess :is-centered="true" route="/admin/offre/add" message="L'entreprise à bien été créer"
+                  id="modal-succ-entreprise"/>
+    <ModalSuccess :is-centered="true" route="/admin" :message="msgOffre" id="modal-succ-offre"/>
     <b-modal id="modal-entreprise" title="Nouvelle entreprise" hide-footer hide-header centered>
       <label class="d-block" for="nom-entreprise">Ajoutez une nouvelle entreprise</label>
       <input v-model="entreprise.add" type="text" name="nom-entreprise" id="nom-entreprise"
@@ -10,8 +11,12 @@
       <button class="btn btn-danger mt-4" @click="hideEntrepriseModal">Annuler</button>
     </b-modal>
     <b-container>
-      <b-row>
-        <div class="mx-auto rounded w-100 mt-3 mb-4 p-4">
+      <b-row class="mt-3">
+        <b-col v-if="offre.pourvu" id="pourvu-text" cols="12">
+          <b-icon-check></b-icon-check>
+          Cette offre est pourvu.
+        </b-col>
+        <div class="mx-auto rounded w-100 mb-4 p-4">
           <form autocomplete="off" @submit="preSubmit($event, offre)" class="d-flex flex-wrap">
             <label for="nom" class="d-none">Intitulé de l'offre</label>
             <div class="position-relative w-100 titre-container">
@@ -28,7 +33,9 @@
                        @focus="entreprise.showList = true"
                        placeholder="entreprise">
                 <div class="px-2 col-2">
-                  <button type="button" v-b-modal.modal-entreprise class="bg-jobs h-100 rounded-lg w-100 btn btn-primary">+</button>
+                  <button type="button" v-b-modal.modal-entreprise
+                          class="bg-jobs h-100 rounded-lg w-100 btn btn-primary">+
+                  </button>
                 </div>
                 <ul id="entreprise-autocomplete" class="position-absolute w-100 bg-white rounded"
                     v-if="entrepriseFilter.length > 0 && entreprise.showList"> <!-- Autocomplete list -->
@@ -37,7 +44,6 @@
                     {{ entreprise.nom }}
                   </li>
                 </ul>
-                <p>Entreprise séléctionné: {{ offre.entreprise.nom }}</p>
               </div>
 
               <!-- Tags -->
@@ -66,27 +72,19 @@
                     {{ localisation.nom }} {{ localisation.codesPostaux[0] }}, {{ localisation.departement.nom }}
                   </li>
                 </ul>
-                <p>Localisation:
-                  <span v-if="localisation.selected">{{
-                      localisation.selected.nom
-                    }} {{ localisation.selected.codesPostaux[0] }}, {{ localisation.selected.departement.nom }}</span>
-                  <span v-else>Toute la France</span>
-                </p>
               </div>
             </div>
 
             <div class="position-relative d-flex align-items-center justify-content-center col-md-6 px-0"
                  id="file-container">
               <input type="file" id="image" class="h-100 w-100 position-absolute" @change="updatePreviewImg($event)"/>
-              <img class="mx-auto d-block mh-100 mw-100" :src="preview" alt="Prévisualisation de l'image">
+              <img class="mx-auto d-block mh-100 mw-100" :src="getImage(preview)" alt="Prévisualisation de l'image">
             </div>
 
             <div class="col-md-6 px-0">
               <label class="d-block mt-4">Type de contrat</label>
-              <CheckboxButton class="d-inline-block" value="alternance" label="alternance"/>
-              <CheckboxButton class="d-inline-block" value="cdi" label="CDI"/>
-              <CheckboxButton class="d-inline-block" value="cdd" label="CDD"/>
-              <CheckboxButton class="d-inline-block" value="stage" label="stage"/>
+              <CheckboxButton v-for="type in typeOffres" v-bind:key="type.id" class="d-inline-block" :value="type.nom"
+                              :label="type.nom"/>
             </div>
 
             <div class="col-md-6 px-0 my-4">
@@ -105,12 +103,11 @@
               <div class="col-md-6 px-0">
                 <textarea class="d-block w-100"
                           rows="12"
-                          v-model="description"
+                          v-model="offre.description"
                           name="description"
-                          id="description"
-                          @keyup="updateDescriptions"/>
+                          id="description"/>
               </div>
-              <div class="col-md-6 d-none d-md-block" v-html="offre.description"></div>
+              <div class="col-md-6 d-none d-md-block" v-html="compiledDescription"></div>
             </div>
 
             <div class="d-flex col-12 mt-4">
@@ -121,7 +118,6 @@
       </b-row>
     </b-container>
   </div>
-
 </template>
 
 <script>
@@ -131,19 +127,10 @@ import camera from '~/static/icons/camera.svg'
 import edit from '~/static/icons/edit.svg'
 import AjaxServices from '~/services/ajaxServices'
 import modalSuccess from "@/components/modalSuccess";
+import param from "@/param/param";
 
 export default {
   name: "OfferForm",
-  head() {
-    return {
-      script: [
-        {
-          src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
-          callback: () => this.markedLoaded = true
-        }
-      ]
-    }
-  },
   components: {
     Tag,
     CheckboxButton,
@@ -167,7 +154,9 @@ export default {
   },
   data() {
     return {
-
+      cheminImage: param.cheminPhoto,
+      msgOffre: 'L\'offre à bien été créer',
+      typeOffres: [],
       preview: camera,
       editIcone: edit,
       types: [],
@@ -176,13 +165,11 @@ export default {
       localisation: {
         search: '',
         list: [],
-        selected: null,
         showList: false
       },
       entreprise: {
         search: '',
         list: [],
-        selected: null,
         showList: false,
         add: ''
       },
@@ -201,7 +188,8 @@ export default {
           codeDepartement: null,
           codeVille: null,
           ville: ''
-        }
+        },
+        pourvu: false
       }
     }
   },
@@ -214,11 +202,7 @@ export default {
       this.$bvModal.show('modal-succ-offre')
       this.onSubmit(offre)
     },
-    updateDescriptions() {
-      this.offre.description = this.compiledDescription
-    },
     updateTags() {
-      console.log('update tags')
       this.offre.tags = this.compiledTags
     },
     updatePreviewImg(event) {
@@ -256,35 +240,35 @@ export default {
         '- non ordonnées\n' +
         '1. mais aussi\n' +
         '2. ordonnées'
-
-      const self = this
-      if (this.markedLoaded) {
-        this.updateDescriptions()
-      } else {
-        setTimeout(function () {
-          self.updateDescriptions()
-        }, 1000)
-      }
     },
     setLocalisation(localisation) {
-      this.localisation.search = ''
-      this.localisation.selected = localisation
+      this.localisation.search = `${localisation.nom} ${localisation.codesPostaux[0]}, ${localisation.departement.nom}`
       this.offre.localisation.codeDepartement = localisation.departement.code
       this.offre.localisation.codeVille = localisation.code
       this.offre.localisation.ville = localisation.nom
       this.localisation.showList = false
     },
     setEntreprise(entreprise) {
-      this.entreprise.search = ''
-      this.entreprise.selected = entreprise
+      this.entreprise.search = entreprise.nom
       this.offre.entreprise.nom = entreprise.nom
       this.offre.entreprise.id = entreprise.id
       this.entreprise.showList = false
+    },
+    getImage(photo) {
+      if (photo.includes('://')){
+        return photo
+      } else {
+        return this.cheminImage + photo
+      }
     }
   },
   computed: {
     compiledDescription() {
-      return marked(this.description)
+      if (typeof marked !== 'undefined') {
+        return marked(this.offre.description)
+      } else {
+        return ''
+      }
     },
     compiledTags() {
       return this.tagsText.split(',').map(tag => tag.trim().toLowerCase()).filter(tag => tag.length > 0)
@@ -312,6 +296,40 @@ export default {
   async mounted() {
     this.initDescription()
     this.entreprise.list = await AjaxServices.getListe('entreprises')
+    // Pour init les types d'offres après que le store sois rempli
+    const typeOffres = await AjaxServices.getListe('typeOffres')
+
+    if (this.$route.params.slug) {
+      this.msgOffre = 'L\'offre à bien été modifiée'
+      AjaxServices.getInformations('listeOffres', this.$route.params.slug)
+        .then((data) => {
+          this.offre.nom = data.nom
+          this.offre.description = data.description
+          this.description = data.description
+          this.offre.shortDescription = data.short_description
+          this.preview = data.image
+          let tags = []
+          data.tags.forEach(tag => tags.push(tag.nom))
+          this.tagsText = tags.join()
+          this.updateTags()
+          this.$store.commit('offretype/setTypes', data.typeoffres)
+          this.$axios.$get(`https://geo.api.gouv.fr/communes/${data.code_ville}?fields=nom,code,codesPostaux,codeDepartement,departement,codeRegion&format=json&geometry=centre`)
+            .then(loc => {
+              if (loc.code === data.code_ville + '') {
+                this.setLocalisation(loc)
+              }
+            })
+          this.offre.entreprise = data.entreprise
+          this.offre.pourvu = data.pourvu
+          this.typeOffres = typeOffres
+        })
+        .catch(e => console.log(e))
+    } else {
+      this.typeOffres = typeOffres
+    }
+  },
+  beforeDestroy() {
+    this.$store.commit('offretype/removeTypes')
   }
 }
 </script>
@@ -371,6 +389,13 @@ textarea {
 
 ::v-deep p, ::v-deep li {
   font-size: 1.6rem;
+}
+
+#pourvu-text {
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--green);
+  margin-top: 20px;
 }
 
 .btn.bg-jobs {

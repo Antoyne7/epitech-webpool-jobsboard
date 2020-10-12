@@ -17,10 +17,15 @@ export default {
         href: 'https://pro.fontawesome.com/releases/v5.10.0/css/fontawesome.css'
       },
       {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'}
+    ],
+    script: [
+      {
+        src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js'
+      }
     ]
   },
-  //Refresh token pour l'authentification
   router: [],
+
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
 

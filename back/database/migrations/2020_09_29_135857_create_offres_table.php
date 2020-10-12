@@ -20,8 +20,8 @@ class CreateOffresTable extends Migration
             $table->integer('code_ville')->nullable();
             $table->string('ville')->nullable();
             $table->integer('code_departement')->nullable();
-            $table->text('short_description')->nullable();
-            $table->longText('description')->nullable();
+            $table->string('short_description')->nullable();
+            $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->boolean('pourvu')->default(false);
             $table->timestamps();

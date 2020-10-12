@@ -95,7 +95,50 @@ class OffreController extends Controller
      */
     public function update(Request $request, Offre $offre)
     {
-        return response("pas fait encore");
+        // https://laravel.com/docs/8.x/eloquent-relationships#inserting-and-updating-related-models
+
+
+        $offre->nom = $request['nom'];
+        $offre->description = $request['description'];
+        $offre->short_description = $request['shortDescription'];
+        if ($request['codeVille']) {
+            $offre->code_ville = $request['codeVille'];
+            $offre->ville = $request['ville'];
+            $offre->code_departement = $request['codeDepartement'];
+        }
+        if ($request->file('image')) {
+            $offre->image = $request->file('image')->store('offreimgs');
+        }
+
+        $entreprise = Entreprise::find($request->entreprise);
+        $offre->entreprise()->associate($entreprise);
+        if ($offre->save()) {
+            foreach (json_decode($request['tags']) as $tagNom) {
+                $tagsTemp = Tag::where('nom', $tagNom)->get();
+                if (sizeof($tagsTemp) > 0) {
+                    $tag = $tagsTemp[0];
+                } else {
+                    $tag = Tag::create([
+                        'nom' => $tagNom
+                    ]);
+                }
+                $offre->tags()->save($tag);
+            }
+            foreach (json_decode($request['offretype']) as $typeOffreNom) {
+                $typeOffreTemp = TypeOffre::where('nom', $typeOffreNom)->get();
+                if (sizeof($typeOffreTemp) > 0) {
+                    $typeOffre = $typeOffreTemp[0];
+                } else {
+                    $typeOffre = TypeOffre::create([
+                        'nom' => $typeOffreNom
+                    ]);
+                }
+                $offre->typeOffres()->save($typeOffre);
+            }
+            return response(1);
+        } else {
+            return response(0);
+        }
     }
 
     /**
