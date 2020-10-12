@@ -18,17 +18,37 @@
           VIEW
         </b-button>
       </b-row>
-      <nuxt-link v-else :to="{name:'slug', params:{slug: linkId}}">
-        <button>En savoir plus</button>
+      <nuxt-link :title="title_card" v-else :to="{name:'slug', params:{slug: linkId}}">
+        <button :disabled="isDisable">En savoir plus</button>
       </nuxt-link>
     </div>
   </b-col>
 </template>
 
 <script>
+
 export default {
   name: "JobCard",
+  data() {
+    return {
+      title_card: null,
+      isDisable: false,
+      candidatures: null
+    }
+  },
   props: ['title', 'shortDescription', 'img', 'linkId', 'localisation', 'adminView'],
+  created() {
+    this.title_card = this.title
+    if (!this.adminView && this.$auth.user.candidatures) {
+      this.candidatures = this.$auth.user.candidatures;
+      this.candidatures.forEach((el) => {
+        if (el.offre_id === this.linkId) {
+          this.title_card = "Vous avez déjà postulé à cette offre !";
+          this.isDisable = true;
+        }
+      })
+    }
+  },
   methods: {
     descriptionFunc(desc) {
       if (desc.length > 100) {
@@ -68,6 +88,10 @@ export default {
     font-weight: 700;
     font-size: 18px;
     text-transform: uppercase;
+  }
+
+  button[disabled] {
+    background: grey !important;
   }
 
   img {

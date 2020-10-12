@@ -49,11 +49,10 @@
       <b-col lg="6" md="12" cols="12">
         <h2>Mes candidatures</h2>
 
-        <div class="candidature">
-          <h4>Nom de l'offre<span>Entreprise/localisation</span></h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua.</p>
-          <nuxt-link to="/">Voir l'offre</nuxt-link>
+        <div v-if="candidatures.length > 0" v-for="candidature in candidatures" class="candidature">
+          <h4>{{ candidature.offre.nom }}<span>{{ candidature.offre.entreprise.nom }}/localisation</span></h4>
+          <p>{{ candidature.offre.short_description }}</p>
+          <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
         </div>
 
       </b-col>
@@ -71,7 +70,7 @@ import ModalSuccess from "@/components/modalSuccess";
 
 export default {
   name: "profil",
-
+  middleware: 'auth',
   components: {
     ModalSuccess,
     Alert,
@@ -79,6 +78,7 @@ export default {
   },
   data() {
     return {
+      candidatures: {},
       preview: camera,
       imgStyle: 'not-updated',
       action: "Chargez",
@@ -105,6 +105,9 @@ export default {
     }
   },
   mounted() {
+    if (this.$auth.user.candidatures) {
+      this.candidatures = this.$auth.user.candidatures;
+    }
     this.$axios.$get('/back/api/utilisateurs/' + this.$auth.user.id)
       .then((promise) => {
         this.userInfo = promise;
@@ -119,6 +122,7 @@ export default {
       }).catch((err) => {
       console.dir(err)
     })
+
   },
 
   methods: {

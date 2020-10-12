@@ -16,7 +16,8 @@
     "bootstrap-vue": "^2.16.0",
     "core-js": "^3.6.5",
     "js-cookie": "^2.2.1",
-    "nuxt": "^2.14.5"
+    "nuxt": "^2.14.5",
+    "vue-content-loader": "^0.2.3"
   },
   "devDependencies": {
     "coffee-loader": "^1.0.0",

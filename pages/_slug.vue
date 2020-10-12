@@ -74,7 +74,7 @@
         </div>
       </form>
     </b-modal>
-    <modal-success :route="'/'+ this.id" id="success" message="Votre candidature est envoyée !" :is-centered="true"/>
+    <modal-success route="/" id="success" message="Votre candidature est envoyée !" :is-centered="true"/>
   </b-container>
 </template>
 
@@ -97,7 +97,7 @@ export default {
       profilCv: false,
       show: false,
       cvUpload: null,
-      iscandidated:false,
+      iscandidated: false,
       alert: {
         typeAlert: null,
         msgAlert: null,
@@ -146,6 +146,7 @@ export default {
           this.isCandidated = true;
           this.$bvModal.hide('modal_offre');
           this.$bvModal.show('success');
+          this.$auth.fetchUser();
         }
       }).catch((err) => {
         console.dir(err)

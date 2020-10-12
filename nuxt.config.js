@@ -46,17 +46,33 @@ export default {
   ],
 
   auth: {
+    cookie: {
+      options: {
+        secure: false
+      }
+    },
     redirect: {
+      home: '/',
       login: '/login',
       logout: '/login',
-      callback: '/callback',
-      home: '/'
+      callback: false,
     },
     strategies: {
       local: {
         endpoints: {
           login: {url: '/back/api/login', method: 'post', propertyName: false},
-          user: {url: '/back/api/me', method: 'get', propertyName: false},
+          user: {
+            url: '/back/api/me',
+            method: 'get',
+            propertyName: false,
+            // withCredentials: true,
+            // headers: {
+            //   'Referer': 'http://localhost:3000', // <- here
+            //   'Accept': 'application/json',
+            //   'X-Requested-With': 'XMLHttpRequest',
+            //   'Content-Type': 'application/json'
+            // }
+          },
           logout: {url: '/back/api/logout', method: 'post', propertyName: false},
         },
         // tokenRequired: false,

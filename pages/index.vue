@@ -3,6 +3,8 @@
     <SearchBar/>
     <b-container class="container-cards">
       <b-row>
+        <ContentLoader v-for="skeleton in 6" v-show="!charged" height="500"
+                       class="skeleton col-lg-4 col-md-6 col-12 w-100 skeleton"/>
         <JobCard v-for="offre in showOffres" :title="offre.nom"
                  :short-description="offre.short_description"
                  :linkId="offre.id"
@@ -19,28 +21,31 @@
 import SearchBar from "~/components/SearchBar";
 import JobCard from "~/components/JobCard";
 import AjaxServices from "~/services/ajaxServices"
+import {ContentLoader} from 'vue-content-loader';
 
 export default {
   name: 'Index',
-  components: {JobCard, SearchBar},
+  components: {JobCard, SearchBar, ContentLoader},
   middleware: 'auth',
   data() {
     return {
       listeOffres: [],
       listeToShow: [],
       nbrShowed: 1,
+      charged: false,
     }
   },
   created() {
-    console.log(this.$auth.user)
+    this.$auth.fetchUser();
     AjaxServices.getListe('listeOffres').then(promise => {
       console.log(promise)
       this.listeOffres = promise;
+      this.charged = true;
     })
   },
   methods: {
     //Honnêtement ce code est assez immonde donc bon
-    //TODO: Changer cette fonctionnatée immonde
+    //TODO: Changer cette fonctionalitée immonde
     showMore() {
       if ((this.nbrShowed * 6) < this.listeOffres.length) {
         this.nbrShowed++;
@@ -48,7 +53,7 @@ export default {
       }
     },
     goto() {
-      let number = (6 * (this.nbrShowed - 1) + 1);
+      let number = (6 * (this.nbrShowed - 1) + 7);
       if (document.querySelector(".container-cards .row div:nth-child(" + number + ")")) {
         document.querySelector(".container-cards .row div:nth-child(" + number + ")").scrollIntoView()
       } else {
@@ -73,6 +78,10 @@ export default {
 <style lang="scss">
 html {
   scroll-behavior: smooth;
+}
+
+.skeleton {
+  margin: 20px 0;
 }
 
 .container-cards {

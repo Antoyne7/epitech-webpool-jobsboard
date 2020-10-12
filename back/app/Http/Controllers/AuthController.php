@@ -55,7 +55,8 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        return $request->user();
+        $user = $request->user();
+        return $user->load('candidatures.offre');
     }
 
 

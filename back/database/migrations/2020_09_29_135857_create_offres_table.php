@@ -18,7 +18,7 @@ class CreateOffresTable extends Migration
             $table->id();
             $table->string('nom');
             $table->integer('code_ville');
-            $table->string('ville');
+            $table->string('ville')->nullable();
             $table->integer('code_departement');
             $table->text('short_description');
             $table->longText('description');
