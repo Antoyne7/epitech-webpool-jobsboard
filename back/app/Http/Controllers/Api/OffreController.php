@@ -122,7 +122,10 @@ class OffreController extends Controller
                         'nom' => $tagNom
                     ]);
                 }
-                $offre->tags()->save($tag);
+                // if tag exist deja dans l'offre
+                if (!$offre->tags()->find($tag->id)) {
+                    $offre->tags()->save($tag);
+                }
             }
             foreach (json_decode($request['offretype']) as $typeOffreNom) {
                 $typeOffreTemp = TypeOffre::where('nom', $typeOffreNom)->get();
@@ -133,7 +136,9 @@ class OffreController extends Controller
                         'nom' => $typeOffreNom
                     ]);
                 }
-                $offre->typeOffres()->save($typeOffre);
+                if (!$offre->typeOffres()->find($typeOffre->id)) {
+                    $offre->typeOffres()->save($typeOffre);
+                }
             }
             return response(1);
         } else {

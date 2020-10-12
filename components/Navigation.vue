@@ -5,6 +5,12 @@
         <div class="navbar-custom">
           <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
+            <nuxt-link v-if="isAdminRoute" class="mr-4 text-dark font-weight-bolder" to="/">
+              Front
+            </nuxt-link>
+            <nuxt-link v-else class="mr-4 text-dark font-weight-bolder" to="/admin">
+              Administration
+            </nuxt-link>
             <nuxt-link to="/profil">
               <img src="/icons/ic_person_48px.svg" alt="Icône de personne">
             </nuxt-link>
@@ -28,6 +34,12 @@ export default {
   data() {
     return {
       isShowed: false,
+      isAdminRoute: null
+    }
+  },
+  watch: {
+    $route () {
+      this.updateIsAdminRoute()
     }
   },
   methods: {
@@ -42,7 +54,13 @@ export default {
         }).catch((err)=>{
           console.dir(err)
       })
+    },
+    updateIsAdminRoute() {
+      this.isAdminRoute = this.$route.name.includes('admin')
     }
+  },
+  mounted() {
+    this.updateIsAdminRoute()
   }
 
 }
@@ -79,6 +97,7 @@ nav {
 
     a {
       cursor: pointer;
+      font-size: 1.6rem;
     }
 
     button {
