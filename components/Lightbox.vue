@@ -2,7 +2,7 @@
   <div class="lightbox">
     <div @click="close()" :close="close" class="lightbox-background">
     </div>
-    <div class="img">
+    <div @click="close()" :close="close" class="img">
       <img :src="cv" alt="">
     </div>
   </div>
@@ -47,12 +47,24 @@ export default {
   }
 
   .img {
-    height: auto;
+    //height: auto;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1001;
+    height: 90%;
+    @media (max-width: 540px) {
+      display: flex;
+    }
+
+    img {
+      height: 100%;
+      @media(max-width: 540px) {
+        height: 80%;
+        margin: auto;
+      }
+    }
   }
 
 }

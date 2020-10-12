@@ -2,27 +2,44 @@
   <b-col lg="4" md="6" cols="12">
     <div class="card-container">
       <h3>{{ title }}</h3>
-      <br v-if="title.length < 22">
+      <br v-if="title.length < 22" />
       <!--      <p>{{localisation}}</p>-->
       <p>{{ descriptionFunc(shortDescription) }}</p>
-      <br v-if="shortDescription && shortDescription.length < 100">
-      <img :src="img" alt="Image de l'offre">
-      <b-row class="admin-buttons w-100 mt-3 justify-content-end" v-if="adminView">
-        <p class="d-flex align-items-center m-0 mr-2" v-if="Number(pourvuValue) === 1">
+      <br v-if="shortDescription && shortDescription.length < 100" />
+      <img :src="img" alt="Image de l'offre" />
+      <b-row
+        class="admin-buttons w-100 mt-3 justify-content-end"
+        v-if="adminView"
+      >
+        <p
+          class="d-flex align-items-center m-0 mr-2"
+          v-if="Number(pourvuValue) === 1"
+        >
           Pourvu !
         </p>
-        <b-button class="mx-2" :class="Number(pourvuValue) === 0 ? '' : 'btn-success'" @click="toggleOffre">
+        <b-button
+          class="mx-2"
+          :class="Number(pourvuValue) === 0 ? '' : 'btn-success'"
+          @click="toggleOffre"
+        >
           <b-icon-check class="w-100"></b-icon-check>
         </b-button>
-        <b-button :to="{ name: 'admin-offre-slug-edit' , params: { 'slug': linkId } }" class="mx-2 my-0 d-flex align-items-center justify-content-center bg-blue-jobs">
+        <b-button
+          :to="{ name: 'admin-offre-slug-edit', params: { slug: linkId } }"
+          class="mx-2 my-0 d-flex align-items-center justify-content-center bg-blue-jobs"
+        >
           <b-icon-pencil-square></b-icon-pencil-square>
         </b-button>
-        <b-button @click="$emit('deleteOffre')" class="ml-2 btn-danger">
+        <b-button @click="$emit('delete-offre')" class="ml-2 btn-danger">
           <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
       </b-row>
-      <nuxt-link v-else :to="{name:'slug', params:{slug: linkId}}">
-        <button>En savoir plus</button>
+      <nuxt-link
+        :title="title_card"
+        v-else
+        :to="{ name: 'slug', params: { slug: linkId } }"
+      >
+        <button :disabled="isDisable">En savoir plus</button>
       </nuxt-link>
     </div>
   </b-col>
@@ -31,26 +48,50 @@
 <script>
 export default {
   name: "JobCard",
-  props: ['title', 'shortDescription', 'img', 'linkId', 'localisation', 'adminView', 'pourvu'],
-  data () {
+  props: [
+    "title",
+    "shortDescription",
+    "img",
+    "linkId",
+    "localisation",
+    "adminView",
+    "pourvu"
+  ],
+  data() {
     return {
-      pourvuValue: this.pourvu
+      pourvuValue: this.pourvu,
+      title_card: null,
+      isDisable: false,
+      candidatures: null
+    };
+  },
+  created() {
+    this.title_card = this.title;
+    if (!this.adminView && this.$auth.user.candidatures) {
+      this.candidatures = this.$auth.user.candidatures;
+      this.candidatures.forEach(el => {
+        if (el.offre_id === this.linkId) {
+          this.title_card = "Vous avez déjà postulé à cette offre !";
+          this.isDisable = true;
+        }
+      });
     }
   },
   methods: {
     descriptionFunc(desc) {
       if (desc && desc.length > 100) {
-        return desc.slice(0, 100) + "..."
+        return desc.slice(0, 100) + "...";
       } else {
-        return desc
+        return desc;
       }
     },
     toggleOffre() {
-      this.$axios.$put(`/back/api/offres/${this.linkId}/toggle`)
-        .then(() => this.pourvuValue = !this.pourvuValue)
+      this.$axios
+        .$put(`/back/api/offres/${this.linkId}/toggle`)
+        .then(() => (this.pourvuValue = !this.pourvuValue));
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -62,10 +103,10 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  @media(max-width: 1100px) {
+  @media (max-width: 1100px) {
     height: 430px;
   }
-  @media(max-width: 992px) {
+  @media (max-width: 992px) {
     height: 540px;
   }
   margin: 15px 0;
@@ -80,6 +121,10 @@ export default {
     font-weight: 700;
     font-size: 18px;
     text-transform: uppercase;
+  }
+
+  button[disabled] {
+    background: grey !important;
   }
 
   img {
@@ -105,7 +150,8 @@ export default {
     align-self: flex-end;
   }
 
-  .admin-buttons button, .admin-buttons a {
+  .admin-buttons button,
+  .admin-buttons a {
     width: 42px;
     svg {
       width: 70%;

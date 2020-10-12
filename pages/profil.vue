@@ -49,11 +49,10 @@
       <b-col lg="6" md="12" cols="12">
         <h2>Mes candidatures</h2>
 
-        <div class="candidature">
-          <h4>Nom de l'offre<span>Entreprise/localisation</span></h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua.</p>
-          <nuxt-link to="/">Voir l'offre</nuxt-link>
+        <div v-if="candidatures.length > 0" v-for="candidature in candidatures" class="candidature">
+          <h4>{{ candidature.offre.nom }}<span>{{ candidature.offre.entreprise.nom }}/localisation</span></h4>
+          <p>{{ candidature.offre.short_description }}</p>
+          <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
         </div>
 
       </b-col>
@@ -71,7 +70,7 @@ import ModalSuccess from "@/components/modalSuccess";
 
 export default {
   name: "profil",
-
+  middleware: 'auth',
   components: {
     ModalSuccess,
     Alert,
@@ -79,6 +78,7 @@ export default {
   },
   data() {
     return {
+      candidatures: {},
       preview: camera,
       imgStyle: 'not-updated',
       action: "Chargez",
@@ -105,19 +105,24 @@ export default {
     }
   },
   mounted() {
+    if (this.$auth.user.candidatures) {
+      this.candidatures = this.$auth.user.candidatures;
+    }
     this.$axios.$get('/back/api/utilisateurs/' + this.$auth.user.id)
       .then((promise) => {
         this.userInfo = promise;
         if (this.userInfo.image) {
           this.preview = param.cheminPhoto + this.userInfo.image;
-          this.action = "Modifiez"
           this.imgStyle = 'updated'
+        }
+        if (this.userInfo.cv) {
           this.cvPreview = param.cheminPhoto + promise.cv
-          console.log(this.userInfo)
+          this.action = "Modifiez"
         }
       }).catch((err) => {
       console.dir(err)
     })
+
   },
 
   methods: {
@@ -131,7 +136,9 @@ export default {
         params.append('prenom', this.userInfo.prenom)
         params.append('cv', this.userInfo.cv)
         params.append('image', this.userInfo.image)
-        params.append('password', this.userInfo.password)
+        if (this.userInfo.password) {
+          params.append('password', this.userInfo.password)
+        }
         params.append('id', this.userInfo.id)
         //On ajoute cela aux informations afin de simuler une requête "put"
         params.append('_method', 'put')
@@ -156,6 +163,7 @@ export default {
             this.$bvModal.show('success_profil')
             this.userInfo.password = null
             this.passwordConfirm = null
+            this.$auth.fetchUser();
           }
         }).catch((err) => {
           console.dir(err)

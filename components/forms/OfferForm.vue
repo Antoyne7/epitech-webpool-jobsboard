@@ -10,12 +10,30 @@
       <button class="btn bg-jobs mt-4 mr-2" @click="entrepriseSubmit">Enregistrer</button>
       <button class="btn btn-danger mt-4" @click="hideEntrepriseModal">Annuler</button>
     </b-modal>
+    <b-modal id="modal-candidature" v-if="candidatureToShow" title="Candidature" hide-footer hide-header centered>
+      <h3>
+        Candidature de {{ candidature.utilisateur.prenom }} {{ candidature.utilisateur.nom.toUpperCase() }}
+      </h3>
+      <div>
+        CV: aziojea
+        {{ candidatureToShow }}
+      </div>
+      <p>
+        {{ candidatureToShow.text }}
+      </p>
+    </b-modal>
     <b-container>
       <b-row class="mt-3">
-        <b-col v-if="offre.pourvu" id="pourvu-text" cols="12">
+        <b-col v-if="offre && offre.pourvu" id="pourvu-text" cols="12">
           <b-icon-check></b-icon-check>
           Cette offre est pourvu.
         </b-col>
+        <b-row v-else-if="offre && !offre.pourvu && offre.candidatures.length > 0" id="candidatures">
+          <b-button v-for="candidature in offre.candidatures" @click="showCandidature(candidature)" class="candidature">
+            <h4>{{ candidature.utilisateur.prenom }} {{ candidature.utilisateur.nom.toUpperCase() }}</h4>
+          </b-button>
+        </b-row>
+
         <div class="mx-auto rounded w-100 mb-4 p-4">
           <form autocomplete="off" @submit="preSubmit($event, offre)" class="d-flex flex-wrap">
             <label for="nom" class="d-none">Intitulé de l'offre</label>
@@ -162,6 +180,7 @@ export default {
       types: [],
       description: '',
       tagsText: '',
+      candidatureToShow: null,
       localisation: {
         search: '',
         list: [],
@@ -189,7 +208,8 @@ export default {
           codeVille: null,
           ville: ''
         },
-        pourvu: false
+        pourvu: false,
+        candidatures: []
       }
     }
   },
@@ -255,11 +275,15 @@ export default {
       this.entreprise.showList = false
     },
     getImage(photo) {
-      if (photo.includes('://')){
+      if (photo.includes('://')) {
         return photo
       } else {
         return this.cheminImage + photo
       }
+    },
+    showCandidature(candidature) {
+      this.candidatureToShow = candidature
+      this.$bvModal.show('modal-candidature')
     }
   },
   computed: {
@@ -322,7 +346,7 @@ export default {
           this.setEntreprise(data.entreprise)
           this.offre.pourvu = data.pourvu
           this.typeOffres = typeOffres
-          console.log(data)
+          this.offre.candidatures = data.candidatures
         })
         .catch(e => console.log(e))
     } else {
@@ -453,6 +477,49 @@ div#file-container {
     &:hover {
       background-color: #EEEEEE;
     }
+  }
+}
+
+//  Candidature
+.candidature {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 15px;
+  margin: 10px 0;
+
+  h4 {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-weight: 500;
+    font-size: 2rem;
+
+    span {
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+  }
+
+  p {
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: 1.6rem;
+  }
+
+  a {
+    margin: 15px auto 10px;
+    display: flex;
+    width: 200px;
+    height: 40px;
+    background: var(--primary-jobs);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 5px;
+
   }
 }
 

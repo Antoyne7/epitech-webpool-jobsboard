@@ -9,6 +9,10 @@ class Candidature extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'text', 'utilisateur_id', 'cv', 'offre_id','useprofilecv'
+    ];
+
     public function offre()
     {
         return $this->belongsTo(Offre::class);
