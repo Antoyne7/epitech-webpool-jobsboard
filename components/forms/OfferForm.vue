@@ -319,9 +319,10 @@ export default {
                 this.setLocalisation(loc)
               }
             })
-          this.offre.entreprise = data.entreprise
+          this.setEntreprise(data.entreprise)
           this.offre.pourvu = data.pourvu
           this.typeOffres = typeOffres
+          console.log(data)
         })
         .catch(e => console.log(e))
     } else {

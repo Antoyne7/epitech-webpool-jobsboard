@@ -5,12 +5,14 @@
         <div class="navbar-custom">
           <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
-            <nuxt-link v-if="isAdminRoute" class="mr-4 text-dark font-weight-bolder" to="/">
-              Front
-            </nuxt-link>
-            <nuxt-link v-else class="mr-4 text-dark font-weight-bolder" to="/admin">
-              Administration
-            </nuxt-link>
+            <span v-if="$store.state.auth.user.role === 2">
+              <nuxt-link v-if="isAdminRoute" class="mr-4 text-dark font-weight-bolder" to="/">
+                Front
+              </nuxt-link>
+              <nuxt-link v-else class="mr-4 text-dark font-weight-bolder" to="/admin">
+                Administration
+              </nuxt-link>
+            </span>
             <nuxt-link to="/profil">
               <img src="/icons/ic_person_48px.svg" alt="Icône de personne">
             </nuxt-link>
