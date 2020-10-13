@@ -17,8 +17,8 @@
           <div class="vr"></div>
         </b-col>
         <b-col md="3" lg="3" cols="12">
-          <select name="contract" id="contract">
-            <option value="">Type de contrat</option>
+          <select @change="type($event)"  name="contract" id="contract">
+            <option style="" v-for="type in typeoffres" :value="type.id" :type="type">{{ type.nom }}</option>
           </select>
           <img class="icone rotate" src="/icons/ic_chevron_right_48px.svg" alt="Icone selecteur">
         </b-col>
@@ -32,12 +32,21 @@
 <script>
 export default {
   name: 'SearchBar',
-  data(){
-    return{
+  data() {
+    return {
       query: null,
+      typeoffres: []
     }
   },
+  created() {
+    this.$axios.$get('/back/api/typeoffres').then((promise) => {
+      this.typeoffres = promise
+    })
+  },
   methods: {
+    type(event){
+      this.$emit('type', event.target.value);
+    },
     search(event) {
       this.$emit('query', event.target.value);
     }

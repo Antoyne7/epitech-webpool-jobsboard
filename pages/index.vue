@@ -1,8 +1,8 @@
 <template>
   <div>
-    <SearchBar @query="searchQuery($event)"/>
+    <SearchBar @type="changeType($event)" @query="searchQuery($event)"/>
     <b-container class="container-cards">
-      <b-row>
+      <b-row v-if="showOffres.length > 0">
         <ContentLoader v-for="skeleton in 6" v-show="!charged" height="500"
                        class="skeleton col-lg-4 col-md-6 col-12 w-100 skeleton"/>
         <JobCard v-for="offre in showOffres" :title="offre.nom"
@@ -11,7 +11,11 @@
                  :img="offre.image"
                  :localisation="offre.localisation"
         />
+
       </b-row>
+      <div class="msg" v-else>
+        Il n'y a aucune offre disponibles pour vos critères.
+      </div>
       <button v-show="showBtn" @click="showMore()" class="btn-show">Voir plus</button>
     </b-container>
   </div>
@@ -48,6 +52,9 @@ export default {
     })
   },
   methods: {
+    changeType(type) {
+      console.log(type)
+    },
     searchQuery(queryString) {
       this.listeOffres = [];
       this.nbrShowed = 1;
@@ -57,23 +64,14 @@ export default {
           this.listeOffres.push(offre);
         }
       })
-
-
       let number = 0
       if (this.nbrShowed * this.nbr === 0) {
         number = 6
       } else {
         number = this.nbrShowed * this.nbr === 0;
       }
-      console.log('Offres', this.listeOffres.length)
-      console.log('Nbr', this.nbr, 'NbrShowed', this.nbrShowed)
-      console.log('Number', number)
 
-      if (this.listeOffres.length <= number) {
-        this.showBtn = false
-      } else {
-        this.showBtn = true
-      }
+      this.showBtn = this.listeOffres.length > number;
     },
     //Honnêtement ce code est assez immonde donc bon
     //TODO: Changer cette fonctionalitée immonde
@@ -135,6 +133,11 @@ html {
   text-transform: uppercase;
   margin: 30px auto 10px;
   display: block;
+}
+
+.msg {
+  font-size: 2rem;
+  text-align: center;
 }
 </style>
 
