@@ -147,7 +147,7 @@
                   <button
                     type="button"
                     v-b-modal.modal-entreprise
-                    class="bg-jobs h-100 rounded-lg w-100 btn btn-primary"
+                    class="bg-jobs font-weight-bold h-100 rounded-lg w-100 btn btn-primary"
                   >
                     +
                   </button>
@@ -180,7 +180,7 @@
               </div>
 
               <!-- Localisation -->
-              <div class="d-flex flex-wrap mt-5 position-relative">
+              <div class="d-flex flex-wrap mt-5 mb-4 position-relative">
                 <label for="localisation">Localisation de l'offre</label>
                 <div
                   class="position-relative autocomplete-input w-100"
@@ -237,7 +237,7 @@
               />
             </div>
 
-            <div class="col-md-6 px-0">
+            <div class="col-md-6 px-0 mb-4">
               <label class="d-block mt-4">Type de contrat</label>
               <CheckboxButton
                 v-for="type in typeOffres"
@@ -258,7 +258,14 @@
                 v-model="offre.shortDescription"
                 name="shortDescription"
                 id="shortDescription"
+                placeholder="Entrez une description courte"
+                maxlength="160"
               />
+              <small
+                :class="{ 'text-danger': offre.shortDescription.length > 120 }"
+              >
+                {{ offre.shortDescription.length }}/160
+              </small>
             </div>
 
             <div class="col-12 d-flex px-0 flex-wrap">
@@ -294,7 +301,10 @@
             </div>
 
             <div class="d-flex col-12 mt-4">
-              <button class="bg-jobs btn mx-auto mt-3 px-4 py-3" type="submit">
+              <button
+                class="submit bg-jobs btn mx-auto mt-3 px-4 py-3"
+                type="submit"
+              >
                 Enregistrer
               </button>
             </div>
@@ -485,7 +495,7 @@ export default {
       this.entreprise.showList = false;
     },
     getImage(photo) {
-      if (photo.includes("://")) {
+      if (photo.includes("://") || photo.includes("data:image")) {
         return photo;
       } else {
         return this.cheminImage + photo;
@@ -595,9 +605,11 @@ h2 {
   font-size: 2.4rem;
 }
 
-a {
+a,
+button {
   font-size: 1.6rem;
-  &.contact {
+  &.contact,
+  &.submit {
     padding: 12px;
     display: block;
     text-align: center;
@@ -646,12 +658,8 @@ label {
   font-size: 1.8rem;
 }
 
-button {
-  font-size: 1.6rem;
-}
-
 small {
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin-top: 2px;
   margin-left: 2px;
   display: block;
