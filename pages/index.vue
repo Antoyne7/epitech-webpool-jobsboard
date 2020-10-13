@@ -12,12 +12,8 @@
         />
         <JobCard
           v-for="offre in showOffres"
-          :title="offre.nom"
+          :offreProp="offre"
           v-bind:key="offre.id"
-          :short-description="offre.short_description"
-          :linkId="offre.id"
-          :img="offre.image"
-          :localisation="offre.localisation"
         />
       </b-row>
       <div class="msg" v-else>
@@ -53,12 +49,15 @@ export default {
   },
   created() {
     this.$auth.fetchUser();
-    this.$axios.$get("/back/api/offres").then(promise => {
-      console.log(promise);
-      this.listeOffres = promise;
+    this.$axios.$get("/back/api/offres").then(data => {
+      console.log(data);
+      this.listeOffres = data;
       this.listeOffresCopie = this.listeOffres
       this.charged = true;
     });
+  },
+  mounted() {
+
   },
   methods: {
     changeType(type) {

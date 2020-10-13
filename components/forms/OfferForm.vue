@@ -261,7 +261,9 @@
                 placeholder="Entrez une description courte"
                 maxlength="160"
               />
-              <small :class="{ 'text-danger': offre.shortDescription.length > 120 }">
+              <small
+                :class="{ 'text-danger': offre.shortDescription.length > 120 }"
+              >
                 {{ offre.shortDescription.length }}/160
               </small>
             </div>
@@ -299,7 +301,10 @@
             </div>
 
             <div class="d-flex col-12 mt-4">
-              <button class="submit bg-jobs btn mx-auto mt-3 px-4 py-3" type="submit">
+              <button
+                class="submit bg-jobs btn mx-auto mt-3 px-4 py-3"
+                type="submit"
+              >
                 Enregistrer
               </button>
             </div>
@@ -490,7 +495,7 @@ export default {
       this.entreprise.showList = false;
     },
     getImage(photo) {
-      if (photo.includes("://") || photo.includes("data:image") ) {
+      if (photo.includes("://") || photo.includes("data:image")) {
         return photo;
       } else {
         return this.cheminImage + photo;
@@ -499,6 +504,7 @@ export default {
     showCandidature(candidature) {
       this.candidatureToShow = candidature;
       this.$bvModal.show("modal-candidature");
+      // TODO: Seen candidature
     },
     getDate(dateString) {
       const date = new Date(dateString);
@@ -599,9 +605,11 @@ h2 {
   font-size: 2.4rem;
 }
 
-a, button {
+a,
+button {
   font-size: 1.6rem;
-  &.contact, &.submit {
+  &.contact,
+  &.submit {
     padding: 12px;
     display: block;
     text-align: center;
