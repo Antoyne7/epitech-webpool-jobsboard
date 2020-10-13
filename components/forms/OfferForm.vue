@@ -494,6 +494,7 @@ export default {
     showCandidature(candidature) {
       this.candidatureToShow = candidature;
       this.$bvModal.show("modal-candidature");
+      this.$axios.$get("/back/api/candidatures/" + candidatureazhdiygzaeuihdhuiozdhzaiudhaz.id + "/seen");
     },
     getDate(dateString) {
       const date = new Date(dateString);

@@ -11,6 +11,9 @@
         class="admin-buttons w-100 mt-3 justify-content-end"
         v-if="adminView"
       >
+        <div id="new-candids">
+          {{ countNewCandidatures() }} nouvelles candidatures
+        </div>
         <p
           class="d-flex align-items-center m-0 mr-2"
           v-if="Number(pourvuValue) === 1"
@@ -55,7 +58,8 @@ export default {
     "linkId",
     "localisation",
     "adminView",
-    "pourvu"
+    "pourvu",
+    "candidaturesProp"
   ],
   data() {
     return {
@@ -89,6 +93,9 @@ export default {
       this.$axios
         .$put(`/back/api/offres/${this.linkId}/toggle`)
         .then(() => (this.pourvuValue = !this.pourvuValue));
+    },
+    countNewCandidatures() {
+      return this.candidaturesProp.filter(candid => candid.seen === 0).length;
     }
   }
 };
@@ -121,6 +128,16 @@ export default {
     font-weight: 700;
     font-size: 18px;
     text-transform: uppercase;
+  }
+
+  #new-candids {
+    max-width: 60px;
+    margin-right: 10px;
+    height: 100%;
+    font-size: 1.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   button[disabled] {
