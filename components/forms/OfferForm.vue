@@ -10,17 +10,23 @@
       <button class="btn bg-jobs mt-4 mr-2" @click="entrepriseSubmit">Enregistrer</button>
       <button class="btn btn-danger mt-4" @click="hideEntrepriseModal">Annuler</button>
     </b-modal>
-    <b-modal id="modal-candidature" v-if="candidatureToShow" title="Candidature" hide-footer hide-header centered>
-      <h3>
-        Candidature de {{ candidature.utilisateur.prenom }} {{ candidature.utilisateur.nom.toUpperCase() }}
-      </h3>
-      <div>
-        CV: aziojea
-        {{ candidatureToShow }}
+    <b-modal id="modal-candidature" title="Candidature" hide-footer hide-header centered>
+      <div v-if="candidatureToShow !== null">
+        <h3>
+          Candidature de {{ candidatureToShow.utilisateur.prenom }} {{
+            candidatureToShow.utilisateur.nom.toUpperCase()
+          }}
+        </h3>
+        <div>
+          CV: aziojea
+          <pre>
+                {{ candidatureToShow }}
+              </pre>
+        </div>
+        <p>
+          {{ candidatureToShow.text }}
+        </p>
       </div>
-      <p>
-        {{ candidatureToShow.text }}
-      </p>
     </b-modal>
     <b-container>
       <b-row class="mt-3">
@@ -28,11 +34,23 @@
           <b-icon-check></b-icon-check>
           Cette offre est pourvu.
         </b-col>
-        <b-row v-else-if="offre && !offre.pourvu && offre.candidatures.length > 0" id="candidatures">
-          <b-button v-for="candidature in offre.candidatures" @click="showCandidature(candidature)" class="candidature">
-            <h4>{{ candidature.utilisateur.prenom }} {{ candidature.utilisateur.nom.toUpperCase() }}</h4>
-          </b-button>
-        </b-row>
+        <div v-else-if="offre && !offre.pourvu && offre.candidatures.length > 0" id="candidatures">
+          <h2 class="col-12">Candidatures</h2>
+          <div class="d-flex col-12">
+            <b-card
+              :title="candidature.utilisateur.prenom + ' ' + candidature.utilisateur.nom.toUpperCase()"
+              style="max-width: 30rem;"
+              class="mb-2 mx-2"
+              v-for="candidature in offre.candidatures"
+              v-bind:key="candidature.id"
+            >
+              <b-card-text>
+                Some quick example text to build on the card title and make up the bulk of the card's content.
+              </b-card-text>
+              <button @click="showCandidature(candidature)">Voir</button>
+            </b-card>
+          </div>
+        </div>
 
         <div class="mx-auto rounded w-100 mb-4 p-4">
           <form autocomplete="off" @submit="preSubmit($event, offre)" class="d-flex flex-wrap">

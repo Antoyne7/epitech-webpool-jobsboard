@@ -5,7 +5,7 @@
       <b-row>
         <ContentLoader
           v-for="skeleton in 6"
-          v-bind:key="skeleton"
+          v-bind:key="'skeleton'+skeleton"
           v-show="!charged"
           height="500"
           class="skeleton col-lg-4 col-md-6 col-12 w-100 skeleton"

@@ -49,10 +49,12 @@
       <b-col lg="6" md="12" cols="12">
         <h2>Mes candidatures</h2>
 
-        <div v-if="candidatures.length > 0" v-for="candidature in candidatures" class="candidature">
-          <h4>{{ candidature.offre.nom }}<span>{{ candidature.offre.entreprise.nom }}/localisation</span></h4>
-          <p>{{ candidature.offre.short_description }}</p>
-          <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+        <div v-if="candidatures.length > 0">
+          <div v-for="candidature in candidatures" class="candidature">
+            <h4>{{ candidature.offre.nom }}<span>{{ candidature.offre.entreprise.nom }}/{{ candidature.offre.ville || 'Toute la France' }}</span></h4>
+            <p>{{ candidature.offre.short_description }}</p>
+            <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+          </div>
         </div>
 
       </b-col>
@@ -78,7 +80,7 @@ export default {
   },
   data() {
     return {
-      candidatures: {},
+      candidatures: [],
       preview: camera,
       imgStyle: 'not-updated',
       action: "Chargez",

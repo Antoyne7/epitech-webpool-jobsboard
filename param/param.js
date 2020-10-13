@@ -5,7 +5,7 @@ const host = 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboa
 
 export default {
 
-  cheminPhoto: 'http://jobs.epitech.fr/back/storage/app/',
+  cheminPhoto: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/storage/app/',
 
   // Les différentes adresses des flux de données
   listeCandidatures: host + 'candidatures',
