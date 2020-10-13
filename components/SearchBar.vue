@@ -10,7 +10,7 @@
           <div class="vr"></div>
         </b-col>
         <b-col class="position-relative" md="4" lg="4" cols="12">
-          <input type="search" placeholder="Le job de vos rêves">
+          <input @keyup="search($event)" :query="search" type="search" placeholder="Le job de vos rêves">
           <img class="icone" src="/icons/ic_search_48px.svg" alt="Cherchez un emploi en particulier">
         </b-col>
         <b-col class="separator" md="1" lg="1" cols="0">
@@ -31,7 +31,17 @@
 </template>
 <script>
 export default {
-  name: 'SearchBar'
+  name: 'SearchBar',
+  data(){
+    return{
+      query: null,
+    }
+  },
+  methods: {
+    search(event) {
+      this.$emit('query', event.target.value);
+    }
+  }
 }
 </script>
 <style scoped lang="scss">

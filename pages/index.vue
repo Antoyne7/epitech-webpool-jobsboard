@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBar/>
+    <SearchBar @query="searchQuery($event)"/>
     <b-container class="container-cards">
       <b-row>
         <ContentLoader v-for="skeleton in 6" v-show="!charged" height="500"
@@ -12,7 +12,7 @@
                  :localisation="offre.localisation"
         />
       </b-row>
-      <button @click="showMore()" class="btn-show">Voir plus</button>
+      <button v-show="showBtn" @click="showMore()" class="btn-show">Voir plus</button>
     </b-container>
   </div>
 </template>
@@ -30,8 +30,11 @@ export default {
   data() {
     return {
       listeOffres: [],
+      listeOffresCopie: [],
       listeToShow: [],
       nbrShowed: 1,
+      nbr: 0,
+      showBtn: true,
       charged: false,
     }
   },
@@ -40,26 +43,58 @@ export default {
     AjaxServices.getListe('listeOffres').then(promise => {
       console.log(promise)
       this.listeOffres = promise;
+      this.listeOffresCopie = this.listeOffres
       this.charged = true;
     })
   },
   methods: {
+    searchQuery(queryString) {
+      this.listeOffres = [];
+      this.nbrShowed = 1;
+      this.nbr = 0;
+      this.listeOffresCopie.forEach((offre) => {
+        if (offre.nom.toLowerCase().includes(queryString.toLowerCase())) {
+          this.listeOffres.push(offre);
+        }
+      })
+
+
+      let number = 0
+      if (this.nbrShowed * this.nbr === 0) {
+        number = 6
+      } else {
+        number = this.nbrShowed * this.nbr === 0;
+      }
+      console.log('Offres', this.listeOffres.length)
+      console.log('Nbr', this.nbr, 'NbrShowed', this.nbrShowed)
+      console.log('Number', number)
+
+      if (this.listeOffres.length <= number) {
+        this.showBtn = false
+      } else {
+        this.showBtn = true
+      }
+    },
     //Honnêtement ce code est assez immonde donc bon
     //TODO: Changer cette fonctionalitée immonde
     showMore() {
+      this.showBtn = false
       if ((this.nbrShowed * 6) < this.listeOffres.length) {
         this.nbrShowed++;
         this.goto()
       }
     },
     goto() {
-      let number = (6 * (this.nbrShowed - 1) + 7);
-      if (document.querySelector(".container-cards .row div:nth-child(" + number + ")")) {
-        document.querySelector(".container-cards .row div:nth-child(" + number + ")").scrollIntoView()
+      this.nbr = (6 * (this.nbrShowed - 1) + 7);
+      if (document.querySelector(".container-cards .row div:nth-child(" + this.nbr + ")")) {
+        document.querySelector(".container-cards .row div:nth-child(" + this.nbr + ")").scrollIntoView()
+        if (this.listeOffres.length > this.nbrShowed * this.nbr) {
+          this.showBtn = true
+        }
       } else {
         setTimeout(this.goto, 50);
       }
-    },
+    }
   },
   computed: {
     showOffres() {
