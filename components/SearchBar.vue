@@ -10,15 +10,15 @@
           <div class="vr"></div>
         </b-col>
         <b-col class="position-relative" md="4" lg="4" cols="12">
-          <input type="search" placeholder="Le job de vos rêves">
+          <input @keyup="search($event)" :query="search" type="search" placeholder="Le job de vos rêves">
           <img class="icone" src="/icons/ic_search_48px.svg" alt="Cherchez un emploi en particulier">
         </b-col>
         <b-col class="separator" md="1" lg="1" cols="0">
           <div class="vr"></div>
         </b-col>
         <b-col md="3" lg="3" cols="12">
-          <select name="contract" id="contract">
-            <option value="">Type de contrat</option>
+          <select @change="type($event)"  name="contract" id="contract">
+            <option style="" v-for="type in typeoffres" :value="type.id" :type="type">{{ type.nom }}</option>
           </select>
           <img class="icone rotate" src="/icons/ic_chevron_right_48px.svg" alt="Icone selecteur">
         </b-col>
@@ -31,7 +31,26 @@
 </template>
 <script>
 export default {
-  name: 'SearchBar'
+  name: 'SearchBar',
+  data() {
+    return {
+      query: null,
+      typeoffres: []
+    }
+  },
+  created() {
+    this.$axios.$get('/back/api/typeoffres').then((promise) => {
+      this.typeoffres = promise
+    })
+  },
+  methods: {
+    type(event){
+      this.$emit('type', event.target.value);
+    },
+    search(event) {
+      this.$emit('query', event.target.value);
+    }
+  }
 }
 </script>
 <style scoped lang="scss">

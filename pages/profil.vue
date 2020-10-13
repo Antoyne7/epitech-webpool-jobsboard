@@ -47,16 +47,35 @@
       </b-col>
       <b-col class="separator" lg="1"/>
       <b-col lg="6" md="12" cols="12">
-        <h2>Mes candidatures</h2>
-
-        <div v-if="candidatures.length > 0">
-          <div v-for="candidature in candidatures" class="candidature">
-            <h4>{{ candidature.offre.nom }}<span>{{ candidature.offre.entreprise.nom }}/{{ candidature.offre.ville || 'Toute la France' }}</span></h4>
-            <p>{{ candidature.offre.short_description }}</p>
-            <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+        <h2 class="position-relative">Mes candidatures <span v-if="candidatures.length>3" class="icon-scroll"></span>
+        </h2>
+        <div class="candidatures-container" v-if="candidatures.length > 0">
+          <div class="historique">
+            <div v-for="candidature in candidatures" :key="candidature.id" class="candidature">
+              <h4>{{ candidature.offre.nom }}</h4>
+              <div class="loc_company">
+            <span class="loc">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+                   viewBox="0 0 48 48"><title>
+            ic_location_on_48px</title>
+            <g class="nc-icon-wrapper" fill="#111111">
+              <path style="fill: var(--primary-jobs)"
+                    d="M24 4c-7.73 0-14 6.27-14 14 0 10.5 14 26 14 26s14-15.5 14-26c0-7.73-6.27-14-14-14zm0 19c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+            </g>
+            </svg>
+              {{ candidature.offre.ville }}
+            </span>
+                <span>{{ candidature.offre.entreprise.nom }}</span>
+              </div>
+              <p>{{ candidature.offre.short_description }}</p>
+              <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+            </div>
           </div>
         </div>
-
+        <div class="msg" v-else>
+          Vous n'avez postulé à aucune offre pour le moment.
+          <nuxt-link to="/">Découvrir les offres</nuxt-link>
+        </div>
       </b-col>
     </b-row>
   </b-container>
@@ -109,6 +128,7 @@ export default {
   mounted() {
     if (this.$auth.user.candidatures) {
       this.candidatures = this.$auth.user.candidatures;
+      console.log(this.candidatures)
     }
     this.$axios.$get('/back/api/utilisateurs/' + this.$auth.user.id)
       .then((promise) => {
@@ -129,8 +149,6 @@ export default {
 
   methods: {
     submit() {
-      console.log(this.userInfo)
-      console.log(this.userInfo.password)
       if (this.userInfo.password === this.passwordConfirm || (!this.password && this.passwordConfirm === null)) {
         const params = new FormData();
         params.append('email', this.userInfo.email)
@@ -206,6 +224,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.msg {
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.6rem;
+
+  a {
+    color: var(--primary-jobs);
+    text-decoration: none;
+  }
+}
+
 .ligne {
   margin-top: 50px;
 
@@ -343,6 +377,19 @@ export default {
     }
   }
 
+  .candidatures-container {
+    max-height: 600px;
+    overflow: auto;
+    @media(max-width: 992px) {
+      margin: 20px 0;
+    }
+
+    .historique {
+      height: 100%;
+
+    }
+  }
+
   //  Candidature
   .candidature {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -355,11 +402,26 @@ export default {
       flex-wrap: wrap;
       font-weight: 500;
       font-size: 2rem;
+    }
+
+    .loc_company {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 10px;
 
       span {
         font-size: 1.6rem;
         font-weight: 400;
+        display: block;
       }
+
+      .loc {
+        display: flex;
+        align-items: flex-end;
+        font-weight: 500;
+      }
+
     }
 
     p {
@@ -386,4 +448,50 @@ export default {
     }
   }
 }
+
+//Animation scroll souris
+.icon-scroll:before {
+  position: absolute;
+  left: 50%
+}
+
+.icon-scroll {
+  position: absolute;
+  width: 23px;
+  height: 35px;
+  bottom: 0;
+  right: 0;
+  border: 2px solid black;
+  border-radius: 25px;
+}
+
+@media (max-width: 767px) {
+  .icon-scroll {
+    position: relative
+  }
+}
+
+.icon-scroll:before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: black;
+  margin-left: -2px;
+  top: 4px;
+  border-radius: 4px;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-name: scroll
+}
+
+@keyframes scroll {
+  0% {
+    opacity: 1
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(26px)
+  }
+}
+
 </style>

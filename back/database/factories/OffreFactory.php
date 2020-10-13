@@ -28,7 +28,8 @@ class OffreFactory extends Factory
             'short_description' => $this->faker->text(200),
             'description' => $this->faker->realText(600),
             'image' => $this->faker->imageUrl(),
-            'entreprise_id' => $this->faker->numberBetween(1,10)
+            'entreprise_id' => $this->faker->numberBetween(1,10),
+            'ville' => $this->faker->text(10)
         ];
     }
 }
