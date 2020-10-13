@@ -40,6 +40,8 @@ export default {
       nbr: 0,
       showBtn: true,
       charged: false,
+      queryString: null,
+      typeOffreSelected: 0,
     }
   },
   created() {
@@ -53,17 +55,54 @@ export default {
   },
   methods: {
     changeType(type) {
-      console.log(type)
+      this.typeOffreSelected = type;
+      if (!this.queryString) {
+        this.findTypes();
+      } else {
+        this.searchQuery(this.queryString)
+      }
     },
+
+    findTypes() {
+      if (this.typeOffreSelected != 0) {
+        this.nbrShowed = 1;
+        this.nbr = 0;
+        this.listeOffres = [];
+        this.listeOffresCopie.forEach((offre) => {
+          let i = 0;
+          offre.typeoffres.forEach((typeoffre) => {
+            if ((typeoffre.id == this.typeOffreSelected || this.typeOffreSelected === 0) && i === 0) {
+              i++
+              this.listeOffres.push(offre)
+            }
+          })
+        })
+      } else {
+        this.listeOffres = this.listeOffresCopie;
+      }
+      this.changeButtonState();
+    },
+
     searchQuery(queryString) {
       this.listeOffres = [];
       this.nbrShowed = 1;
       this.nbr = 0;
+      this.queryString = queryString;
       this.listeOffresCopie.forEach((offre) => {
         if (offre.nom.toLowerCase().includes(queryString.toLowerCase())) {
-          this.listeOffres.push(offre);
+          let i = 0;
+          offre.typeoffres.forEach((typeoffre) => {
+            if ((typeoffre.id == this.typeOffreSelected || this.typeOffreSelected == 0) && i === 0) {
+              i++
+              this.listeOffres.push(offre)
+            }
+          })
         }
       })
+      this.changeButtonState();
+
+    },
+    changeButtonState() {
       let number = 0
       if (this.nbrShowed * this.nbr === 0) {
         number = 6
@@ -73,7 +112,8 @@ export default {
 
       this.showBtn = this.listeOffres.length > number;
     },
-    //Honnêtement ce code est assez immonde donc bon
+
+    //Honnêtement ce code est assez immonde donc bon, désolé
     //TODO: Changer cette fonctionalitée immonde
     showMore() {
       this.showBtn = false
@@ -82,6 +122,7 @@ export default {
         this.goto()
       }
     },
+
     goto() {
       this.nbr = (6 * (this.nbrShowed - 1) + 7);
       if (document.querySelector(".container-cards .row div:nth-child(" + this.nbr + ")")) {
@@ -96,13 +137,7 @@ export default {
   },
   computed: {
     showOffres() {
-      if (typeof window !== "undefined") {
-        if (window.innerWidth < 992) {
-          this.listeToShow = [...this.listeOffres].slice(0, 6 * this.nbrShowed)
-        } else {
-          this.listeToShow = [...this.listeOffres].slice(0, 6 * this.nbrShowed)
-        }
-      }
+      this.listeToShow = [...this.listeOffres].slice(0, 6 * this.nbrShowed)
       return this.listeToShow
     }
   }

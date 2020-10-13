@@ -3,8 +3,14 @@
     <b-container>
       <b-row class="input-containers">
         <b-col class="position-relative" md="3" lg="3" cols="12">
-          <input type="text" placeholder="Localisation">
-          <img class="icone" src="/icons/ic_my_location_48px.svg" alt="Trouvez votre localisation">
+          <input v-model="city.cityName" type="text" placeholder="Localisation">
+          <div v-show="locationLoading" class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <img @click="locate()" class="icone" src="/icons/ic_my_location_48px.svg" alt="Trouvez votre localisation">
         </b-col>
         <b-col class="separator" md="1" lg="1" cols="0">
           <div class="vr"></div>
@@ -17,8 +23,9 @@
           <div class="vr"></div>
         </b-col>
         <b-col md="3" lg="3" cols="12">
-          <select @change="type($event)"  name="contract" id="contract">
-            <option style="" v-for="type in typeoffres" :value="type.id" :type="type">{{ type.nom }}</option>
+          <select @change="type($event)" name="contract" id="contract">
+            <option selected :value="0">Tous les types</option>
+            <option v-for="type in typeoffres" :value="type.id" :type="type">{{ type.nom }}</option>
           </select>
           <img class="icone rotate" src="/icons/ic_chevron_right_48px.svg" alt="Icone selecteur">
         </b-col>
@@ -35,7 +42,13 @@ export default {
   data() {
     return {
       query: null,
-      typeoffres: []
+      locationLoading: false,
+      locationData: null,
+      typeoffres: [],
+      city: {
+        cityCode: null,
+        cityName: null,
+      }
     }
   },
   created() {
@@ -44,7 +57,32 @@ export default {
     })
   },
   methods: {
-    type(event){
+    locate() {
+      this.locationLoading = true;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.getPosition)
+      }
+    },
+    getPosition(position) {
+      this.$axios.get("https://api-adresse.data.gouv.fr/reverse/" +
+        "?lon=" + position.coords.longitude + "&" +
+        "lat=" + position.coords.latitude + "", {
+        transformRequest: (data, headers) => {
+          delete headers.common['Authorization'];
+        }
+      }).then((resp) => {
+        this.locationData = resp.data.features[0].properties;
+        this.city.cityCode = parseInt(this.locationData.citycode)
+        this.city.cityName = this.locationData.city
+        console.log(this.city)
+
+        this.locationLoading = false
+      }).catch((err) => {
+        console.dir(err)
+        this.locationLoading = false
+      })
+    },
+    type(event) {
       this.$emit('type', event.target.value);
     },
     search(event) {
@@ -137,5 +175,53 @@ export default {
 
   }
 
+}
+
+//Style chargement
+.lds-ring {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 55px;
+}
+
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+  border: 3px solid var(--primary-jobs);
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: var(--primary-jobs) transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
