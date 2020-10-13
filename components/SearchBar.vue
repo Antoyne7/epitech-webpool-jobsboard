@@ -3,7 +3,25 @@
     <b-container>
       <b-row class="input-containers">
         <b-col class="position-relative" md="3" lg="3" cols="12">
-          <input v-model="city.cityName" type="text" placeholder="Localisation">
+          <input v-model="location.name" type="text" placeholder="Localisation">
+
+          <ul id="localisation-autocomplete" class="position-absolute w-100 bg-white rounded"
+              v-if="localisationFilter.length > 0"> <!-- Autocomplete list -->
+            <li class="localisation-item" v-for="localisation in localisationFilter"
+                :key="localisation.code"
+                @click="setLocalisation(localisation)">
+              {{ localisation.nom }}
+              <span
+                v-if="!localisation.codeRegion">
+                {{ localisation.codesPostaux[0] }},
+                {{ localisation.departement.nom }}
+              </span>
+              <span v-else>
+                {{ localisation.code }}
+              </span>
+            </li>
+          </ul>
+
           <div v-show="locationLoading" class="lds-ring">
             <div></div>
             <div></div>
@@ -45,9 +63,10 @@ export default {
       locationLoading: false,
       locationData: null,
       typeoffres: [],
-      city: {
-        cityCode: null,
-        cityName: null,
+      listLoc: [],
+      location: {
+        code: null,
+        name: null,
       }
     }
   },
@@ -55,6 +74,41 @@ export default {
     this.$axios.$get('/back/api/typeoffres').then((promise) => {
       this.typeoffres = promise
     })
+  },
+  watch: {
+    location: {
+      async handler({name}) {
+        if (name.length === 3) {
+          this.listLoc = await this.$axios.$get('https://geo.api.gouv.fr/communes?nom=' + name + '&fields=nom,code,codesPostaux,codeDepartement,departement&format=json&geometry=centre')
+          let listDepartement = await this.$axios.$get('https://geo.api.gouv.fr/departements?nom=' + name + '&fields=nom,code,codeRegion')
+          listDepartement.forEach((el) => {
+              this.listLoc.push(el)
+            }
+          )
+          console.log(this.listLoc)
+        } else if (name.length < 3) {
+          this.listLoc = []
+        }
+      },
+      deep: true
+    }
+  },
+  computed: {
+    localisationFilter() {
+      const sorted = this.listLoc.filter(localisation => localisation.nom.toLowerCase().includes(this.location.name.toLowerCase().trim()));
+      [...sorted].forEach((element) => {
+        if (element.codeRegion) {
+          console.log('unshifted', element)
+          sorted.unshift(element);
+        }
+      })
+      if (sorted.length > 6) {
+        return sorted.slice(0, 6)
+      } else {
+        return sorted
+      }
+
+    },
   },
   methods: {
     locate() {
@@ -72,15 +126,18 @@ export default {
         }
       }).then((resp) => {
         this.locationData = resp.data.features[0].properties;
-        this.city.cityCode = parseInt(this.locationData.citycode)
-        this.city.cityName = this.locationData.city
-        console.log(this.city)
+        this.location.code = parseInt(this.locationData.citycode)
+        this.location.name = this.locationData.city
+        console.log(this.location)
 
         this.locationLoading = false
       }).catch((err) => {
         console.dir(err)
         this.locationLoading = false
       })
+    },
+    setLocalisation(loc) {
+      console.log(loc)
     },
     type(event) {
       this.$emit('type', event.target.value);

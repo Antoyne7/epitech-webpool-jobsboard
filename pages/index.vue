@@ -2,20 +2,21 @@
   <div>
     <SearchBar @type="changeType($event)" @query="searchQuery($event)"/>
     <b-container class="container-cards">
-      <b-row v-if="showOffres.length > 0">
-        <ContentLoader v-for="skeleton in 6" v-show="!charged" height="500"
-                       class="skeleton col-lg-4 col-md-6 col-12 w-100 skeleton"/>
+      <b-row v-if="showOffres.length > 0 && charged === true">
         <JobCard v-for="offre in showOffres" :title="offre.nom"
                  :short-description="offre.short_description"
                  :linkId="offre.id"
                  :img="offre.image"
                  :localisation="offre.localisation"
         />
-
       </b-row>
-      <div class="msg" v-else>
+      <div class="msg" v-else-if="charged === true">
         Il n'y a aucune offre disponibles pour vos critères.
       </div>
+      <b-row v-else>
+        <ContentLoader v-for="skeleton in 6" v-show="!charged" height="500"
+                       class="skeleton col-lg-4 col-md-6 col-12 w-100 skeleton"/>
+      </b-row>
       <button v-show="showBtn" @click="showMore()" class="btn-show">Voir plus</button>
     </b-container>
   </div>

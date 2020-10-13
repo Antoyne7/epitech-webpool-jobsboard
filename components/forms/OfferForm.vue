@@ -220,14 +220,6 @@ export default {
     updatePreviewImg(event) {
       this.preview = window.URL.createObjectURL(event.target.files[0])
     },
-    async updateLocalisation() {
-      if (this.localisation.search.length === 3) {
-        this.localisation.list = await this.$axios.$get('https://geo.api.gouv.fr/communes?nom=' + this.localisation.search + '&fields=nom,code,codesPostaux,codeDepartement,departement,codeRegion&format=json&geometry=centre')
-        this.localisation.showList = true
-      } else if (this.localisation.search.length < 3) {
-        this.localisation.list = []
-      }
-    },
     entrepriseSubmit() {
       console.log('Creation nouvelle entreprise avec pour nom:', this.entreprise.nom)
       // this.$axios.$post()
@@ -257,6 +249,7 @@ export default {
         }, 1000)
       }
     },
+
     setLocalisation(localisation) {
       this.localisation.search = ''
       this.localisation.selected = localisation
@@ -264,6 +257,15 @@ export default {
       this.offre.localisation.codeVille = localisation.code
       this.offre.localisation.ville = localisation.nom
       this.localisation.showList = false
+    },
+
+    async updateLocalisation() {
+      if (this.localisation.search.length === 3) {
+        this.localisation.list = await this.$axios.$get('https://geo.api.gouv.fr/communes?nom=' + this.localisation.search + '&fields=nom,code,codesPostaux,codeDepartement,departement,codeRegion&format=json&geometry=centre')
+        this.localisation.showList = true
+      } else if (this.localisation.search.length < 3) {
+        this.localisation.list = []
+      }
     },
     setEntreprise(entreprise) {
       this.entreprise.search = ''
@@ -284,7 +286,6 @@ export default {
         localisation.nom.toLowerCase().includes(this.localisation.search.toLowerCase().trim()))
       if (sorted.length > 6) {
         return sorted.slice(0, 6)
-
       } else {
         return sorted
       }
