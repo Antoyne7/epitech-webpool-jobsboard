@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBar @type="changeType($event)" @query="searchQuery($event)"/>
+    <SearchBar @changeData="handleChange($event)"/>
     <b-container class="container-cards">
       <b-row v-if="showOffres.length > 0 && charged === true">
         <JobCard v-for="offre in showOffres" :title="offre.nom"
@@ -41,68 +41,87 @@ export default {
       nbr: 0,
       showBtn: true,
       charged: false,
-      queryString: null,
-      typeOffreSelected: 0,
     }
   },
   created() {
     this.$auth.fetchUser();
     AjaxServices.getListe('listeOffres').then(promise => {
-      console.log(promise)
+      console.table(promise)
       this.listeOffres = promise;
-      this.listeOffresCopie = this.listeOffres
+      this.listeOffresCopie = [...this.listeOffres]
       this.charged = true;
     })
   },
   methods: {
-    changeType(type) {
-      this.typeOffreSelected = type;
-      if (!this.queryString) {
-        this.findTypes();
-      } else {
-        this.searchQuery(this.queryString)
-      }
-    },
-
-    findTypes() {
-      if (this.typeOffreSelected != 0) {
-        this.nbrShowed = 1;
-        this.nbr = 0;
-        this.listeOffres = [];
-        this.listeOffresCopie.forEach((offre) => {
-          let i = 0;
-          offre.typeoffres.forEach((typeoffre) => {
-            if ((typeoffre.id == this.typeOffreSelected || this.typeOffreSelected === 0) && i === 0) {
-              i++
-              this.listeOffres.push(offre)
-            }
-          })
-        })
-      } else {
-        this.listeOffres = this.listeOffresCopie;
-      }
-      this.changeButtonState();
-    },
-
-    searchQuery(queryString) {
+    handleChange(event) {
+      console.log('Changement', event)
       this.listeOffres = [];
       this.nbrShowed = 1;
       this.nbr = 0;
-      this.queryString = queryString;
-      this.listeOffresCopie.forEach((offre) => {
-        if (offre.nom.toLowerCase().includes(queryString.toLowerCase())) {
+      [...this.listeOffresCopie].forEach((offre) => {
           let i = 0;
-          offre.typeoffres.forEach((typeoffre) => {
-            if ((typeoffre.id == this.typeOffreSelected || this.typeOffreSelected == 0) && i === 0) {
-              i++
-              this.listeOffres.push(offre)
-            }
-          })
-        }
-      })
-      this.changeButtonState();
+          if (offre.typeoffres.length > 0) {
+            offre.typeoffres.forEach((typeoffre) => {
+              if ((event.selectedTypeOffre == 0 || typeoffre.id == event.selectedTypeOffre) && i === 0) {
+                console.log('declenched')
+                i++
+                this.listeOffres.push(offre);
+              }
+            })
+          } else if (event.selectedTypeOffre == 0) {
+            console.log('declenched too')
+            this.listeOffres.push(offre)
+          }
 
+
+          if (event.location.name && event.location.name.length > 0 && ((event.location.code !== offre.code_ville) && (event.location.code !== offre.code_departement))) {
+            let index = this.listeOffres.indexOf(offre)
+            this.listeOffres.splice(index, 1)
+            console.log('Je retire')
+          }
+
+          // console.table('Comprend pas', this.listeOffres)
+          // if (event.query && event.query.length > 0) {
+          //   if (offre.nom.toLowerCase().includes(event.query.toLowerCase())) {
+          //     this.listeOffres.push(offre)
+          //   }
+          // } else {
+          //
+          // }
+        }
+      )
+      this.changeButtonState();
     },
+
+    // changeType(type) {
+    //   this.typeOffreSelected = type;
+    //   if (!this.queryString) {
+    //     this.findTypes();
+    //   } else {
+    //     this.searchQuery(this.queryString)
+    //   }
+    // },
+    //
+    // findTypes() {
+    //   if (this.typeOffreSelected != 0) {
+    //     this.nbrShowed = 1;
+    //     this.nbr = 0;
+    //     this.listeOffres = [];
+    //     this.listeOffresCopie.forEach((offre) => {
+    //       let i = 0;
+    //       offre.typeoffres.forEach((typeoffre) => {
+    //         if ((typeoffre.id == this.typeOffreSelected || this.typeOffreSelected === 0) && i === 0) {
+    //           i++
+    //           this.listeOffres.push(offre)
+    //         }
+    //       })
+    //     })
+    //   } else {
+    //     this.listeOffres = this.listeOffresCopie;
+    //   }
+    //   this.changeButtonState();
+    // },
+
     changeButtonState() {
       let number = 0
       if (this.nbrShowed * this.nbr === 0) {
