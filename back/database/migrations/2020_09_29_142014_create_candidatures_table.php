@@ -18,6 +18,7 @@ class CreateCandidaturesTable extends Migration
             $table->boolean('useprofilecv');
             $table->string('cv');
             $table->mediumText('text');
+            $table->boolean('seen')->default(false);
             $table->timestamps();
             $table->unsignedBigInteger('utilisateur_id');
             $table->foreign('utilisateur_id')
