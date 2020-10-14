@@ -504,13 +504,14 @@ export default {
     showCandidature(candidature) {
       this.candidatureToShow = candidature;
       this.$bvModal.show("modal-candidature");
-      this.$axios.$get("/back/api/candidatures/" + candidatureazhdiygzaeuihdhuiozdhzaiudhaz.id + "/seen");
+      this.$axios.$get("/back/api/candidatures/" + candidature.id + "/seen");
     },
     getDate(dateString) {
       const date = new Date(dateString);
+      const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
       // Pour une raison inconnue il faut month +1
       return `${date.getDate()}/${date.getMonth() +
-        1}/${date.getFullYear()} ${date.getHours()}H${date.getMinutes()}`;
+        1}/${date.getFullYear()} ${date.getHours()}H${minutes}`;
     }
   },
   computed: {

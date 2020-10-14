@@ -11,9 +11,15 @@
           class="skeleton col-lg-4 col-md-6 col-12 w-100 skeleton"
         />
         <JobCard
-          v-for="offre in showOffres"
-          :offreProp="offre"
-          v-bind:key="offre.id"
+          v-for="offre in listeOffres"
+          :title="offre.nom"
+          :key="offre.id"
+          :short-description="offre.short_description"
+          :linkId="offre.id"
+          :img="offre.image"
+          :pourvu="offre.pourvu"
+          :localisation="offre.localisation"
+          :candidaturesProp="offre.candidatures"
         />
       </b-row>
       <div class="msg" v-else>

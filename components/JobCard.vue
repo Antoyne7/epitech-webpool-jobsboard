@@ -1,12 +1,12 @@
 <template>
-  <b-col lg="4" md="6" cols="12">z
+  <b-col lg="4" md="6" cols="12">
     <div class="card-container">
-      <h3>{{ offre.nom }}</h3>
-      <br v-if="offreProp.nom.length < 22" />
+      <h3>{{ title }}</h3>
+      <br v-if="title.length < 22" />
       <!-- <div v-if="offre.ville">{{ offre.ville }}</div> -->
-      <p>{{ descriptionFunc(offre.short_description) }}</p>
-      <br v-if="offre.short_description && offre.short_description.length < 100" />
-      <img :src="offre.image" alt="Image de l'offre" />
+      <p>{{ descriptionFunc(shortDescription) }}</p>
+      <br v-if="shortDescription && shortDescription.length < 100" />
+      <img :src="img" alt="Image de l'offre" />
       <b-row
         class="admin-buttons w-100 mt-3 justify-content-end"
         v-if="adminView"
@@ -26,7 +26,7 @@
           <b-icon-check class="w-100"></b-icon-check>
         </b-button>
         <b-button
-          :to="{ name: 'admin-offre-slug-edit', params: { slug: offre.id } }"
+          :to="{ name: 'admin-offre-slug-edit', params: { slug: linkId } }"
           class="mx-2 my-0 d-flex align-items-center justify-content-center bg-blue-jobs">
           <b-icon-pencil-square></b-icon-pencil-square>
         </b-button>
@@ -37,7 +37,7 @@
       <nuxt-link
         :title="title_card"
         v-else
-        :to="{ name: 'slug', params: { slug: offre.id } }">
+        :to="{ name: 'slug', params: { slug: linkId } }">
         <button :disabled="isDisable">En savoir plus</button>
       </nuxt-link>
     </div>
@@ -59,19 +59,18 @@ export default {
   ],
   data() {
     return {
-      offre: [...this.offreProp],
-      pourvuValue: this.offreProp.pourvu,
+      pourvuValue: this.pourvu,
       title_card: null,
       isDisable: false,
       candidatures: null
     };
   },
   created() {
-    this.title_card = this.offre.nom;
+    this.title_card = this.title;
     if (!this.adminView && this.$auth.user.candidatures) {
       this.candidatures = this.$auth.user.candidatures;
       this.candidatures.forEach(el => {
-        if (el.offre_id === this.offre.id) {
+        if (el.offre_id === this.linkId) {
           this.title_card = "Vous avez déjà postulé à cette offre !";
           this.isDisable = true;
         }
@@ -88,7 +87,7 @@ export default {
     },
     toggleOffre() {
       this.$axios
-        .$put(`/back/api/offres/${this.offre.id}/toggle`)
+        .$put(`/back/api/offres/${this.linkId}/toggle`)
         .then(() => (this.pourvuValue = !this.pourvuValue));
     },
     countNewCandidatures() {
