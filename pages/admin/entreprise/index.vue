@@ -42,17 +42,32 @@
       </b-row>
     </b-container>
 
-    <b-container class="container-cards">
-      <DataCard
-        v-for="entreprise in entreprises"
-        v-bind:key="entreprise.id"
-        :data="entreprise"
-        :delete-function="deleteFunction"
-        @edit="openFormModal('edit', entreprise)"
-      >
-        {{ entreprise.nom }}
-      </DataCard>
+    <b-container>
+      <div class="container-cards" v-if="entreprises.length > 0 && loaded === true">
+        <DataCard
+          v-for="entreprise in entreprises"
+          v-bind:key="entreprise.id"
+          :data="entreprise"
+          :delete-function="deleteFunction"
+          @edit="openFormModal('edit', entreprise)"
+        >
+          {{ entreprise.nom }}
+        </DataCard>
+      </div>   
+      <div class="msg" v-else-if="loaded === true">
+        Il n'y a aucune entreprise dans la base de données.
+      </div>
+      <b-row class="px-4" v-else>
+        <ContentLoader
+          v-for="skeleton in 9"
+          :key="'skeletonEntreprise' + skeleton"
+          height="44"
+          width="1400"
+          class="w-100 skeleton"
+        />
+      </b-row>
     </b-container>
+    
   </div>
 </template>
 
@@ -62,6 +77,7 @@ import AjaxServices from "@/services/ajaxServices";
 import BasicDataForm from "@/components/forms/BasicDataForm";
 import DataDeletion from "@/components/DataDeletion";
 import ModalSuccess from "@/components/ModalSuccess";
+import { ContentLoader } from "vue-content-loader";
 
 export default {
   name: "Index",
@@ -69,7 +85,8 @@ export default {
     DataCard,
     DataDeletion,
     BasicDataForm,
-    ModalSuccess
+    ModalSuccess,
+    ContentLoader
   },
   data() {
     return {
@@ -78,7 +95,8 @@ export default {
       toEdit: null,
       formText: null,
       formType: "create",
-      successText: null
+      successText: null,
+      loaded: false
     };
   },
   created() {
@@ -95,8 +113,11 @@ export default {
       this.$refs.deleteComponent.deleteModal(this.toDelete);
     },
     updateList() {
+      this.loaded = false
       AjaxServices.getListe("entreprises").then(promise => {
         this.entreprises = promise;
+        const self = this
+        setTimeout(() => self.loaded = true, 200)
       });
     },
     openFormModal(type, objet) {
@@ -151,6 +172,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.skeleton {
+  margin: 4px 0;
+  height: 44px;
+  border-radius: 0.3rem;
+  overflow: hidden;
+}
+
 button,
 a,
 p,

@@ -1,7 +1,7 @@
 <template>
   <b-row
     cols="12"
-    class="my-2 justify-content-between rounded-lg data-container"
+    class="my-2 mx-0 justify-content-between rounded-lg data-container flex-nowrap"
   >
     <div id="slot">
       <slot></slot>
@@ -52,7 +52,6 @@ a {
   height: 34px;
   justify-content: center;
   align-items: center;
-  margin: 0 4px;
   display: flex;
   background: transparent;
   border: none;

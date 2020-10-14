@@ -1,6 +1,7 @@
 <template>
   <div>
-    <DataDeletion ref="deleteComponent" type="typeOffres" :data-id="toDelete">On supprime mon pote typeoffre
+    <DataDeletion ref="deleteComponent" type="typeOffres" :data-id="toDelete"
+      >On supprime mon pote typeoffre
     </DataDeletion>
 
     <BasicDataForm
@@ -11,16 +12,27 @@
       {{ formText }}
     </BasicDataForm>
 
-    <ModalSuccess :route="$route" id="modal-success" :message="successText" :isCentered="true" />
-
+    <ModalSuccess
+      :route="$route"
+      id="modal-success"
+      :message="successText"
+      :isCentered="true"
+    />
 
     <b-container class="my-5">
       <b-row class="justify-content-between">
-        <b-button variant="light" @click="$router.back()" class="back text-uppercase font-weight-bold d-flex align-items-center">
-          <img src="~/static/icons/ic_chevron_right_48px.svg" alt="Retour page précédente">
+        <b-button
+          variant="light"
+          @click="$router.back()"
+          class="back text-uppercase font-weight-bold d-flex align-items-center"
+        >
+          <img
+            src="~/static/icons/ic_chevron_right_48px.svg"
+            alt="Retour page précédente"
+          />
           Retour
         </b-button>
-         <div>
+        <div>
           <b-button
             class="new-offre"
             variant="light"
@@ -33,16 +45,33 @@
       </b-row>
     </b-container>
 
-    
-    <b-container class="container-cards">
-      <DataCard v-for="typeOffre in listeTypeOffres" 
-                v-bind:key="typeOffre.id" 
-                :delete-function="deleteFunction"
-                :data="typeOffre"
-                @edit="openFormModal('edit', typeOffre)"
-                >
-        {{ typeOffre.nom }}
-      </DataCard>
+    <b-container class="px-3 container-cards">
+      <div
+        class="container-cards"
+        v-if="listeTypeOffres.length > 0 && loaded === true"
+      >
+        <DataCard
+          v-for="typeOffre in listeTypeOffres"
+          v-bind:key="typeOffre.id"
+          :delete-function="deleteFunction"
+          :data="typeOffre"
+          @edit="openFormModal('edit', typeOffre)"
+        >
+          {{ typeOffre.nom }}
+        </DataCard>
+      </div>
+      <div class="msg" v-else-if="loaded === true">
+        Il n'y a aucune entreprise dans la base de données.
+      </div>
+      <b-row v-else>
+        <ContentLoader
+          v-for="skeleton in 9"
+          :key="'skeletonTypeOffre' + skeleton"
+          height="44"
+          width="1300"
+          class="w-100 skeleton"
+        />
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -52,6 +81,7 @@ import DataCard from "@/components/DataCard";
 import BasicDataForm from "@/components/forms/BasicDataForm";
 import DataDeletion from "@/components/DataDeletion";
 import ModalSuccess from "@/components/ModalSuccess";
+import { ContentLoader } from "vue-content-loader";
 
 export default {
   name: "Index",
@@ -59,7 +89,8 @@ export default {
     DataCard,
     DataDeletion,
     BasicDataForm,
-    ModalSuccess
+    ModalSuccess,
+    ContentLoader
   },
   data() {
     return {
@@ -68,26 +99,30 @@ export default {
       toEdit: null,
       formText: null,
       formType: "create",
-      successText: null
-    }
+      successText: null,
+      loaded: false
+    };
   },
   created() {
-    this.updateList()
-    const self = this
-    this.$nuxt.$on('deletion', function () {
-      console.log('emit recept')
-      self.updateList()
-    })
+    this.updateList();
+    const self = this;
+    this.$nuxt.$on("deletion", function() {
+      console.log("emit recept");
+      self.updateList();
+    });
   },
   methods: {
     deleteFunction(id) {
-      this.toDelete = id
-      this.$refs.deleteComponent.deleteModal(this.toDelete)
+      this.toDelete = id;
+      this.$refs.deleteComponent.deleteModal(this.toDelete);
     },
     updateList() {
+      this.loaded = false;
       this.$axios.$get("/back/api/typeoffres").then(promise => {
         this.listeTypeOffres = promise;
-      })
+        const self = this;
+        setTimeout(() => (self.loaded = true), 200);
+      });
     },
     openFormModal(type, objet) {
       this.formType = type;
@@ -108,8 +143,8 @@ export default {
         .then(data => {
           if (data.id) {
             this.updateList();
-            this.successText = 'Type de contrat créer.'
-            this.$bvModal.show('modal-success')
+            this.successText = "Type de contrat créer.";
+            this.$bvModal.show("modal-success");
             this.$bvModal.hide("basic-form-modal");
           }
         })
@@ -121,8 +156,8 @@ export default {
         .$put("/back/api/typeoffres/" + objet.id, objet)
         .then(() => {
           this.updateList();
-          this.successText = 'Modification effectuée.'
-          this.$bvModal.show('modal-success')
+          this.successText = "Modification effectuée.";
+          this.$bvModal.show("modal-success");
           this.$bvModal.hide("basic-form-modal");
         })
         .catch(e => console.log(e));
@@ -137,15 +172,26 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
-button, a, p, div {
+.skeleton {
+  margin: 4px 0;
+  height: 44px;
+  border-radius: 0.3rem;
+  overflow: hidden;
+}
+
+button,
+a,
+p,
+div {
   font-size: 1.6rem;
 }
 
-button, a {
+button,
+a {
   border-radius: 6px;
   padding: 6px 12px;
   &.new-offre {
@@ -162,5 +208,4 @@ button, a {
 .container-cards {
   margin: 30px auto;
 }
-
 </style>
