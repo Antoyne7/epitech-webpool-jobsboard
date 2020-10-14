@@ -95,7 +95,7 @@ export default {
       this.$refs.deleteComponent.deleteModal(this.toDelete);
     },
     updateList() {
-      AjaxServices.getListe("entreprises").then(promise => {
+      this.$axios.$get("/back/api/entreprises").then(promise => {
         this.entreprises = promise;
       });
     },

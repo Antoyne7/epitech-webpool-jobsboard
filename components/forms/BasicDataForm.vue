@@ -41,14 +41,17 @@ export default {
   },
   methods: {
     updateData() {
+      console.log('update');
       if (this.dataObject !== null) {
         this.id = this.dataObject.id;
         this.nom = this.dataObject.nom;
       }
     }
   },
-  updated() {
-    this.updateData();
+  watch: {
+    dataObject: {
+      handler: 'updateData'
+    }
   }
 };
 </script>
