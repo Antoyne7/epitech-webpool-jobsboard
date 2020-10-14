@@ -51,7 +51,6 @@ export default {
     disconnect() {
       this.$auth.logout()
         .then(() => {
-          console.log('success')
           this.$router.push('/login')
         }).catch((err)=>{
           console.dir(err)

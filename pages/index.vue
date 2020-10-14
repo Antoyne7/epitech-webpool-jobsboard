@@ -5,7 +5,7 @@
     <b-container class="container-cards">
       <b-row v-if="showOffres.length > 0 && charged === true">
         <JobCard
-          v-for="offre in listeOffres"
+          v-for="offre in listeToShow"
           :title="offre.nom"
           :key="offre.id"
           :short-description="offre.short_description"
@@ -31,8 +31,7 @@
 <script>
 import SearchBar from "~/components/SearchBar";
 import JobCard from "~/components/JobCard";
-import AjaxServices from "~/services/ajaxServices";
-import { ContentLoader } from "vue-content-loader";
+import {ContentLoader} from "vue-content-loader";
 
 export default {
   name: "Index",

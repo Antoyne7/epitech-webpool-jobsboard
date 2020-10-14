@@ -2,7 +2,13 @@
   <b-container>
     <b-row class="ligne">
       <b-col lg="5" md="12" cols="12">
-        <h2>Modifier vos informations <BasicDataDeletion/></h2>
+        <h2 class="title-deletion">Modifier vos informations
+          <BasicDataDeletion type="utilisateurs" :with-success="true"
+                             message-success="Votre compte a bien été supprimé !" route="/login" :with-dcnx="true"
+                             :with-poubelle="true" :id="userInfo.id" title="Attention !">Voulez-vous vraiment
+            supprimer votre profil ? Toutes les données assossiées seront effacées.
+          </BasicDataDeletion>
+        </h2>
         <div class="position-relative d-flex align-items-center justify-content-center col-md-6 px-0"
              id="file-container">
           <input type="file" accept="image/gif, image/png, image/jpeg" id="image" class="h-100 w-100 position-absolute"
@@ -226,6 +232,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title-deletion {
+  display: flex;
+  justify-content: space-between;
+}
+
 .msg {
   width: 100%;
   text-align: center;
