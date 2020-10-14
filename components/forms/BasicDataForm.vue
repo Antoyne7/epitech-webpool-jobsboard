@@ -1,21 +1,5 @@
 <template>
-  <b-container>
-    <b-container class="my-4">
-      <!-- bouton back -->
-      <b-row class="justify-content-between">
-        <b-button
-          variant="light"
-          @click="$router.back()"
-          class="back text-uppercase font-weight-bold d-flex align-items-center"
-        >
-          <img
-            src="~/static/icons/ic_chevron_right_48px.svg"
-            alt="Retour page précédente"
-          />
-          Retour
-        </b-button>
-      </b-row>
-    </b-container>
+  <b-modal id="basic-form-modal" hide-header hide-footer>
     <div class="main px-3">
       <h2 class="mb-4"><slot></slot></h2>
       <b-form @submit.prevent="submitFunction({ id: id, nom: nom })">
@@ -32,7 +16,7 @@
         </div>
       </b-form>
     </div>
-  </b-container>
+  </b-modal>
 </template>
 
 <script>
@@ -53,14 +37,18 @@ export default {
     return {
       id: null,
       nom: ""
-    };
-  },
-
-  updated() {
-    if (this.dataObject != null && this.nom === "") {
-      this.id = this.dataObject.id;
-      this.nom = this.dataObject.nom;
     }
+  },
+  methods: {
+    updateData() {
+      if (this.dataObject !== null) {
+        this.id = this.dataObject.id;
+        this.nom = this.dataObject.nom;
+      }
+    }
+  },
+  updated() {
+    this.updateData();
   }
 };
 </script>

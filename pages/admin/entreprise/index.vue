@@ -4,6 +4,15 @@
       >On supprime mon pote entreprise
     </DataDeletion>
 
+    <BasicDataForm
+      id="formmodal"
+      :data-object="toEdit"
+      :submit-function="formSubmitFunc"
+    >
+      {{ formText }}
+    </BasicDataForm>
+
+    <!-- Boutons back et ajout -->
     <b-container class="my-5">
       <b-row class="justify-content-between">
         <b-button
@@ -18,10 +27,11 @@
           Retour
         </b-button>
         <div>
+          <!-- :to="{ name: 'admin-entreprise-add' }" -->
           <b-button
             class="new-offre"
             variant="light"
-            :to="{ name: 'admin-entreprise-add' }"
+            @click="openFormModal('create')"
           >
             <b-icon-plus-square class="mr-2" />
             Nouvelle entreprise
@@ -35,8 +45,8 @@
         v-for="entreprise in entreprises"
         v-bind:key="entreprise.id"
         :data="entreprise"
-        :to="'./entreprise/edit/' + entreprise.id"
         :delete-function="deleteFunction"
+        @edit="openFormModal('edit', entreprise)"
       >
         {{ entreprise.nom }}
       </DataCard>
@@ -47,20 +57,23 @@
 <script>
 import DataCard from "@/components/DataCard";
 import AjaxServices from "@/services/ajaxServices";
-
+import BasicDataForm from "@/components/forms/BasicDataForm";
 import DataDeletion from "@/components/DataDeletion";
 
 export default {
   name: "Index",
   components: {
     DataCard,
-    DataDeletion
+    DataDeletion,
+    BasicDataForm
   },
   data() {
     return {
       entreprises: [],
-
-      toDelete: null
+      toDelete: null,
+      toEdit: null,
+      formText: null,
+      formType: 'create',
     };
   },
   created() {
@@ -80,6 +93,45 @@ export default {
       AjaxServices.getListe("entreprises").then(promise => {
         this.entreprises = promise;
       });
+    },
+    openFormModal(type, objet) {
+      this.formType = type
+      if (type === "create") {
+        this.toEdit = null;
+        this.formText = "Creez une nouvelle entreprise.";
+      } else {
+        this.toEdit = objet;
+        this.formText = `Modifiez l'entreprise ${objet.nom}.`;
+      }
+      this.$bvModal.show("basic-form-modal");
+    },
+    create(objet) {
+      const formdata = new FormData()
+      formdata.append('nom', objet.nom)
+      this.$axios.$post('/back/api/entreprises', formdata)
+        .then(data => {
+          if (data.id) {
+            this.updateList()
+          }
+        })
+        .catch(e => console.log(e))
+    },
+    update(objet) {
+      // Update, afficher animation success puis retour a la liste des entreprise
+      this.$axios.$put('/back/api/entreprises/' + objet.id, objet)
+        .then(() => {
+            this.updateList()
+        })
+        .catch(e => console.log(e))
+    }
+  },
+  computed: {
+    formSubmitFunc() {
+      if (this.formType === "create") {
+        return this.create;
+      } else {
+        return this.update;
+      }
     }
   }
 };

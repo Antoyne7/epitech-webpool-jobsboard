@@ -7,7 +7,7 @@
       <slot></slot>
     </div>
     <div class="d-flex">
-      <b-button variant="light" :to="to">
+      <b-button variant="light" @click="$emit('edit')">
         <svg
           width="32"
           height="32"
