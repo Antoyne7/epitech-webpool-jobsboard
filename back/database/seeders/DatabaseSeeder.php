@@ -19,13 +19,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
         Entreprise::factory(10)->create();
         Utilisateur::factory(15)->create();
         Tag::factory(6)->create();
         TypeOffre::factory(7)->create();
         Offre::factory()->count(10)->create()->each(function ($offre) {
-            $ids = range(1, 10);
+            $ids = range(1, 6);
             shuffle($ids);
             $offre->tags()->attach(array_slice($ids, 0, rand(1, 4)));
             shuffle($ids);

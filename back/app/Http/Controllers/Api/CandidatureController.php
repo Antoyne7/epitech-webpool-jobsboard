@@ -99,4 +99,16 @@ class CandidatureController extends Controller
     {
         //
     }
+
+    /**
+     * Toggle seen the candidature
+     *
+     * @param Candidature $candidature
+     * @return \Illuminate\Http\Response
+     */
+    public function seen(Candidature $candidature)
+    {
+        $candidature->seen = true;
+        return response($candidature->save());
+    }
 }

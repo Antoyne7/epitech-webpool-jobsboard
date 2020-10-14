@@ -8,7 +8,7 @@
       <b-col lg="6" md="6" cols="12">
         <h3>{{ offre.nom }}</h3>
         <div v-if="offre.tags.length > 0" class="tags-container">
-          <Tag v-for="tag in offre.tags" :text="tag.nom"/>
+          <Tag v-for="tag in offre.tags" :key="tag.id" :text="tag.nom"/>
         </div>
         <div class="localisation">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><title>
@@ -48,7 +48,7 @@
       </span>
       </h2>
       <div class="tags-container">
-        <Tag v-for="tag in offre.tags" :text="tag.nom"/>
+        <Tag v-for="tag in offre.tags" :key="tag.id + 'bis'" :text="tag.nom"/>
       </div>
       <p>{{ offre.short_description }}</p>
       <h2>Votre candidature</h2>

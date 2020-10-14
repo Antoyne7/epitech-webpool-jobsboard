@@ -9,5 +9,15 @@ export const mutations = {
     } else {
       state.types.push(type)
     }
+  },
+  removeTypes(state) {
+    state.types = []
+  },
+  setTypes(state, typesArray) {
+    typesArray.forEach(type => {
+      if (!state.types.includes(type.nom)) {
+        state.types.push(type.nom)
+      }
+    })
   }
 }

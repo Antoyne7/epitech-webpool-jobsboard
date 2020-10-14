@@ -17,10 +17,15 @@ export default {
         href: 'https://pro.fontawesome.com/releases/v5.10.0/css/fontawesome.css'
       },
       {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'}
+    ],
+    script: [
+      {
+        src: 'https://cdn.jsdelivr.net/npm/marked/marked.min.js'
+      }
     ]
   },
-  //Refresh token pour l'authentification
   router: [],
+
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
 
@@ -36,7 +41,9 @@ export default {
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     // https://go.nuxtjs.dev/bootstrap
-    'bootstrap-vue/nuxt',
+    ['bootstrap-vue/nuxt', {
+      icons: true,
+    }],
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
@@ -88,14 +95,14 @@ export default {
   // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/
   axios: { //
     // baseURL: 'https://backend.antoinebraillard.tech/jobboard/public/index.php/',
-    baseURL: 'http://jobs.epitech.fr/back/public/',
+    // baseURL: 'http://jobs.epitech.fr/back/public/',
     credentials: true,
     proxy: true
   },
 
   proxy: {
     '/back': {
-      target: 'http://jobs.epitech.fr/back/public/',
+      target: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/',
       pathRewrite: {'^/back': '/'}
     }
   },

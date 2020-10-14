@@ -1,22 +1,26 @@
 <template>
   <div>
+
     <SearchBar @changeData="handleChange($event)"/>
     <b-container class="container-cards">
       <b-row v-if="showOffres.length > 0 && charged === true">
-        <JobCard v-for="offre in showOffres" :title="offre.nom"
-                 :key="offre.id"
-                 :short-description="offre.short_description"
-                 :linkId="offre.id"
-                 :img="offre.image"
-                 :localisation="offre.localisation"
-                 :types="offre.typeoffres"
-        />
+        <JobCard
+          v-for="offre in listeOffres"
+          :title="offre.nom"
+          :key="offre.id"
+          :short-description="offre.short_description"
+          :linkId="offre.id"
+          :img="offre.image"
+          :pourvu="offre.pourvu"
+          :localisation="offre.localisation"
+          :candidaturesProp="offre.candidatures"
+          :types="offre.typeoffres" />
       </b-row>
       <div class="msg" v-else-if="charged === true">
         Il n'y a aucune offre disponibles pour vos critères.
       </div>
       <b-row v-else>
-        <ContentLoader v-for="skeleton in 6" v-show="!charged" height="500"
+        <ContentLoader v-for="skeleton in 6" :key="'skeleton' + skeleton" v-show="!charged" height="500"
                        class="skeleton col-lg-4 col-md-6 col-12 w-100 skeleton"/>
       </b-row>
       <button v-show="showBtn" @click="showMore()" class="btn-show">Voir plus</button>
@@ -27,13 +31,13 @@
 <script>
 import SearchBar from "~/components/SearchBar";
 import JobCard from "~/components/JobCard";
-import AjaxServices from "~/services/ajaxServices"
-import {ContentLoader} from 'vue-content-loader';
+import AjaxServices from "~/services/ajaxServices";
+import { ContentLoader } from "vue-content-loader";
 
 export default {
-  name: 'Index',
-  components: {JobCard, SearchBar, ContentLoader},
-  middleware: 'auth',
+  name: "Index",
+  components: { JobCard, SearchBar, ContentLoader },
+  middleware: "auth",
   data() {
     return {
       listeOffres: [],
@@ -47,12 +51,14 @@ export default {
   },
   created() {
     this.$auth.fetchUser();
-    AjaxServices.getListe('listeOffres').then(promise => {
-      console.table(promise)
-      this.listeOffres = promise;
+    this.$axios.$get("/back/api/offres").then(data => {
+      this.listeOffres = data;
       this.listeOffresCopie = [...this.listeOffres]
       this.charged = true;
-    })
+    });
+  },
+  mounted() {
+
   },
   methods: {
     //On détecte ici chaques changements dans le composant searchbar et on récupère les données
@@ -124,7 +130,7 @@ export default {
       this.showBtn = false
       if ((this.nbrShowed * 6) < this.listeOffres.length) {
         this.nbrShowed++;
-        this.goto()
+        this.goto();
       }
     },
 
@@ -146,7 +152,7 @@ export default {
       return this.listeToShow
     }
   }
-}
+};
 </script>
 <style lang="scss">
 html {
@@ -180,4 +186,3 @@ html {
   text-align: center;
 }
 </style>
-

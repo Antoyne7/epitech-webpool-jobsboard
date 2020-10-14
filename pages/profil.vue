@@ -51,7 +51,7 @@
         </h2>
         <div class="candidatures-container" v-if="candidatures.length > 0">
           <div class="historique">
-            <div v-for="candidature in candidatures" class="candidature">
+            <div v-for="candidature in candidatures" :key="candidature.id" class="candidature">
               <h4>{{ candidature.offre.nom }}</h4>
               <div class="loc_company">
             <span class="loc">
@@ -101,7 +101,7 @@ export default {
   },
   data() {
     return {
-      candidatures: {},
+      candidatures: [],
       preview: camera,
       imgStyle: 'not-updated',
       action: "Chargez",

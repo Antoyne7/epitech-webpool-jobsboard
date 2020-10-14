@@ -19,7 +19,9 @@ export default {
 <style lang="scss">
 :root {
   --primary-jobs: #260592;
-  --color-background: #FBFBFF
+  --color-background: #FBFBFF;
+  --red: #D1301A;
+  --green: #36CB45; 
 }
 
 html {
@@ -48,6 +50,10 @@ header {
 *::after {
   box-sizing: border-box;
   margin: 0;
+}
+
+.bg-blue-jobs {
+  background: var(--primary-jobs);
 }
 
 </style>

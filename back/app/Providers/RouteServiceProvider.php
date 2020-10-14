@@ -60,7 +60,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('utilisateur', function ($value) {
-            return Utilisateur::with('candidatures.offre')->find($value) ?? abort(404);
+            return Utilisateur::with('candidatures.offre.entreprise')->find($value) ?? abort(404);
         });
     }
 

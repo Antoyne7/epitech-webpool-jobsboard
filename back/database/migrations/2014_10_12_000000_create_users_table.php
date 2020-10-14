@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('image')->nullable();
             $table->string('cv')->nullable();
+            $table->integer('role')->nullable();
             $table->string('api_token')->unique()->nullable()->default(null);
             $table->timestamps();
         });

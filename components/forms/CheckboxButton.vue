@@ -1,7 +1,7 @@
 <template>
   <div>
-    <input @change="toggleCheck" :checked="checked" type="checkbox" name="checkbox" id="leid" :id="'checkbox' + checkboxId" :value="value">
-    <label for="leid" :for="'checkbox' + checkboxId">{{ label }}</label>
+    <input @change="toggleCheck" :checked="checked" type="checkbox" name="checkbox" :id="'checkbox' + checkboxId" :value="value">
+    <label :for="'checkbox' + checkboxId">{{ label }}</label>
   </div>
 </template>
 
@@ -30,11 +30,9 @@ export default {
       this.$store.commit('offretype/toggleType', this.value)
     }
   },
-  created() {
-    // This generate "unique" ID for checkboxs
-    this.checkboxId = Math.floor(Math.random() * 1000000)
-  },
   mounted() {
+    // This generate "unique" ID for checkboxs
+    this.checkboxId = this._uid
     if (this.$store.state.offretype.types.includes(this.value)) {
       this.checked = true
     }

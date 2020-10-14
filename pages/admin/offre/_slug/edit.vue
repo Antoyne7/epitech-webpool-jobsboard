@@ -1,6 +1,6 @@
 <template>
   <div>
-    <OfferForm :on-submit="ajoutOffre"/>
+    <OfferForm :on-submit="editOffre"/>
   </div>
 </template>
 
@@ -13,9 +13,9 @@ export default {
     OfferForm
   },
   methods: {
-    ajoutOffre (data) {
+    editOffre (data) {
       const formdata = new FormData()
-
+      formdata.append('_method', 'put')
       formdata.append('nom', data.nom)
       formdata.append('ville', data.localisation.ville)
       formdata.append('codeVille', data.localisation.codeVille)
@@ -29,7 +29,7 @@ export default {
 
       console.log('data:', data)
 
-      AjaxServices.pushInformations('listeOffres', formdata)
+      this.$axios.$post('/back/api/offres/' + this.$route.params.slug, formdata)
         .then(data => {
           console.log(data)
         })
@@ -37,7 +37,7 @@ export default {
           console.dir(error)
         })
     }
-  }
+  },
 }
 </script>
 
