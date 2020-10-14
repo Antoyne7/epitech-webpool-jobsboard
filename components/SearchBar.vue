@@ -43,7 +43,7 @@
         <b-col class="separator" md="1" lg="1" cols="0">
           <div class="vr"></div>
         </b-col>
-        <b-col class="position-relative" md="4" lg="4" cols="12">
+        <b-col class="search-container position-relative" md="4" lg="4" cols="12">
           <input @keyup="search($event)" type="search" placeholder="Le job de vos rêves">
           <img class="icone" src="/icons/ic_search_48px.svg" alt="Cherchez un emploi en particulier">
         </b-col>
@@ -189,9 +189,17 @@ export default {
   padding-bottom: 28px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
+
   .input-containers {
     padding: 30px 0;
-
+    @media (max-width: 768px) {
+      padding: 30px;
+    }
+    .search-container{
+      @media (max-width: 768px) {
+      padding: 0;
+      }
+    }
     div:nth-child(3) {
       @media(max-width: 768px) {
         margin: 20px 0;

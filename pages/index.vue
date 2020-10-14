@@ -9,6 +9,7 @@
                  :linkId="offre.id"
                  :img="offre.image"
                  :localisation="offre.localisation"
+                 :types="offre.typeoffres"
         />
       </b-row>
       <div class="msg" v-else-if="charged === true">
@@ -63,7 +64,6 @@ export default {
 
       //On boucle sur chacune des offres de la copie de la liste des offres
       [...this.listeOffresCopie].forEach((offre) => {
-
 
           /************************************************************/
           /*Tri par type d'offre et ajout des offres à la liste finale*/
