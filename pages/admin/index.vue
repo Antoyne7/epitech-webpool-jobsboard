@@ -45,7 +45,7 @@
           :localisation="offre.localisation"
           :candidaturesProp="offre.candidatures"
           admin-view="true"
-          @deleteOffre="$refs.offreDeletion.deleteModal(offre.id)"
+          @delete-offre="$refs.offreDeletion.deleteModal(offre.id)"
         />
       </b-row>
     </b-container>

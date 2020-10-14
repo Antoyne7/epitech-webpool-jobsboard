@@ -3,7 +3,8 @@
     <p class="my-4">
       <slot></slot>
     </p>
-    <b-button @click="deleteData">del</b-button>
+    <b-button variant="secondary" class="mr-2" @click="deleteData">Oui, supprimer.</b-button>
+    <b-button variant="primary" class="bg-blue-jobs"  @click="cancel">Annuler</b-button>
   </b-modal>
 </template>
 
@@ -33,14 +34,23 @@ export default {
           console.log('jai emit')
         })
         .catch(e => console.log(e))
+    },
+    cancel() {
+      this.$bvModal.hide('delete-modal')
+      this.toDelete = null
     }
   }
 }
 </script>
 
 <style scoped>
-  p {
+  p, button {
     font-size: 1.6rem;
+  }
+
+  button {
+    border-radius: 6px;
+    padding: 4px 12px;
   }
 
 </style>
