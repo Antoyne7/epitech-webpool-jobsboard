@@ -74,9 +74,38 @@
                 <span>{{ candidature.offre.entreprise.nom }}</span>
               </div>
               <p>{{ candidature.offre.short_description }}</p>
-              <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+              <div class="candidature-action">
+                <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+                <img @click="showCandidature(candidature)" src="~/static/icons/eye.svg"
+                     alt="Voir votre candidature">
+              </div>
             </div>
           </div>
+          <b-modal
+            id="modal-candidature"
+            title="Candidature"
+            hide-footer
+            hide-header
+            centered
+            size="lg">
+
+            <div class="p-3">
+              <h2>Votre candidature</h2>
+              <p>Envoyé le {{ getDate(candidatureToShow.created_at) }}</p>
+              <p>{{ candidatureToShow.text }}</p>
+              <button @click="showCandidatureModal = true"
+                      class="btn btn-outline-dark d-flex align-items-center p-3 my-3">
+                <span class="mr-2">Voir le CV</span>
+                <img id="cvShowCandidate" src="~/static/icons/eye.svg" style="width:30px;" alt="Voir le cv"/>
+              </button>
+
+              <Lightbox
+                v-bind="propertyCandidature"
+                @hide="showCandidatureModal = false"
+                v-show="showCandidatureModal">
+              </Lightbox>
+            </div>
+          </b-modal>
         </div>
         <div class="msg" v-else>
           Vous n'avez postulé à aucune offre pour le moment.
@@ -115,6 +144,12 @@ export default {
       showSync: null,
       open: false,
       cvPreview: null,
+      showCandidatureModal: false,
+      candidatureToShow: {
+        created_at: null,
+        text: null,
+        cv: null,
+      },
       alert: {
         alertShow: false,
         alertMsg: null,
@@ -214,6 +249,13 @@ export default {
       //On charge le CV dans la data pour pouvoir l'upload par la suite
       this.userInfo.cv = e.target.files[0]
     },
+    getDate(dateString) {
+      const date = new Date(dateString);
+      const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      // Pour une raison inconnue il faut month +1
+      return `${date.getDate()}/${date.getMonth() +
+      1}/${date.getFullYear()} à ${date.getHours()}H${minutes}`;
+    },
 
     updatePreviewImg(event) {
       //On change la data preview par l'url du fichier upload
@@ -222,16 +264,24 @@ export default {
       this.imgStyle = 'updated'
       this.userInfo.image = event.target.files[0];
     },
+    showCandidature(candidature) {
+      this.candidatureToShow = candidature;
+      this.$bvModal.show("modal-candidature");
+    },
   },
   computed: {
     property() {
       return {cv: this.cvPreview}
+    },
+    propertyCandidature() {
+      return {cv: param.cheminPhoto + this.candidatureToShow.cv}
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
 .title-deletion {
   display: flex;
   justify-content: space-between;
@@ -408,6 +458,7 @@ export default {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px 15px;
     margin: 10px 0;
+    background: white;
 
     h4 {
       display: flex;
@@ -443,8 +494,14 @@ export default {
       font-size: 1.6rem;
     }
 
+    .candidature-action {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
     a {
-      margin: 15px auto 10px;
+      margin: 15px 10px 10px;
       display: flex;
       width: 200px;
       height: 40px;
@@ -495,6 +552,31 @@ export default {
   animation-duration: 1.5s;
   animation-iteration-count: infinite;
   animation-name: scroll
+}
+
+//Style modal Candidature
+#modal-candidature {
+  h2 {
+    font-size: 2.3rem;
+  }
+
+  p {
+    font-size: 1.6rem;
+
+    &:first-of-type {
+      font-style: italic;
+    }
+  }
+
+  button {
+    font-size: 1.6rem;
+    margin: auto;
+
+    &:hover {
+      background: none;
+      color: black;
+    }
+  }
 }
 
 @keyframes scroll {
