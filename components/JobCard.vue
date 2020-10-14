@@ -1,17 +1,23 @@
 <template>
   <b-col lg="4" md="6" cols="12">
     <div class="card-container">
-      <div id="candids-tag" v-if="countNewCandidatures() > 0 && !pourvuValue">
-        {{ countNewCandidatures() }}
-      </div>
-      <div v-if="pourvuValue" id="pourvu-tag">
+      <div v-if="pourvuValue && adminView" id="pourvu-tag">
         Pourvu
       </div>
+      <div id="candids-tag" v-else-if="countNewCandidatures() > 0 && adminView">
+        {{ countNewCandidatures() }}
+      </div>
+      
       <h3>{{ title }}</h3>
       <br v-if="title.length < 22" />
       <!-- <div v-if="offre.ville">{{ offre.ville }}</div> -->
       <p>{{ descriptionFunc(shortDescription) }}</p>
-      <br v-if="shortDescription && shortDescription.length < 100" />
+      
+      
+     <br v-if="shortDescription.length < 100">
+      <div class="type-container">
+        <span v-for="type in typesOffres" :key="'type'+type.id">{{ type.nom }}</span>
+      </div>
       <img :src="img" alt="Image de l'offre" />
       <b-row
         class="admin-buttons w-100 mt-3 justify-content-end"
@@ -91,7 +97,8 @@ export default {
     "localisation",
     "adminView",
     "pourvu",
-    "candidaturesProp"
+    "candidaturesProp",
+    "types"
   ],
   data() {
     return {
@@ -101,11 +108,14 @@ export default {
       pourvuValue: this.pourvu,
       title_card: null,
       isDisable: false,
-      candidatures: null
-    };
+      candidatures: null,
+      typesOffres: [],
+    }
   },
   created() {
-    this.title_card = this.title;
+    this.typesOffres = this.types;
+    console.log(this.typesOffres)
+    this.title_card = this.title
     if (!this.adminView && this.$auth.user.candidatures) {
       this.candidatures = this.$auth.user.candidatures;
       this.candidatures.forEach(el => {
@@ -141,15 +151,15 @@ export default {
   background: white;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 500px;
+  height: 600px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  @media (max-width: 1100px) {
-    height: 430px;
-  }
-  @media (max-width: 992px) {
+  @media(max-width: 1100px) {
     height: 540px;
+  }
+  @media(max-width: 992px) {
+    height:640px;
   }
   margin: 15px 0;
 
@@ -235,8 +245,20 @@ export default {
     }
   }
 
-  .admin-buttons::v-deep svg {
-    color: white;
+
+  .type-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    height: fit-content;
+
+    span {
+      margin: 8px;
+      font-size: 1.3rem;
+      border: solid 1px var(--primary-jobs);
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
   }
 }
 </style>

@@ -481,12 +481,22 @@ export default {
         "1. mais aussi\n" +
         "2. ordonnées";
     },
+
     setLocalisation(localisation) {
       this.localisation.search = `${localisation.nom} ${localisation.codesPostaux[0]}, ${localisation.departement.nom}`;
       this.offre.localisation.codeDepartement = localisation.departement.code;
       this.offre.localisation.codeVille = localisation.code;
       this.offre.localisation.ville = localisation.nom;
       this.localisation.showList = false;
+    },
+
+    async updateLocalisation() {
+      if (this.localisation.search.length === 3) {
+        this.localisation.list = await this.$axios.$get('https://geo.api.gouv.fr/communes?nom=' + this.localisation.search + '&fields=nom,code,codesPostaux,codeDepartement,departement,codeRegion&format=json&geometry=centre')
+        this.localisation.showList = true
+      } else if (this.localisation.search.length < 3) {
+        this.localisation.list = []
+      }
     },
     setEntreprise(entreprise) {
       this.entreprise.search = entreprise.nom;

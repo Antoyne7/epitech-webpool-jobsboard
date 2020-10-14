@@ -465,11 +465,11 @@ export default {
   border-radius: 25px;
 }
 
-@media (max-width: 767px) {
-  .icon-scroll {
-    position: relative
-  }
-}
+//@media (max-width: 767px) {
+//  .icon-scroll {
+//    position: relative
+//  }
+//}
 
 .icon-scroll:before {
   content: '';
