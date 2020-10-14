@@ -6,29 +6,43 @@
           <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
             <!-- TODO: Enlever true -->
-            <span v-if="$store.state.auth.user.role === 2 || true"> 
-              <nuxt-link
-                v-if="isAdminRoute"
-                class="mr-4 text-dark font-weight-bolder"
-                to="/"
-              >
-                Front
-              </nuxt-link>
-              <nuxt-link
-                v-else
-                class="mr-4 text-dark font-weight-bolder"
-                to="/admin"
-              >
-                Administration
-              </nuxt-link>
+            <span v-if="$store.state.auth.user.role === 2 || true">
               <button class="mr-3" @click="isShowedAdmin = !isShowedAdmin">
                 <b-icon-gear-fill scale="3.3" />
                 <span class="drop-d" v-show="isShowedAdmin">
                   <ul>
-                    <li><b-icon-plus-square scale="2" /><nuxt-link :to="{ name: 'admin-offre-add' }">Nouvelle offre</nuxt-link></li>
-                    <li><b-icon-file-earmark scale="2" /><nuxt-link :to="{ name: 'admin-offretype' }">Types de contrats</nuxt-link></li>
-                    <li><b-icon-building scale="2" /><nuxt-link :to="{ name: 'admin-entreprise' }">Entreprises</nuxt-link></li>
-                  </ul>                 
+                    <li v-if="isAdminRoute">
+                      <b-icon-house scale="2" />
+                      <nuxt-link
+                        to="/">
+                        Accueil
+                      </nuxt-link>
+                    </li>
+                    <li v-else>
+                      <b-icon-gear scale="2" />
+                      <nuxt-link  
+                        to="/admin">
+                        Administration
+                      </nuxt-link></li>
+                    <li>
+                      <b-icon-plus-square scale="2" /><nuxt-link
+                        :to="{ name: 'admin-offre-add' }"
+                        >Nouvelle offre</nuxt-link
+                      >
+                    </li>
+                    <li>
+                      <b-icon-file-earmark scale="2" /><nuxt-link
+                        :to="{ name: 'admin-offretype' }"
+                        >Types de contrats</nuxt-link
+                      >
+                    </li>
+                    <li>
+                      <b-icon-building scale="2" /><nuxt-link
+                        :to="{ name: 'admin-entreprise' }"
+                        >Entreprises</nuxt-link
+                      >
+                    </li>
+                  </ul>
                 </span>
               </button>
             </span>

@@ -63,4 +63,9 @@ button.bg-blue-jobs {
     background: var(--primary-jobs-hover);
   }
 }
+
+.btn-light:not(:hover) {
+  background: transparent;
+  border: 1px solid transparent;
+}
 </style>
