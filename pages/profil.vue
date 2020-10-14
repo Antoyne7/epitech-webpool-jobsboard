@@ -2,7 +2,7 @@
   <b-container>
     <b-row class="ligne">
       <b-col lg="5" md="12" cols="12">
-        <h2>Modifier vos informations</h2>
+        <h2>Modifier vos informations <BasicDataDeletion/></h2>
         <div class="position-relative d-flex align-items-center justify-content-center col-md-6 px-0"
              id="file-container">
           <input type="file" accept="image/gif, image/png, image/jpeg" id="image" class="h-100 w-100 position-absolute"
@@ -87,12 +87,14 @@ import Lightbox from "@/components/Lightbox";
 import Alert from "@/components/Alert";
 import param from "@/param/param";
 import ModalSuccess from "@/components/modalSuccess";
+import BasicDataDeletion from "@/components/DataDeletion";
 
 
 export default {
   name: "profil",
   middleware: 'auth',
   components: {
+    BasicDataDeletion,
     ModalSuccess,
     Alert,
     Lightbox,

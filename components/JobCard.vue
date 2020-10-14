@@ -131,11 +131,16 @@ export default {
     height: fit-content;
 
     span {
-      margin: 8px;
+      margin: 5px;
       font-size: 1.3rem;
+      background: var(--primary-jobs);
       border: solid 1px var(--primary-jobs);
       border-radius: 5px;
+      color: white;
+      font-weight: 500;
+      text-transform: capitalize;
       padding: 5px 10px;
+
     }
   }
 }
