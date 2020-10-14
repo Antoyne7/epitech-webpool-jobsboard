@@ -443,18 +443,6 @@ export default {
     updatePreviewImg(event) {
       this.preview = window.URL.createObjectURL(event.target.files[0]);
     },
-    async updateLocalisation() {
-      if (this.localisation.search.length === 3) {
-        this.localisation.list = await this.$axios.$get(
-          "https://geo.api.gouv.fr/communes?nom=" +
-            this.localisation.search +
-            "&fields=nom,code,codesPostaux,codeDepartement,departement,codeRegion&format=json&geometry=centre"
-        );
-        this.localisation.showList = true;
-      } else if (this.localisation.search.length < 3) {
-        this.localisation.list = [];
-      }
-    },
     entrepriseSubmit() {
       const entrepriseFormdata = new FormData();
       entrepriseFormdata.append("nom", this.entreprise.add);

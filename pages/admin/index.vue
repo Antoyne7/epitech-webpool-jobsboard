@@ -1,61 +1,16 @@
 <template>
-  <div>
-    <SearchBar />
-    <DataDeletion @deletion="refreshOffres" type="offres" ref="offreDeletion">
-      Supprimer l'offre ?
-    </DataDeletion>
-    <b-container class="container-cards">
-      <b-row>
-        <JobCard
-          v-for="offre in listeOffres"
-          :title="offre.nom"
-          :key="offre.id"
-          :short-description="offre.short_description"
-          :linkId="offre.id"
-          :img="offre.image"
-          :pourvu="offre.pourvu"
-          :localisation="offre.localisation"
-          :candidaturesProp="offre.candidatures"
-          admin-view="true"
-          @delete-offre="$refs.offreDeletion.deleteModal(offre.id)"
-        />
-      </b-row>
-    </b-container>
-  </div>
+  <ListeOffres :admin-view="true" />
 </template>
 
 <script>
-import JobCard from "@/components/JobCard";
-import SearchBar from "@/components/SearchBar";
-import DataDeletion from "@/components/DataDeletion";
+import ListeOffres from "~/components/ListeOffres";
 
 export default {
   name: "Index",
-  components: {
-    JobCard,
-    SearchBar,
-    DataDeletion
-  },
-  data() {
-    return {
-      listeOffres: []
-    };
-  },
-  methods: {
-    refreshOffres() {
-      this.$axios.$get("/back/api/offres").then(promise => {
-        console.log(promise);
-        this.listeOffres = promise;
-      });
-    },
-    preDelete(offreId) {
-      console.log("suppression");
-    }
-  },
-  created() {
-    this.refreshOffres();
-  }
+  components: { ListeOffres },
+  middleware: "auth",
 };
 </script>
+<style lang="scss">
 
-<style scoped></style>
+</style>

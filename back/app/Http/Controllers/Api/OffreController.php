@@ -20,7 +20,7 @@ class OffreController extends Controller
      */
     public function index()
     {
-        return response(Offre::with(['entreprise', 'tags', 'typeoffres', 'candidatures'])->get());
+        return response(Offre::with(['entreprise', 'tags', 'typeoffres', 'candidatures'])->orderBy('created_at', 'DESC')->get());
     }
 
     /**

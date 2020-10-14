@@ -2,7 +2,13 @@
   <b-container>
     <b-row class="ligne">
       <b-col lg="5" md="12" cols="12">
-        <h2>Modifier vos informations</h2>
+        <h2 class="title-deletion">Modifier vos informations
+          <BasicDataDeletion type="utilisateurs" :with-success="true"
+                             message-success="Votre compte a bien été supprimé !" route="/login" :with-dcnx="true"
+                             :with-poubelle="true" :id="userInfo.id" title="Attention !">Voulez-vous vraiment
+            supprimer votre profil ? Toutes les données assossiées seront effacées.
+          </BasicDataDeletion>
+        </h2>
         <div class="position-relative d-flex align-items-center justify-content-center col-md-6 px-0"
              id="file-container">
           <input type="file" accept="image/gif, image/png, image/jpeg" id="image" class="h-100 w-100 position-absolute"
@@ -68,9 +74,39 @@
                 <span>{{ candidature.offre.entreprise.nom }}</span>
               </div>
               <p>{{ candidature.offre.short_description }}</p>
-              <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+              <div class="candidature-action">
+<!--                <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>-->
+                <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
+                <img @click="showCandidature(candidature)" src="~/static/icons/eye.svg"
+                     alt="Voir votre candidature">
+              </div>
             </div>
           </div>
+          <b-modal
+            id="modal-candidature"
+            title="Candidature"
+            hide-footer
+            hide-header
+            centered
+            size="lg">
+
+            <div class="p-3">
+              <h2>Votre candidature</h2>
+              <p>Envoyé le {{ getDate(candidatureToShow.created_at) }}</p>
+              <p>{{ candidatureToShow.text }}</p>
+              <button @click="showCandidatureModal = true"
+                      class="btn btn-outline-dark d-flex align-items-center p-3 my-3">
+                <span class="mr-2">Voir le CV</span>
+                <img id="cvShowCandidate" src="~/static/icons/eye.svg" style="width:30px;" alt="Voir le cv"/>
+              </button>
+
+              <Lightbox
+                v-bind="propertyCandidature"
+                @hide="showCandidatureModal = false"
+                v-show="showCandidatureModal">
+              </Lightbox>
+            </div>
+          </b-modal>
         </div>
         <div class="msg" v-else>
           Vous n'avez postulé à aucune offre pour le moment.
@@ -87,12 +123,14 @@ import Lightbox from "@/components/Lightbox";
 import Alert from "@/components/Alert";
 import param from "@/param/param";
 import ModalSuccess from "@/components/modalSuccess";
+import BasicDataDeletion from "@/components/DataDeletion";
 
 
 export default {
   name: "profil",
   middleware: 'auth',
   components: {
+    BasicDataDeletion,
     ModalSuccess,
     Alert,
     Lightbox,
@@ -107,6 +145,12 @@ export default {
       showSync: null,
       open: false,
       cvPreview: null,
+      showCandidatureModal: false,
+      candidatureToShow: {
+        created_at: null,
+        text: null,
+        cv: null,
+      },
       alert: {
         alertShow: false,
         alertMsg: null,
@@ -148,6 +192,21 @@ export default {
   },
 
   methods: {
+    stringToSlug(str) {
+      str = str.replace(/^\s+|\s+$/g, ''); // trim
+      str = str.toLowerCase();
+
+      let from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+      let to = "aaaaeeeeiiiioooouuuunc------";
+      for (let i = 0, l = from.length; i < l; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+      }
+
+      str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+      return str + '-' + id;
+    },
     submit() {
       if (this.userInfo.password === this.passwordConfirm || (!this.password && this.passwordConfirm === null)) {
         const params = new FormData();
@@ -206,6 +265,13 @@ export default {
       //On charge le CV dans la data pour pouvoir l'upload par la suite
       this.userInfo.cv = e.target.files[0]
     },
+    getDate(dateString) {
+      const date = new Date(dateString);
+      const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      // Pour une raison inconnue il faut month +1
+      return `${date.getDate()}/${date.getMonth() +
+      1}/${date.getFullYear()} à ${date.getHours()}H${minutes}`;
+    },
 
     updatePreviewImg(event) {
       //On change la data preview par l'url du fichier upload
@@ -214,16 +280,29 @@ export default {
       this.imgStyle = 'updated'
       this.userInfo.image = event.target.files[0];
     },
+    showCandidature(candidature) {
+      this.candidatureToShow = candidature;
+      this.$bvModal.show("modal-candidature");
+    },
   },
   computed: {
     property() {
       return {cv: this.cvPreview}
+    },
+    propertyCandidature() {
+      return {cv: param.cheminPhoto + this.candidatureToShow.cv}
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+.title-deletion {
+  display: flex;
+  justify-content: space-between;
+}
+
 .msg {
   width: 100%;
   text-align: center;
@@ -395,6 +474,7 @@ export default {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px 15px;
     margin: 10px 0;
+    background: white;
 
     h4 {
       display: flex;
@@ -430,8 +510,14 @@ export default {
       font-size: 1.6rem;
     }
 
+    .candidature-action {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
     a {
-      margin: 15px auto 10px;
+      margin: 15px 10px 10px;
       display: flex;
       width: 200px;
       height: 40px;
@@ -482,6 +568,31 @@ export default {
   animation-duration: 1.5s;
   animation-iteration-count: infinite;
   animation-name: scroll
+}
+
+//Style modal Candidature
+#modal-candidature {
+  h2 {
+    font-size: 2.3rem;
+  }
+
+  p {
+    font-size: 1.6rem;
+
+    &:first-of-type {
+      font-style: italic;
+    }
+  }
+
+  button {
+    font-size: 1.6rem;
+    margin: auto;
+
+    &:hover {
+      background: none;
+      color: black;
+    }
+  }
 }
 
 @keyframes scroll {

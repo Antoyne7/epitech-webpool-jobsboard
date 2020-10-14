@@ -7,7 +7,6 @@
 
 <script>
 import Sucess from "./Sucess";
-import param from "../param/param";
 
 export default {
   name: "modalSuccess",
@@ -26,8 +25,18 @@ export default {
   },
   methods: {
     goTo: function () {
-      this.$router.push(this.$props.route);
+      if (this.needDcnx) {
+        this.$auth.logout()
+          .then(() => {
+            this.$router.push(this.$props.route);
+          }).catch((err) => {
+          console.dir(err)
+        })
+      } else {
+        this.$router.push(this.$props.route);
+      }
     },
+
     modalHide: function () {
       this.$bvModal.hide(this.id);
     }

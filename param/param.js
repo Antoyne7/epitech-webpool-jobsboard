@@ -1,28 +1,31 @@
 // Serveur fournisseur des données
 // const host = 'https://backend.antoinebraillard.tech/jobboard/public/index.php/api/';
-const host = 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/';
+// const host = 'http://jobs.epitech.fr/back/public/api/';
+// const host = "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/";
+
+const host = "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/";
 
 
 export default {
-
-  cheminPhoto: 'http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/storage/app/',
+  cheminPhoto:
+    "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/storage/app/",
+  // cheminPhoto: "http://jobs.epitech.fr/back/storage/app/",
 
   // Les différentes adresses des flux de données
-  listeCandidatures: host + 'candidatures',
-  listeOffres: host + 'offres',
-  ajoutUtilisateur: host + 'utilisateurs',
+  listeCandidatures: host + "candidatures",
+  listeOffres: host + "offres",
+  ajoutUtilisateur: host + "utilisateurs",
 
-  register: host + 'register',
-  login: host + 'login',
-  logout: host + 'logout',
+  register: host + "register",
+  login: host + "login",
+  logout: host + "logout",
 
-  typeOffres: host + 'typeoffres',
-  tags: host + 'tags',
-  entreprises: host + 'entreprises',
+  typeOffres: host + "typeoffres",
+  tags: host + "tags",
+  entreprises: host + "entreprises",
 
-  getUser: host + 'utilisateurs',
-  updateUser: host + 'utilisateurs',
-
+  getUser: host + "utilisateurs",
+  updateUser: host + "utilisateurs",
 
   //Messages d'erreur
   message: {
@@ -40,10 +43,11 @@ export default {
     errNoInfo: "Veuillez remplir les informations",
     errMail: "Un compte est déjà lié à cette adresse mail.",
     errMailused: "Cette addresse mail est déjà utilisée.",
-    errCv: 'Veuillez envoyer un cv avec votre candidature',
-    errText: 'Veuillez renseigner un message de plus de 6 caractères pour la candidature',
+    errCv: "Veuillez envoyer un cv avec votre candidature",
+    errText:
+      "Veuillez renseigner un message de plus de 6 caractères pour la candidature",
 
-    sucProfil: 'Vos informations ont bien été mises à jour !',
+    sucProfil: "Vos informations ont bien été mises à jour !",
     sucPasswords: "Les mots de passe correspondent"
   }
-}
+};

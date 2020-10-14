@@ -7,6 +7,7 @@
       <b-col class="separator" lg="1" md="1"></b-col>
       <b-col lg="6" md="6" cols="12">
         <h3>{{ offre.nom }}</h3>
+        <p>Postée le {{ getDate(offre.created_at) }}</p>
         <div v-if="offre.tags.length > 0" class="tags-container">
           <Tag v-for="tag in offre.tags" :key="tag.id" :text="tag.nom"/>
         </div>
@@ -23,14 +24,13 @@
         <p>{{ offre.short_description }}</p>
       </b-col>
     </b-row>
-    <b-row class="desc-container m-0">
+    <b-row class="desc-container m-0 mb-4">
       <b-col lg="10" md="12" cols="12">
-        <p>
-          {{ offre.description }}
+        <p v-html="getDescription">
         </p>
       </b-col>
     </b-row>
-    <button v-b-modal.modal_offre>
+    <button v-if="!disabled" :disabled="disabled" v-b-modal.modal_offre>
       Postuler
     </button>
     <b-modal class="modal-offre" size="lg" id="modal_offre" hide-footer hide-header>
@@ -80,14 +80,13 @@
 
 <script>
 import AjaxServices from '~/services/ajaxServices'
-import Tag from '~/components/Tag'
 import Lightbox from "@/components/Lightbox";
 import param from "@/param/param";
 import Alert from "@/components/Alert";
 import ModalSuccess from "@/components/modalSuccess";
 
 export default {
-  name: "_slug",
+  name: "Slug",
   components: {ModalSuccess, Alert, Lightbox},
   middleware: 'auth',
   data() {
@@ -97,6 +96,7 @@ export default {
       profilCv: false,
       show: false,
       cvUpload: null,
+      disabled: false,
       iscandidated: false,
       alert: {
         typeAlert: null,
@@ -115,70 +115,106 @@ export default {
   computed: {
     property() {
       return {cv: param.cheminPhoto + this.$auth.user.cv}
-    }
+    },
+
   },
   methods: {
-    submit() {
-      let params = new FormData;
-      params.append('idUser', this.$auth.user.id);
-      params.append('idOffre', this.id);
-      params.append('text', this.candidature.text);
-      if (this.profilCv) {
-        params.append('cv', this.$auth.user.cv);
-      } else {
-        params.append('cv', this.cvUpload);
-      }
-      this.$axios.$post('back/api/candidatures', params).then((response) => {
-        console.log(response)
-        if (response.status_code === 422) {
-          if (response.error_code === 11) {
-            this.alert.msgAlert = param.message.errText;
-            this.alert.typeAlert = "error";
-            this.alert.showAlert = true;
-          }
-          if (response.error_code === 12) {
-            this.alert.msgAlert = param.message.errCv;
-            this.alert.typeAlert = "error";
-            this.alert.showAlert = true;
-          }
-        } else if (response.statusCode === 200) {
-          this.alert.showAlert = false;
-          this.isCandidated = true;
-          this.$bvModal.hide('modal_offre');
-          this.$bvModal.show('success');
-          this.$auth.fetchUser();
+    isDisabled() {
+      this.$auth.user.candidatures.forEach((candidature) => {
+        if (candidature.offre_id === parseInt(this.id)) {
+          this.disabled = true;
+          return true
         }
-      }).catch((err) => {
-        console.dir(err)
-        this.alert.msgAlert = param.message.errDefault;
-        this.alert.typeAlert = "error";
-        this.alert.showAlert = true;
       })
+    },
+    submit() {
+      console.log(this.disabled)
+      if (this.disabled === false) {
+        let params = new FormData;
+        params.append('idUser', this.$auth.user.id);
+        params.append('idOffre', this.id);
+        params.append('text', this.candidature.text);
+        if (this.profilCv) {
+          params.append('cv', this.$auth.user.cv);
+        } else {
+          params.append('cv', this.cvUpload);
+        }
+        this.$axios.$post('back/api/candidatures', params).then((response) => {
+          console.log(response)
+          if (response.status_code === 422) {
+            if (response.error_code === 11) {
+              this.alert.msgAlert = param.message.errText;
+              this.alert.typeAlert = "error";
+              this.alert.showAlert = true;
+            }
+            if (response.error_code === 12) {
+              this.alert.msgAlert = param.message.errCv;
+              this.alert.typeAlert = "error";
+              this.alert.showAlert = true;
+            }
+          } else if (response.statusCode === 200) {
+            this.alert.showAlert = false;
+            this.isCandidated = true;
+            this.$bvModal.hide('modal_offre');
+            this.$bvModal.show('success');
+            this.$auth.fetchUser();
+          }
+        }).catch((err) => {
+          console.dir(err)
+          this.alert.msgAlert = param.message.errDefault;
+          this.alert.typeAlert = "error";
+          this.alert.showAlert = true;
+        })
+      }
     },
     fileUpload(e) {
       let files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
       //On charge le CV dans la data pour pouvoir l'upload par la suite
       this.cvUpload = e.target.files[0]
+    },
+    getDate(dateString) {
+      const date = new Date(dateString);
+      const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      // Pour une raison inconnue il faut month +1
+      return `${date.getDate()}/${date.getMonth() +
+        1}/${date.getFullYear()} à ${date.getHours()}H${minutes}`;
     }
   },
   created() {
     console.log(this.$auth.user)
+    // if (this.$route.params.id) {
+    // this.id = this.$route.params.id;
     this.id = this.$route.params.slug;
+    // } else {
+    //   let cut = this.$route.params.slug.split('-')
+    //   if (!isNaN(parseInt(cut[cut.length - 1]))) {
+    //     this.id = parseInt(cut[cut.length - 1]);
+    //     console.log(this.id)
+    //   }
+    // }
+    // if (this.id !== 0) {
     AjaxServices.getInformations('listeOffres', this.id).then((promise) => {
-      console.log(promise)
       this.offre = promise;
-      console.log(this.offre.tags)
+      this.isDisabled()
     }).catch((err) => {
       console.dir(err)
     })
+    // } else {
+    //   console.log(this.$options.nuxt)
+    // }
+  },
+  computed: {
+    getDescription() {
+      if (typeof marked !== 'undefined' && this.offre !== null) {
+        return marked(this.offre.description)
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
-
 /* Mise en forme page */
 .tags-container {
   display: flex;
@@ -186,9 +222,11 @@ export default {
   @media (max-width: 992px) {
     margin: 5px 0;
   }
-
-  div:not(:first-of-type) {
+  div {
     margin: 0 20px;
+  }
+  div:first-of-type, div:last-of-type {
+    margin: 0;
   }
 }
 

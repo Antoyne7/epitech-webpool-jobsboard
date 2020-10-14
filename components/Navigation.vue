@@ -83,15 +83,15 @@ export default {
       this.$auth
         .logout()
         .then(() => {
-          console.log("success");
-          this.$router.push("/login");
-        })
-        .catch(err => {
-          console.dir(err);
-        });
+          this.$router.push('/login')
+        }).catch((err)=>{
+          console.dir(err)
+      })
     },
     updateIsAdminRoute() {
-      this.isAdminRoute = this.$route.name.includes("admin");
+      if (this.$route.name) {
+        this.isAdminRoute = this.$route.name.includes('admin')
+      }
     }
   },
   mounted() {

@@ -16,7 +16,7 @@ export default {
 
 <style lang="scss">
 :root {
-  --primary-jobs: #260592;
+  --primary-jobs: #2b08a4;
   --color-background: #FBFBFF
 }
 

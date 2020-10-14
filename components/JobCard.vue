@@ -7,23 +7,28 @@
       <div id="candids-tag" v-else-if="countNewCandidatures() > 0 && adminView">
         {{ countNewCandidatures() }}
       </div>
-      
+
       <h3>{{ title }}</h3>
       <br v-if="title.length < 22" />
       <!-- <div v-if="offre.ville">{{ offre.ville }}</div> -->
       <p>{{ descriptionFunc(shortDescription) }}</p>
-      
-      
-     <br v-if="shortDescription.length < 100">
+
+      <br v-if="shortDescription.length < 100" />
       <div class="type-container">
-        <span v-for="type in typesOffres" :key="'type'+type.id">{{ type.nom }}</span>
+        <span v-for="type in typesOffres" :key="'type' + type.id">{{
+          type.nom
+        }}</span>
       </div>
       <img :src="img" alt="Image de l'offre" />
       <b-row
         class="admin-buttons w-100 mt-3 justify-content-end"
         v-if="adminView"
       >
-        <b-button @click="$emit('delete-offre')" variant="danger" class="mr-auto danger">
+        <b-button
+          @click="$emit('delete-offre')"
+          variant="danger"
+          class="mr-auto danger"
+        >
           <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
         <b-button
@@ -78,6 +83,7 @@
         v-else
         :to="{ name: 'slug', params: { slug: linkId } }"
       >
+        <!--   :to="{ name: 'slug', params: { slug: stringToSlug(title, linkId), id: linkId }}"-->
         <button :disabled="isDisable">En savoir plus</button>
       </nuxt-link>
     </div>
@@ -109,13 +115,13 @@ export default {
       title_card: null,
       isDisable: false,
       candidatures: null,
-      typesOffres: [],
-    }
+      typesOffres: []
+    };
   },
   created() {
     this.typesOffres = this.types;
-    console.log(this.typesOffres)
-    this.title_card = this.title
+    console.log(this.typesOffres);
+    this.title_card = this.title;
     if (!this.adminView && this.$auth.user.candidatures) {
       this.candidatures = this.$auth.user.candidatures;
       this.candidatures.forEach(el => {
@@ -126,7 +132,24 @@ export default {
       });
     }
   },
+
   methods: {
+    stringToSlug(str, id) {
+      str = str.replace(/^\s+|\s+$/g, ""); // trim
+      str = str.toLowerCase();
+
+      let from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+      let to = "aaaaeeeeiiiioooouuuunc------";
+      for (let i = 0, l = from.length; i < l; i++) {
+        str = str.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));
+      }
+
+      str = str
+        .replace(/[^a-z0-9 -]/g, "") // remove invalid chars
+        .replace(/\s+/g, "-") // collapse whitespace and replace by -
+        .replace(/-+/g, "-"); // collapse dashes
+      return str + "-" + id;
+    },
     descriptionFunc(desc) {
       if (desc && desc.length > 100) {
         return desc.slice(0, 100) + "...";
@@ -155,11 +178,11 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  @media(max-width: 1100px) {
+  @media (max-width: 1100px) {
     height: 540px;
   }
-  @media(max-width: 992px) {
-    height:640px;
+  @media (max-width: 992px) {
+    height: 640px;
   }
   margin: 15px 0;
 
@@ -232,6 +255,9 @@ export default {
       width: 42px;
       height: 42px;
       border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       svg {
         width: 70%;
         height: auto;
@@ -240,11 +266,10 @@ export default {
     & button.danger {
       background-color: var(--red);
       &:hover {
-        opacity: .9;
+        opacity: 0.9;
       }
     }
   }
-
 
   .type-container {
     width: 100%;
@@ -253,10 +278,14 @@ export default {
     height: fit-content;
 
     span {
-      margin: 8px;
+      margin: 3px;
       font-size: 1.3rem;
+      background: var(--primary-jobs);
       border: solid 1px var(--primary-jobs);
       border-radius: 5px;
+      color: white;
+      font-weight: 500;
+      text-transform: capitalize;
       padding: 5px 10px;
     }
   }
