@@ -1,8 +1,8 @@
 <template>
   <div>
     <Navigation />
-    <Nuxt/>
-    <Footer/>
+    <Nuxt />
+    <Footer />
   </div>
 </template>
 
@@ -11,17 +11,17 @@ import Navigation from "~/components/Navigation";
 import Footer from "~/components/Footer";
 
 export default {
-  components: {Footer, Navigation}
-
-}
+  components: { Footer, Navigation }
+};
 </script>
 
 <style lang="scss">
 :root {
   --primary-jobs: #260592;
-  --color-background: #FBFBFF;
-  --red: #D1301A;
-  --green: #36CB45; 
+  --primary-jobs-hover: #2a03aa;
+  --color-background: #fbfbff;
+  --red: #d1301a;
+  --green: #36cb45;
 }
 
 html {
@@ -54,6 +54,13 @@ header {
 
 .bg-blue-jobs {
   background: var(--primary-jobs);
+  border: none;
 }
 
+button.bg-blue-jobs {
+  color: white;
+  &:hover {
+    background: var(--primary-jobs-hover);
+  }
+}
 </style>

@@ -5,20 +5,39 @@
         <div class="navbar-custom">
           <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
-            <span v-if="$store.state.auth.user.role === 2">
-              <nuxt-link v-if="isAdminRoute" class="mr-4 text-dark font-weight-bolder" to="/">
+            <!-- TODO: Enlever true -->
+            <span v-if="$store.state.auth.user.role === 2 || true"> 
+              <nuxt-link
+                v-if="isAdminRoute"
+                class="mr-4 text-dark font-weight-bolder"
+                to="/"
+              >
                 Front
               </nuxt-link>
-              <nuxt-link v-else class="mr-4 text-dark font-weight-bolder" to="/admin">
+              <nuxt-link
+                v-else
+                class="mr-4 text-dark font-weight-bolder"
+                to="/admin"
+              >
                 Administration
               </nuxt-link>
+              <button class="mr-3" @click="isShowedAdmin = !isShowedAdmin">
+                <b-icon-gear-fill scale="3.3" />
+                <span class="drop-d" v-show="isShowedAdmin">
+                  <ul>
+                    <li><b-icon-plus-square scale="2" /><nuxt-link :to="{ name: 'admin-offre-add' }">Nouvelle offre</nuxt-link></li>
+                    <li><b-icon-file-earmark scale="2" /><nuxt-link :to="{ name: 'admin-offretype' }">Types de contrats</nuxt-link></li>
+                    <li><b-icon-building scale="2" /><nuxt-link :to="{ name: 'admin-entreprise' }">Entreprises</nuxt-link></li>
+                  </ul>                 
+                </span>
+              </button>
             </span>
             <nuxt-link to="/profil">
-              <img src="/icons/ic_person_48px.svg" alt="Icône de personne">
+              <img src="/icons/ic_person_48px.svg" alt="Icône de personne" />
             </nuxt-link>
-            <button @click="dropdown()">
-              <img src="/icons/disconnect.svg" alt="Icône deconnexion">
-              <span class="drop-d" v-show="isShowed">
+            <button @click="isShowedDcnx = !isShowedDcnx">
+              <img src="/icons/disconnect.svg" alt="Icône deconnexion" />
+              <span class="drop-d" v-show="isShowedDcnx">
                 <a @click="disconnect()">Deconnexion</a>
               </span>
             </button>
@@ -35,37 +54,36 @@ export default {
 
   data() {
     return {
-      isShowed: false,
+      isShowedDcnx: false,
+      isShowedAdmin: false,
       isAdminRoute: null
-    }
+    };
   },
   watch: {
-    $route () {
-      this.updateIsAdminRoute()
+    $route() {
+      this.updateIsAdminRoute();
     }
   },
   methods: {
-    dropdown() {
-      this.isShowed = !this.isShowed
-    },
     disconnect() {
-      this.$auth.logout()
+      this.$auth
+        .logout()
         .then(() => {
-          console.log('success')
-          this.$router.push('/login')
-        }).catch((err)=>{
-          console.dir(err)
-      })
+          console.log("success");
+          this.$router.push("/login");
+        })
+        .catch(err => {
+          console.dir(err);
+        });
     },
     updateIsAdminRoute() {
-      this.isAdminRoute = this.$route.name.includes('admin')
+      this.isAdminRoute = this.$route.name.includes("admin");
     }
   },
   mounted() {
-    this.updateIsAdminRoute()
+    this.updateIsAdminRoute();
   }
-
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -100,6 +118,7 @@ nav {
     a {
       cursor: pointer;
       font-size: 1.6rem;
+      color: inherit;
     }
 
     button {
@@ -131,7 +150,7 @@ nav {
           width: 0;
           height: 2px;
           background: var(--primary-jobs);
-          transition: all ease-in-out .3s;
+          transition: all ease-in-out 0.3s;
         }
 
         &:hover {
@@ -140,6 +159,22 @@ nav {
           &:after {
             width: 10%;
             transform: translate(-50%) scaleX(9);
+          }
+        }
+      }
+      ul {
+        padding: 0;
+        list-style: none;
+        margin: 0;
+        li {
+          display: flex;
+          align-items: center;
+          margin: 4px 0;
+          text-align: left;
+
+          svg {
+            width: 24px;
+            margin-right: 6px;
           }
         }
       }

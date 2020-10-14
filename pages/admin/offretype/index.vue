@@ -2,18 +2,23 @@
   <div>
     <DataDeletion ref="deleteComponent" type="typeOffres" :data-id="toDelete">On supprime mon pote typeoffre
     </DataDeletion>
-    <b-container class="mt-4">
-      <b-row>
-        <b-button :to="{ name: 'admin' }" block variant="primary" size="lg">
-          back
+    <b-container class="my-5">
+      <b-row class="justify-content-between">
+        <b-button variant="light" @click="$router.back()" class="back text-uppercase font-weight-bold d-flex align-items-center">
+          <img src="~/static/icons/ic_chevron_right_48px.svg" alt="Retour page précédente">
+          Retour
         </b-button>
-        <b-button :to="{ name: 'admin-offretype-add' }">
-          Ajout nouveau type offre
-        </b-button>
+        <div>
+          <b-button class="new-offre" variant="light" :to="{ name: 'admin-offretype-add' }">
+            <b-icon-plus-square class="mr-2" />
+            Nouveau type de contrat
+          </b-button>
+        </div>
       </b-row>
     </b-container>
-    <b-container class="container-cards">
 
+    
+    <b-container class="container-cards">
       <DataCard v-for="typeOffre in listeTypeOffres" v-bind:key="typeOffre.id" :delete-function="deleteFunction"
                 :to="'./offretype/edit/' + typeOffre.id"
                 :data="typeOffre">
@@ -64,6 +69,27 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+button, a, p, div {
+  font-size: 1.6rem;
+}
+
+button, a {
+  border-radius: 6px;
+  padding: 6px 12px;
+  &.new-offre {
+    font-weight: bold;
+  }
+  &.back {
+    img {
+      transform: rotate(180deg);
+      width: 24px;
+    }
+  }
+}
+
+.container-cards {
+  margin: 30px auto;
+}
 
 </style>

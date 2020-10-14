@@ -179,7 +179,7 @@ export default {
   #candids-tag {
     font-size: 1.4rem;
     font-weight: bold;
-    text-transform: capitalize;
+    text-transform: uppercase;
     display: flex;
     justify-content: center;
     align-items: center;
