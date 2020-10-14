@@ -4,6 +4,7 @@
     <b-container class="container-cards">
       <b-row v-if="showOffres.length > 0 && charged === true">
         <JobCard v-for="offre in showOffres" :title="offre.nom"
+                 :key="offre.id"
                  :short-description="offre.short_description"
                  :linkId="offre.id"
                  :img="offre.image"
@@ -53,74 +54,58 @@ export default {
     })
   },
   methods: {
+    //On détecte ici chaques changements dans le composant searchbar et on récupère les données
     handleChange(event) {
-      console.log('Changement', event)
+      //On reset les variables de liste et celles sur le nombre de cartes à afficher pour pouvoir les ajuster
       this.listeOffres = [];
       this.nbrShowed = 1;
       this.nbr = 0;
+
+      //On boucle sur chacune des offres de la copie de la liste des offres
       [...this.listeOffresCopie].forEach((offre) => {
-          let i = 0;
+
+
+          /************************************************************/
+          /*Tri par type d'offre et ajout des offres à la liste finale*/
+          /************************************************************/
           if (offre.typeoffres.length > 0) {
+            //Si l'offre contient des types d'offres, alors on boucle parmis ces types d'offres
             offre.typeoffres.forEach((typeoffre) => {
-              if ((event.selectedTypeOffre == 0 || typeoffre.id == event.selectedTypeOffre) && i === 0) {
-                console.log('declenched')
-                i++
+              //Si il n'y a pas de type d'offre choisi ou si ce dernier est égal au type d'offre de l'offre, et que cette dernière n'est
+              //pas déjà dans la liste, alors on l'ajoute dans listeOffres (qui affiche les offres à la fin)
+              if ((event.selectedTypeOffre == 0 || typeoffre.id == event.selectedTypeOffre) && !this.listeOffres.includes(offre)) {
                 this.listeOffres.push(offre);
               }
             })
+            //Si l'offre en contient pas de type d'offre et qu'il n'y a pas de type d'offre choisi, on rajoute l'offre
+            //  dans la liste finale
           } else if (event.selectedTypeOffre == 0) {
-            console.log('declenched too')
             this.listeOffres.push(offre)
           }
 
-
-          if (event.location.name && event.location.name.length > 0 && ((event.location.code !== offre.code_ville) && (event.location.code !== offre.code_departement))) {
+          /************************/
+          /* Tri par localisation */
+          /************************/
+          //Si le code de la ville/dpt n'est pas égale à un de ceux présents dans l'offre alors on retire l'offre de la liste finale
+          if (this.listeOffres.includes(offre) && event.location.name && event.location.name.length > 0 && ((event.location.code !== offre.code_ville) && (event.location.code !== offre.code_departement))) {
             let index = this.listeOffres.indexOf(offre)
             this.listeOffres.splice(index, 1)
-            console.log('Je retire')
           }
 
-          // console.table('Comprend pas', this.listeOffres)
-          // if (event.query && event.query.length > 0) {
-          //   if (offre.nom.toLowerCase().includes(event.query.toLowerCase())) {
-          //     this.listeOffres.push(offre)
-          //   }
-          // } else {
-          //
-          // }
+          /*********************/
+          /* Tri par recherche */
+          /*********************/
+          //Si la string tapée par l'utilisateur n'est pas dans le nom de l'offre alors on retire cette dernière de la liste finale
+          if (event.query && event.query.length > 0 && !offre.nom.toLowerCase().includes(event.query.toLowerCase()) && this.listeOffres.includes(offre)) {
+            let index = this.listeOffres.indexOf(offre)
+            this.listeOffres.splice(index, 1)
+          }
+
         }
       )
+      //Changement de l'affichage du bouton "voir plus"
       this.changeButtonState();
     },
-
-    // changeType(type) {
-    //   this.typeOffreSelected = type;
-    //   if (!this.queryString) {
-    //     this.findTypes();
-    //   } else {
-    //     this.searchQuery(this.queryString)
-    //   }
-    // },
-    //
-    // findTypes() {
-    //   if (this.typeOffreSelected != 0) {
-    //     this.nbrShowed = 1;
-    //     this.nbr = 0;
-    //     this.listeOffres = [];
-    //     this.listeOffresCopie.forEach((offre) => {
-    //       let i = 0;
-    //       offre.typeoffres.forEach((typeoffre) => {
-    //         if ((typeoffre.id == this.typeOffreSelected || this.typeOffreSelected === 0) && i === 0) {
-    //           i++
-    //           this.listeOffres.push(offre)
-    //         }
-    //       })
-    //     })
-    //   } else {
-    //     this.listeOffres = this.listeOffresCopie;
-    //   }
-    //   this.changeButtonState();
-    // },
 
     changeButtonState() {
       let number = 0
