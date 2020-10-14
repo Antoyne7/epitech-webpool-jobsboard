@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div id="main-container">
     <Navigation />
-    <Nuxt />
+    <Nuxt id="main" />
     <Footer />
   </div>
 </template>
@@ -31,6 +31,21 @@ html {
 body {
   background: var(--color-background);
   font-family: Rubik, sans-serif;
+  height: 100vh;
+}
+
+body > div, body > div > div {
+  height: 100%;
+}
+
+#main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#main {
+  flex: 1 0 auto;
 }
 
 header {
