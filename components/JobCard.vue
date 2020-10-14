@@ -7,18 +7,18 @@
       <div id="candids-tag" v-else-if="countNewCandidatures() > 0 && adminView">
         {{ countNewCandidatures() }}
       </div>
-      
+
       <h3>{{ title }}</h3>
-      <br v-if="title.length < 22" />
+      <br v-if="title.length < 22"/>
       <!-- <div v-if="offre.ville">{{ offre.ville }}</div> -->
       <p>{{ descriptionFunc(shortDescription) }}</p>
-      
-      
-     <br v-if="shortDescription.length < 100">
+
+
+      <br v-if="shortDescription.length < 100">
       <div class="type-container">
         <span v-for="type in typesOffres" :key="'type'+type.id">{{ type.nom }}</span>
       </div>
-      <img :src="img" alt="Image de l'offre" />
+      <img :src="img" alt="Image de l'offre"/>
       <b-row
         class="admin-buttons w-100 mt-3 justify-content-end"
         v-if="adminView"
@@ -76,8 +76,9 @@
       <nuxt-link
         :title="title_card"
         v-else
-        :to="{ name: 'slug', params: { slug: linkId } }"
+        :to="{ name: 'slug', params: { slug:linkId }}"
       >
+        <!--   :to="{ name: 'slug', params: { slug: stringToSlug(title, linkId), id: linkId }}"-->
         <button :disabled="isDisable">En savoir plus</button>
       </nuxt-link>
     </div>
@@ -126,7 +127,23 @@ export default {
       });
     }
   },
+
   methods: {
+    stringToSlug(str, id) {
+      str = str.replace(/^\s+|\s+$/g, ''); // trim
+      str = str.toLowerCase();
+
+      let from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+      let to = "aaaaeeeeiiiioooouuuunc------";
+      for (let i = 0, l = from.length; i < l; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+      }
+
+      str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+      return str + '-' + id;
+    },
     descriptionFunc(desc) {
       if (desc && desc.length > 100) {
         return desc.slice(0, 100) + "...";

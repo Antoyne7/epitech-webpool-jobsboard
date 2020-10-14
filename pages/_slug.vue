@@ -23,14 +23,14 @@
         <p>{{ offre.short_description }}</p>
       </b-col>
     </b-row>
-    <b-row class="desc-container m-0">
+    <b-row class="desc-container m-0 mb-4">
       <b-col lg="10" md="12" cols="12">
         <p>
           {{ offre.description }}
         </p>
       </b-col>
     </b-row>
-    <button v-b-modal.modal_offre>
+    <button v-if="!disabled" :disabled="disabled" v-b-modal.modal_offre>
       Postuler
     </button>
     <b-modal class="modal-offre" size="lg" id="modal_offre" hide-footer hide-header>
@@ -80,7 +80,6 @@
 
 <script>
 import AjaxServices from '~/services/ajaxServices'
-import Tag from '~/components/Tag'
 import Lightbox from "@/components/Lightbox";
 import param from "@/param/param";
 import Alert from "@/components/Alert";
@@ -97,6 +96,7 @@ export default {
       profilCv: false,
       show: false,
       cvUpload: null,
+      disabled: false,
       iscandidated: false,
       alert: {
         typeAlert: null,
@@ -115,45 +115,57 @@ export default {
   computed: {
     property() {
       return {cv: param.cheminPhoto + this.$auth.user.cv}
-    }
+    },
+
   },
   methods: {
-    submit() {
-      let params = new FormData;
-      params.append('idUser', this.$auth.user.id);
-      params.append('idOffre', this.id);
-      params.append('text', this.candidature.text);
-      if (this.profilCv) {
-        params.append('cv', this.$auth.user.cv);
-      } else {
-        params.append('cv', this.cvUpload);
-      }
-      this.$axios.$post('back/api/candidatures', params).then((response) => {
-        console.log(response)
-        if (response.status_code === 422) {
-          if (response.error_code === 11) {
-            this.alert.msgAlert = param.message.errText;
-            this.alert.typeAlert = "error";
-            this.alert.showAlert = true;
-          }
-          if (response.error_code === 12) {
-            this.alert.msgAlert = param.message.errCv;
-            this.alert.typeAlert = "error";
-            this.alert.showAlert = true;
-          }
-        } else if (response.statusCode === 200) {
-          this.alert.showAlert = false;
-          this.isCandidated = true;
-          this.$bvModal.hide('modal_offre');
-          this.$bvModal.show('success');
-          this.$auth.fetchUser();
+    isDisabled() {
+      this.$auth.user.candidatures.forEach((candidature) => {
+        if (candidature.offre_id === parseInt(this.id)) {
+          this.disabled = true;
+          return true
         }
-      }).catch((err) => {
-        console.dir(err)
-        this.alert.msgAlert = param.message.errDefault;
-        this.alert.typeAlert = "error";
-        this.alert.showAlert = true;
       })
+    },
+    submit() {
+      console.log(this.disabled)
+      if (this.disabled === false) {
+        let params = new FormData;
+        params.append('idUser', this.$auth.user.id);
+        params.append('idOffre', this.id);
+        params.append('text', this.candidature.text);
+        if (this.profilCv) {
+          params.append('cv', this.$auth.user.cv);
+        } else {
+          params.append('cv', this.cvUpload);
+        }
+        this.$axios.$post('back/api/candidatures', params).then((response) => {
+          console.log(response)
+          if (response.status_code === 422) {
+            if (response.error_code === 11) {
+              this.alert.msgAlert = param.message.errText;
+              this.alert.typeAlert = "error";
+              this.alert.showAlert = true;
+            }
+            if (response.error_code === 12) {
+              this.alert.msgAlert = param.message.errCv;
+              this.alert.typeAlert = "error";
+              this.alert.showAlert = true;
+            }
+          } else if (response.statusCode === 200) {
+            this.alert.showAlert = false;
+            this.isCandidated = true;
+            this.$bvModal.hide('modal_offre');
+            this.$bvModal.show('success');
+            this.$auth.fetchUser();
+          }
+        }).catch((err) => {
+          console.dir(err)
+          this.alert.msgAlert = param.message.errDefault;
+          this.alert.typeAlert = "error";
+          this.alert.showAlert = true;
+        })
+      }
     },
     fileUpload(e) {
       let files = e.target.files || e.dataTransfer.files;
@@ -164,15 +176,28 @@ export default {
   },
   created() {
     console.log(this.$auth.user)
+    // if (this.$route.params.id) {
+    // this.id = this.$route.params.id;
     this.id = this.$route.params.slug;
+    // } else {
+    //   let cut = this.$route.params.slug.split('-')
+    //   if (!isNaN(parseInt(cut[cut.length - 1]))) {
+    //     this.id = parseInt(cut[cut.length - 1]);
+    //     console.log(this.id)
+    //   }
+    // }
+    // if (this.id !== 0) {
     AjaxServices.getInformations('listeOffres', this.id).then((promise) => {
-      console.log(promise)
       this.offre = promise;
-      console.log(this.offre.tags)
+      this.isDisabled()
     }).catch((err) => {
       console.dir(err)
     })
+    // } else {
+    //   console.log(this.$options.nuxt)
+    // }
   }
+
 }
 </script>
 

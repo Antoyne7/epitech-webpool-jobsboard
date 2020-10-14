@@ -75,6 +75,7 @@
               </div>
               <p>{{ candidature.offre.short_description }}</p>
               <div class="candidature-action">
+<!--                <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>-->
                 <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
                 <img @click="showCandidature(candidature)" src="~/static/icons/eye.svg"
                      alt="Voir votre candidature">
@@ -191,6 +192,21 @@ export default {
   },
 
   methods: {
+    stringToSlug(str) {
+      str = str.replace(/^\s+|\s+$/g, ''); // trim
+      str = str.toLowerCase();
+
+      let from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+      let to = "aaaaeeeeiiiioooouuuunc------";
+      for (let i = 0, l = from.length; i < l; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+      }
+
+      str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+      return str + '-' + id;
+    },
     submit() {
       if (this.userInfo.password === this.passwordConfirm || (!this.password && this.passwordConfirm === null)) {
         const params = new FormData();

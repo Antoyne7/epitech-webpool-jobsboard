@@ -57,7 +57,9 @@ export default {
       })
     },
     updateIsAdminRoute() {
-      this.isAdminRoute = this.$route.name.includes('admin')
+      if (this.$route.name) {
+        this.isAdminRoute = this.$route.name.includes('admin')
+      }
     }
   },
   mounted() {

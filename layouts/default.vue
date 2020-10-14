@@ -11,7 +11,7 @@ import Navigation from "~/components/Navigation";
 import Footer from "~/components/Footer";
 
 export default {
-  components: {Footer, Navigation}
+  components: {Footer, Navigation},
 
 }
 </script>
@@ -21,7 +21,7 @@ export default {
   --primary-jobs: #260592;
   --color-background: #FBFBFF;
   --red: #D1301A;
-  --green: #36CB45; 
+  --green: #36CB45;
 }
 
 html {
