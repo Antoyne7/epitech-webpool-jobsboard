@@ -208,7 +208,6 @@ export default {
       });
     },
     submit() {
-      console.log(this.disabled);
       if (this.disabled === false) {
         let params = new FormData();
         params.append("idUser", this.$auth.user.id);
@@ -222,7 +221,6 @@ export default {
         this.$axios
           .$post("back/api/candidatures", params)
           .then(response => {
-            console.log(response);
             if (response.status_code === 422) {
               if (response.error_code === 11) {
                 this.alert.msgAlert = param.message.errText;
@@ -266,7 +264,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$auth.user);
     // if (this.$route.params.id) {
     // this.id = this.$route.params.id;
     this.id = this.$route.params.slug;
@@ -274,7 +271,6 @@ export default {
     //   let cut = this.$route.params.slug.split('-')
     //   if (!isNaN(parseInt(cut[cut.length - 1]))) {
     //     this.id = parseInt(cut[cut.length - 1]);
-    //     console.log(this.id)
     //   }
     // }
     // if (this.id !== 0) {
@@ -287,7 +283,6 @@ export default {
         console.dir(err);
       });
     // } else {
-    //   console.log(this.$options.nuxt)
     // }
   },
 }

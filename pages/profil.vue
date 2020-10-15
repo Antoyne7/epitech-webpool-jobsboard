@@ -181,7 +181,6 @@ export default {
   mounted() {
     if (this.$auth.user.candidatures) {
       this.candidatures = this.$auth.user.candidatures;
-      console.log(this.candidatures)
     }
     this.$axios.$get('/back/api/utilisateurs/' + this.$auth.user.id)
       .then((promise) => {
@@ -253,7 +252,6 @@ export default {
         //On ajoute cela aux informations afin de simuler une requête "put"
         params.append('_method', 'put')
         this.$axios.$post('back/api/utilisateurs/' + this.userInfo.id, params).then((resp) => {
-          console.log(resp)
           if (resp.status_code === 422) {
             if (resp.error_code === 10) {
               this.alert.alertMsg = param.message.errPasswordLength

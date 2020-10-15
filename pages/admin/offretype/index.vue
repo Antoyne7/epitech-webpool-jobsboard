@@ -8,7 +8,7 @@
       id="formmodal"
       :data-object="toEdit"
       :submit-function="formSubmitFunc"
-      :error="error" 
+      :error="error"
       :errMsg="errMsg"
     >
       {{ formText }}
@@ -109,7 +109,6 @@ export default {
     this.updateList();
     const self = this;
     this.$nuxt.$on("deletion", function() {
-      console.log("emit recept");
       self.updateList();
     });
   },
@@ -127,7 +126,6 @@ export default {
       });
     },
     setError(msg = null) {
-      console.log('set error:', msg);
       this.error = true
       this.errMsg = msg || param.message.errDefault
     },
@@ -165,7 +163,6 @@ export default {
     },
     update(objet) {
       // Update, afficher animation success puis retour a la liste des entreprise
-      console.log('update2');
       this.$axios
         .$put("/back/api/typeoffres/" + objet.id, objet)
         .then((data) => {

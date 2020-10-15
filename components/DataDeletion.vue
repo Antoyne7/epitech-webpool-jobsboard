@@ -53,9 +53,6 @@ export default {
       showSuccess: false
     }
   },
-  created() {
-    console.log(this.withSuccess)
-  },
   methods: {
     deleteModal(id) {
       this.toDelete = id
@@ -115,7 +112,7 @@ p, button {
   border: solid 1px var(--red);
   &:hover {
     opacity: .8;
-    
+
   }
 }
 

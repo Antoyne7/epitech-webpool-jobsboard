@@ -98,7 +98,6 @@ export default {
               this.listLoc.push(el)
             }
           )
-          console.log(this.listLoc)
         } else if (name.length < 3) {
           this.listLoc = []
           if (name.length === 0) {

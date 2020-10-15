@@ -31,12 +31,8 @@ export default {
       formdata.append('entreprise', data.entreprise.id)
       formdata.append('shortDescription', data.shortDescription)
       formdata.append('description', data.description )
-
-      console.log('data:', data)
-
       this.$axios.$post('/back/api/offres/' + this.$route.params.slug, formdata)
         .then(data => {
-          console.log(data)
         })
         .catch(error => {
           console.dir(error)

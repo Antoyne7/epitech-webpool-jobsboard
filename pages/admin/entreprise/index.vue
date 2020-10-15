@@ -121,7 +121,6 @@ export default {
     this.updateList();
     const self = this;
     this.$nuxt.$on("deletion", function() {
-      console.log("emit recept");
       self.updateList();
     });
   },
@@ -139,7 +138,6 @@ export default {
       });
     },
     setError(msg = null) {
-      console.log("set error:", msg);
       this.error = true;
       this.errMsg = msg || param.message.errDefault;
     },

@@ -120,7 +120,6 @@ export default {
   },
   created() {
     this.typesOffres = this.types;
-    console.log(this.typesOffres);
     this.title_card = this.title;
     if (!this.adminView && this.$auth.user.candidatures) {
       this.candidatures = this.$auth.user.candidatures;

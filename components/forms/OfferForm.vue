@@ -358,7 +358,6 @@ export default {
   methods: {
     preSubmit(event, offre) {
       event.preventDefault();
-      console.log("pre submit de l'ajout d'offre");
       if (offre.pourvu === 1) {
         this.errorMsg = 'Impossible de modifié l\'offre car celle-ci est déjà pourvu.'
         this.error = true

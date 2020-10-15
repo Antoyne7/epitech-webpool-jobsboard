@@ -32,11 +32,9 @@ export default {
       formdata.append('shortDescription', data.shortDescription)
       formdata.append('description', data.description )
 
-      console.log('data:', data)
-
       AjaxServices.pushInformations('listeOffres', formdata)
         .then(data => {
-          console.log(data)
+
         })
         .catch(error => {
           console.dir(error)

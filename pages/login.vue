@@ -64,9 +64,7 @@ export default {
           formData.append('email', this.email)
           formData.append('password', this.password)
           await this.$auth.loginWith('local', {data: formData}).then((res) => {
-            console.log(res)
           });
-          console.log('user:', this.$auth.user)
         }
       } catch (err) {
         this.alertMsgGlobal = param.message.errCnx;
