@@ -114,15 +114,15 @@ export default {
   axios: {
     //
     // baseURL: 'https://backend.antoinebraillard.tech/jobboard/public/index.php/',
-    // baseURL: 'http://jobs.epitech.fr/back/public/',
+    baseURL: 'http://jobs.epitech.fr/back/public/',
     credentials: true,
     proxy: true
   },
 
   proxy: {
     "/back": {
-      target: "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/",
-      // target: "http://jobs.epitech.fr/back/public/",
+      // target: "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/",
+      target: "http://jobs.epitech.fr/back/public/",
       pathRewrite: { "^/back": "/" }
     }
   },
