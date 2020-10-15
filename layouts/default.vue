@@ -34,7 +34,8 @@ body {
   height: 100vh;
 }
 
-body > div, body > div > div {
+body > div#__nuxt,
+body > div#__nuxt > div#__layout {
   height: 100%;
 }
 
@@ -82,5 +83,15 @@ button.bg-blue-jobs {
 .btn-light:not(:hover) {
   background: transparent;
   border: 1px solid transparent;
+}
+
+.container button.back {
+  color: black;
+  width: fit-content;
+  padding: 8px 12px;
+  img {
+    transform: rotate(180deg);
+    width: 24px;
+  }
 }
 </style>

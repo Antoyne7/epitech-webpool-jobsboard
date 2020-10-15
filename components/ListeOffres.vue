@@ -1,7 +1,7 @@
 <template>
   <div>
     <SearchBar @changeData="handleChange($event)" />
-    <DataDeletion @deletion="refreshOffres" type="offres" ref="offreDeletion">
+    <DataDeletion @deletion="refreshOffres" type="offres" ref="offreDeletion" title="Suppression">
       Supprimer l'offre ?
     </DataDeletion>
     <b-container class="container-cards">

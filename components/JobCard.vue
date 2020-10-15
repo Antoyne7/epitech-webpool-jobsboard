@@ -19,7 +19,7 @@
           type.nom
         }}</span>
       </div>
-      <img :src="img" alt="Image de l'offre" />
+      <img :src="$getImage(img)" alt="Image de l'offre" />
       <b-row
         class="admin-buttons w-100 mt-3 justify-content-end"
         v-if="adminView"
@@ -227,6 +227,8 @@ export default {
 
   img {
     width: 100%;
+    max-height: 300px;
+    object-fit: cover;
   }
 
   h3 {

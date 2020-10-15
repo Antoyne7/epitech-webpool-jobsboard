@@ -15,7 +15,7 @@
     </svg>
     <b-modal id="delete-modal" title="Modal de suppression" hide-footer hide-header>
       <h2>{{ title }}</h2>
-      <p class="my-4">
+      <p class="my-4 text-center">
         <slot></slot>
       </p>
       <div class="btn-containers">
@@ -104,12 +104,19 @@ p, button {
   border: solid 1px var(--primary-jobs);
   background: none;
   color: var(--primary-jobs);
+  &:hover {
+    color: white;
+  }
 }
 
 .attention {
   margin-left: 10px;
-  background: #ed4337;
-  border: solid 1px #ed4337;
+  background: var(--red);
+  border: solid 1px var(--red);
+  &:hover {
+    opacity: .8;
+    
+  }
 }
 
 button {

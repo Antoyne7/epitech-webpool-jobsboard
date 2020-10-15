@@ -36,52 +36,6 @@
         Annuler
       </button>
     </b-modal>
-    <b-modal
-      id="modal-candidature"
-      title="Candidature"
-      hide-footer
-      hide-header
-      centered
-      size="lg"
-    >
-      <div v-if="candidatureToShow !== null" class="p-4">
-        <h2>
-          Candidature de {{ candidatureToShow.utilisateur.prenom }}
-          {{ candidatureToShow.utilisateur.nom.toUpperCase() }}
-        </h2>
-        <p>Envoyé le {{ getDate(candidatureToShow.created_at) }}</p>
-        <p>
-          {{ candidatureToShow.text }}
-        </p>
-        <button
-          @click="show = true"
-          class="btn btn-outline-dark d-flex align-items-center p-3 my-3"
-        >
-          <span class="mr-2">
-            Voir le CV
-          </span>
-          <img
-            id="cvShow"
-            src="~/static/icons/eye.svg"
-            style="width:30px;"
-            alt="Voir le cv"
-          />
-        </button>
-        <Lightbox
-          v-bind="property"
-          @hide="show = false"
-          v-show="show"
-        ></Lightbox>
-        <div>
-          <a
-            :href="`mailto:${candidatureToShow.utilisateur.email}`"
-            class="contact"
-          >
-            Contacter
-          </a>
-        </div>
-      </div>
-    </b-modal>
     <b-container>
       <b-row class="mt-3">
         <b-col v-if="offre && offre.pourvu" id="pourvu-text" cols="12">
@@ -226,13 +180,14 @@
             >
               <input
                 type="file"
+                accept="image/*,.pdf"
                 id="image"
                 class="h-100 w-100 position-absolute"
                 @change="updatePreviewImg($event)"
               />
               <img
                 class="mx-auto d-block mh-100 mw-100"
-                :src="getImage(preview)"
+                :src="$getImage(preview)"
                 alt="Prévisualisation de l'image"
               />
             </div>
@@ -299,6 +254,7 @@
                 v-html="compiledDescription"
               ></div>
             </div>
+            <Alert class="text-center w-100 mt-5" v-show="error" type="error" :msg="errorMsg" />
 
             <div class="d-flex col-12 mt-4">
               <button
@@ -310,41 +266,7 @@
             </div>
           </form>
         </div>
-        <div
-          v-if="offre && !offre.pourvu && offre.candidatures.length > 0"
-          id="candidatures"
-          class="mb-4"
-        >
-          <h2 class="col-12">Candidatures</h2>
-          <div class="d-flex col-12">
-            <b-card
-              :title="
-                candidature.utilisateur.prenom +
-                  ' ' +
-                  candidature.utilisateur.nom.toUpperCase()
-              "
-              style="max-width: 30rem;"
-              class="mb-2 mx-2"
-              v-for="candidature in offre.candidatures"
-              v-bind:key="candidature.id"
-            >
-              <b-card-text>
-                {{
-                  candidature.text.length > 50
-                    ? candidature.text.slice(0, 50) + "..."
-                    : candidature.text
-                }}
-              </b-card-text>
-              <button
-                type="button"
-                class="bg-jobs rounded-lg px-4 py-2 btn btn-primary"
-                @click="showCandidature(candidature)"
-              >
-                Voir
-              </button>
-            </b-card>
-          </div>
-        </div>
+        <ListeCandidatures :offre="offre" />
       </b-row>
     </b-container>
   </div>
@@ -357,8 +279,9 @@ import camera from "~/static/icons/camera.svg";
 import edit from "~/static/icons/edit.svg";
 import AjaxServices from "~/services/ajaxServices";
 import modalSuccess from "@/components/modalSuccess";
-import param from "@/param/param";
 import Lightbox from "~/components/Lightbox";
+import Alert from "~/components/Alert";
+import ListeCandidatures from "~/components/ListeCandidatures";
 
 export default {
   name: "OfferForm",
@@ -366,7 +289,9 @@ export default {
     Tag,
     CheckboxButton,
     modalSuccess,
-    Lightbox
+    Lightbox,
+    Alert,
+    ListeCandidatures
   },
   props: {
     onSubmit: {
@@ -386,7 +311,8 @@ export default {
   },
   data() {
     return {
-      cheminImage: param.cheminPhoto,
+      error: false,
+      errorMsg: '',
       msgOffre: "L'offre à bien été créer",
       typeOffres: [],
       preview: camera,
@@ -394,8 +320,6 @@ export default {
       types: [],
       description: "",
       tagsText: "",
-      candidatureToShow: null,
-      show: false,
       localisation: {
         search: "",
         list: [],
@@ -432,6 +356,11 @@ export default {
     preSubmit(event, offre) {
       event.preventDefault();
       console.log("pre submit de l'ajout d'offre");
+      if (offre.pourvu === 1) {
+        this.errorMsg = 'Impossible de modifié l\'offre car celle-ci est déjà pourvu.'
+        this.error = true
+        return
+      }
       this.offre.offreType = this.$store.state.offretype.types;
       this.offre.image = document.querySelector('input[type="file"]').files[0];
       this.$bvModal.show("modal-succ-offre");
@@ -492,25 +421,6 @@ export default {
       this.offre.entreprise.id = entreprise.id;
       this.entreprise.showList = false;
     },
-    getImage(photo) {
-      if (photo.includes("://") || photo.includes("data:image")) {
-        return photo;
-      } else {
-        return this.cheminImage + photo;
-      }
-    },
-    showCandidature(candidature) {
-      this.candidatureToShow = candidature;
-      this.$bvModal.show("modal-candidature");
-      this.$axios.$get("/back/api/candidatures/" + candidature.id + "/seen");
-    },
-    getDate(dateString) {
-      const date = new Date(dateString);
-      const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-      // Pour une raison inconnue il faut month +1
-      return `${date.getDate()}/${date.getMonth() +
-        1}/${date.getFullYear()} ${date.getHours()}H${minutes}`;
-    }
   },
   computed: {
     compiledDescription() {
@@ -551,7 +461,7 @@ export default {
       }
     },
     property() {
-      return { cv: this.getImage(this.candidatureToShow.cv) };
+      return { cv: this.$getImage(this.candidatureToShow.cv) };
     }
   },
   async mounted() {
@@ -768,45 +678,5 @@ div#file-container {
   }
 }
 
-//  Candidature
-.candidature {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 10px 15px;
-  margin: 10px 0;
 
-  h4 {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    font-weight: 500;
-    font-size: 2rem;
-
-    span {
-      font-size: 1.6rem;
-      font-weight: 400;
-    }
-  }
-
-  p {
-    margin-top: 10px;
-    font-weight: 400;
-    font-size: 1.6rem;
-  }
-
-  a {
-    margin: 15px auto 10px;
-    display: flex;
-    width: 200px;
-    height: 40px;
-    background: var(--primary-jobs);
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-    font-size: 1.6rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    border-radius: 5px;
-  }
-}
 </style>
