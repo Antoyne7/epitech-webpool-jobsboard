@@ -46,6 +46,7 @@ export default {
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
+
     // https://go.nuxtjs.dev/bootstrap
     [
       "bootstrap-vue/nuxt",
@@ -58,7 +59,7 @@ export default {
     // https://go.nuxtjs.dev/pwa
 
     "@nuxtjs/pwa",
-    "@nuxtjs/auth"
+    "@nuxtjs/auth",
   ],
 
   auth: {

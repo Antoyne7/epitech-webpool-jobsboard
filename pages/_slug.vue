@@ -47,7 +47,7 @@
                 d="M24 4c-7.73 0-14 6.27-14 14 0 10.5 14 26 14 26s14-15.5 14-26c0-7.73-6.27-14-14-14zm0 19c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
             </g>
           </svg>
-          {{ offre.localisation }}
+          {{ offre.ville }}, {{offre.code_departement}}
       </span>
       </h2>
       <div class="tags-container">
@@ -61,7 +61,7 @@
             <input v-model="profilCv" type="checkbox">
             <span class="slider round"></span>
           </label>
-          <span>Utiliser le cv du profil<a><img @click="show = true" src="/icons/eye.svg" alt="Voir le cv"></a></span>
+          <span>Utiliser le cv du profil<a><img @click="showCv()" src="/icons/eye.svg" alt="Voir le cv"></a></span>
         </div>
         <lightbox v-bind="property" @hide="show = false" v-show="show"/>
         <div class="msg">
@@ -100,6 +100,7 @@ export default {
       show: false,
       cvUpload: null,
       disabled: false,
+      cvName: false,
       iscandidated: false,
       alert: {
         typeAlert: null,
@@ -115,13 +116,31 @@ export default {
       }
     }
   },
+
   computed: {
+    getDescription() {
+      if (typeof marked !== 'undefined' && this.offre !== null) {
+        return marked(this.offre.description)
+      }
+    },
     property() {
       return {cv: param.cheminPhoto + this.$auth.user.cv}
     },
 
   },
   methods: {
+    getFileExtension(filename) {
+      return filename.split('.').pop();
+    },
+
+    showCv() {
+      const name = this.$auth.user.cv.split('/');
+      if (this.getFileExtension(name[name.length - 1]) === 'pdf') {
+        window.open(param.cheminPhoto + this.$auth.user.cv, '_blank', '');
+      } else {
+        this.show = true
+      }
+    },
     isDisabled() {
       this.$auth.user.candidatures.forEach((candidature) => {
         if (candidature.offre_id === parseInt(this.id)) {
@@ -207,13 +226,6 @@ export default {
     //   console.log(this.$options.nuxt)
     // }
   },
-  computed: {
-    getDescription() {
-      if (typeof marked !== 'undefined' && this.offre !== null) {
-        return marked(this.offre.description)
-      }
-    }
-  }
 }
 </script>
 

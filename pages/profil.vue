@@ -40,7 +40,7 @@
 
               <input @change="fileUpload($event)" type="file" name="cv" id="cv"
                      accept="image/gif, image/jpeg, image/png, application/pdf"/>
-              <img @click="show = true" v-show="cvPreview !== null" id="cvShow" src="~/static/icons/eye.svg"
+              <img @click="showCv()" v-show="cvPreview !== null" id="cvShow" src="~/static/icons/eye.svg"
                    alt="Voir votre cv">
             </div>
             <lightbox v-bind="property" @hide="show = false" v-show="show"></lightbox>
@@ -77,7 +77,7 @@
               <div class="candidature-action">
 <!--                <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>-->
                 <nuxt-link :to="'/' + candidature.offre.id">Voir l'offre</nuxt-link>
-                <img @click="showCandidature(candidature)" src="~/static/icons/eye.svg"
+                <img style="cursor:pointer;" @click="showCandidature(candidature)" src="~/static/icons/eye.svg"
                      alt="Voir votre candidature">
               </div>
             </div>
@@ -94,12 +94,11 @@
               <h2>Votre candidature</h2>
               <p>Envoyé le {{ getDate(candidatureToShow.created_at) }}</p>
               <p>{{ candidatureToShow.text }}</p>
-              <button @click="showCandidatureModal = true"
+              <button @click="showCandidatureCv()"
                       class="btn btn-outline-dark d-flex align-items-center p-3 my-3">
                 <span class="mr-2">Voir le CV</span>
                 <img id="cvShowCandidate" src="~/static/icons/eye.svg" style="width:30px;" alt="Voir le cv"/>
               </button>
-
               <Lightbox
                 v-bind="propertyCandidature"
                 @hide="showCandidatureModal = false"
@@ -137,6 +136,7 @@ export default {
   },
   data() {
     return {
+      pdfSrc: null,
       candidatures: [],
       preview: camera,
       imgStyle: 'not-updated',
@@ -145,6 +145,7 @@ export default {
       showSync: null,
       open: false,
       cvPreview: null,
+      cvName: null,
       showCandidatureModal: false,
       candidatureToShow: {
         created_at: null,
@@ -182,6 +183,7 @@ export default {
           this.imgStyle = 'updated'
         }
         if (this.userInfo.cv) {
+          this.cvName = this.userInfo.cv.split('/')[1]
           this.cvPreview = param.cheminPhoto + promise.cv
           this.action = "Modifiez"
         }
@@ -192,6 +194,27 @@ export default {
   },
 
   methods: {
+    getFileExtension(filename) {
+      return filename.split('.').pop();
+    },
+
+    showCv() {
+      if (this.getFileExtension(this.cvName) === 'pdf') {
+        window.open(this.cvPreview, '_blank');
+      } else {
+        this.show = true
+      }
+    },
+
+    showCandidatureCv() {
+      const name = this.candidatureToShow.cv.split('/');
+      if (this.getFileExtension(name[name.length - 1]) === 'pdf') {
+        window.open(this.cvPreview, '_blank');
+      } else {
+        this.showCandidatureModal = true
+      }
+    },
+
     stringToSlug(str) {
       str = str.replace(/^\s+|\s+$/g, ''); // trim
       str = str.toLowerCase();
@@ -260,6 +283,7 @@ export default {
     fileUpload(e) {
       let files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
+      this.cvName = e.target.files[0].name;
       //On change cvPreview pour afficher le nouveau cv
       this.cvPreview = window.URL.createObjectURL(e.target.files[0])
       //On charge le CV dans la data pour pouvoir l'upload par la suite
