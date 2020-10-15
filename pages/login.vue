@@ -17,7 +17,7 @@
             <AuthRedirection class="auth-redirection"
                              text="Créer un compte"/>
           </nuxt-link>
-          <AuthRedirection class="auth-redirection" text="Mot de passe oublié"/>
+          <!-- <AuthRedirection class="auth-redirection" text="Mot de passe oublié"/> -->
         </b-col>
       </b-col>
     </div>
