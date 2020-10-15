@@ -58,6 +58,8 @@
     <button v-if="!disabled" :disabled="disabled" v-b-modal.modal_offre>
       Postuler
     </button>
+
+    <ListeCandidatures v-if="this.$store.$auth.user.role === 2" :offre="offre" />
     <b-modal
       class="modal-offre"
       size="lg"
@@ -154,10 +156,11 @@ import Lightbox from "@/components/Lightbox";
 import param from "@/param/param";
 import Alert from "@/components/Alert";
 import ModalSuccess from "@/components/modalSuccess";
+import ListeCandidatures from "@/components/ListeCandidatures";
 
 export default {
   name: "Slug",
-  components: { ModalSuccess, Alert, Lightbox },
+  components: { ModalSuccess, Alert, Lightbox, ListeCandidatures },
   middleware: "auth",
   data() {
     return {
