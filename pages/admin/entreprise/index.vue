@@ -90,6 +90,12 @@ import { ContentLoader } from "vue-content-loader";
 import param from "@/param/param";
 
 export default {
+  head() {
+    return {
+      title: 'Jobs - entreprises'
+    }
+  },
+
   name: "Index",
   components: {
     DataCard,

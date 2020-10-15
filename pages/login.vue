@@ -29,10 +29,14 @@ import Alert from "@/components/Alert";
 import AuthButton from "~/components/AuthButton";
 import StyledInput from "~/components/StyledInput";
 import AuthRedirection from "~/components/AuthRedirection";
-import AjaxServices from '~/services/ajaxServices'
 import param from "@/param/param";
 
 export default {
+  head() {
+    return {
+      title: 'Jobs - connexion'
+    }
+  },
 
   name: "login.vue",
   layout: 'auth',

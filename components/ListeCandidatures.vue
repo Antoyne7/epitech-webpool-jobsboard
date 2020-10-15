@@ -18,7 +18,7 @@
           {{ candidatureToShow.text }}
         </p>
         <button
-          @click="show = true"
+          @click="showCv()"
           class="btn-outline-dark d-flex btn-cv align-items-center p-3 my-3"
         >
           <span class="mr-2">
@@ -95,6 +95,7 @@
 
 <script>
 import Lightbox from "~/components/Lightbox";
+import param from '~/param/param'
 
 export default {
   name: "ListeCandidatures",
@@ -110,7 +111,24 @@ export default {
       show: false
     };
   },
+  computed: {
+    property() {
+      return { cv: this.$getImage(this.candidatureToShow.cv) };
+    }
+  },
   methods: {
+    getFileExtension(filename) {
+      return filename.split(".").pop();
+    },
+
+    showCv() {
+      const name = this.candidatureToShow.cv.split("/");
+      if (this.getFileExtension(name[name.length - 1]) === "pdf") {
+        window.open(param.cheminPhoto + this.candidatureToShow.cv, "_blank", "");
+      } else {
+        this.show = true;
+      }
+    },
     showCandidature(candidature) {
       this.candidatureToShow = candidature;
       this.$bvModal.show("modal-candidature");

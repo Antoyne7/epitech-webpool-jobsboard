@@ -37,6 +37,7 @@
       </button>
     </b-modal>
     <b-container>
+      <BackButton class="mt-4" />
       <b-row class="mt-3">
         <b-col v-if="offre && offre.pourvu" id="pourvu-text" cols="12">
           <b-icon-check></b-icon-check>
@@ -282,6 +283,7 @@ import modalSuccess from "@/components/modalSuccess";
 import Lightbox from "~/components/Lightbox";
 import Alert from "~/components/Alert";
 import ListeCandidatures from "~/components/ListeCandidatures";
+import BackButton from "~/components/BackButton";
 
 export default {
   name: "OfferForm",
@@ -291,7 +293,8 @@ export default {
     modalSuccess,
     Lightbox,
     Alert,
-    ListeCandidatures
+    ListeCandidatures,
+    BackButton
   },
   props: {
     onSubmit: {

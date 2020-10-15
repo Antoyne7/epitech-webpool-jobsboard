@@ -1,31 +1,23 @@
 <template>
   <b-container v-if="offre">
        <!-- Boutons back et ajout -->
-    <b-container class="my-5">
-      <b-row class="justify-content-between">
-        <b-button
-          variant="light"
-          @click="$router.back()"
-          class="back text-uppercase font-weight-bold d-flex align-items-center"
-        >
-          <img
-            src="~/static/icons/ic_chevron_right_48px.svg"
-            alt="Retour page précédente"
-          />
-          Retour
-        </b-button>
-      </b-row>
-    </b-container>
     <b-row class="offre-row">
+    <BackButton class="m-0" :isMobile="true"/>
       <b-col cols="12" lg="5" md="6">
+        <BackButton :is-desktop="true"/>
         <img :src="$getImage(offre.image)" alt="Image de l'offre" />
       </b-col>
       <b-col class="separator" lg="1" md="1"></b-col>
       <b-col lg="6" md="6" cols="12">
         <h3>{{ offre.nom }}</h3>
-        <p>Postée le {{ getDate(offre.created_at) }}</p>
+        <p>Postée le {{ getDate(offre.created_at) }}, par {{ offre.entreprise.nom }}</p>
         <div v-if="offre.tags.length > 0" class="tags-container">
           <Tag v-for="tag in offre.tags" :key="tag.id" :text="tag.nom" />
+        </div>
+        <div v-if="offre.typeoffres.length > 0" class="tags-container">
+          <Tag :is-type="true" v-for="offre in offre.typeoffres" :key="offre.id" :text="offre.nom"/>
+        </div>
+        <div>
         </div>
         <div class="localisation">
           <svg
@@ -43,9 +35,7 @@
               />
             </g>
           </svg>
-          <p class="mb-0">
-            {{ offre.ville }}
-          </p>
+          {{ offre.ville }}, {{ offre.code_departement }}
         </div>
         <p>{{ offre.short_description }}</p>
       </b-col>
@@ -85,8 +75,8 @@
               />
             </g>
           </svg>
-          {{ offre.localisation }}
-        </span>
+          {{ offre.ville }}, {{offre.code_departement}}
+      </span>
       </h2>
       <div class="tags-container">
         <Tag v-for="tag in offre.tags" :key="tag.id + 'bis'" :text="tag.nom" />
@@ -99,13 +89,7 @@
             <input v-model="profilCv" type="checkbox" />
             <span class="slider round"></span>
           </label>
-          <span
-            >Utiliser le cv du profil<a
-              ><img
-                @click="show = true"
-                src="/icons/eye.svg"
-                alt="Voir le cv"/></a
-          ></span>
+          <span>Utiliser le cv du profil<a><img @click="showCv()" src="/icons/eye.svg" alt="Voir le cv"></a></span>
         </div>
         <lightbox v-bind="property" @hide="show = false" v-show="show" />
         <div class="msg">
@@ -156,12 +140,17 @@ import Lightbox from "@/components/Lightbox";
 import param from "@/param/param";
 import Alert from "@/components/Alert";
 import ModalSuccess from "@/components/modalSuccess";
-import ListeCandidatures from "@/components/ListeCandidatures";
+import BackButton from "@/components/BackButton";
 
 export default {
   name: "Slug",
-  components: { ModalSuccess, Alert, Lightbox, ListeCandidatures },
-  middleware: "auth",
+  components: {BackButton, ModalSuccess, Alert, Lightbox},
+  middleware: 'auth',
+  head() {
+    return {
+      title: 'Jobs - offre'
+    }
+  },
   data() {
     return {
       id: 0,
@@ -170,6 +159,7 @@ export default {
       show: false,
       cvUpload: null,
       disabled: false,
+      cvName: false,
       iscandidated: false,
       alert: {
         typeAlert: null,
@@ -185,12 +175,30 @@ export default {
       }
     };
   },
+
   computed: {
+    getDescription() {
+      if (typeof marked !== 'undefined' && this.offre !== null) {
+        return marked(this.offre.description)
+      }
+    },
     property() {
       return { cv: param.cheminPhoto + this.$auth.user.cv };
     }
   },
   methods: {
+    getFileExtension(filename) {
+      return filename.split('.').pop();
+    },
+
+    showCv() {
+      const name = this.$auth.user.cv.split('/');
+      if (this.getFileExtension(name[name.length - 1]) === 'pdf') {
+        window.open(param.cheminPhoto + this.$auth.user.cv, '_blank', '');
+      } else {
+        this.show = true
+      }
+    },
     isDisabled() {
       this.$auth.user.candidatures.forEach(candidature => {
         if (candidature.offre_id === parseInt(this.id)) {
@@ -282,14 +290,7 @@ export default {
     //   console.log(this.$options.nuxt)
     // }
   },
-  computed: {
-    getDescription() {
-      if (typeof marked !== "undefined" && this.offre !== null) {
-        return marked(this.offre.description);
-      }
-    }
-  }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -297,22 +298,28 @@ export default {
 .tags-container {
   display: flex;
   margin: 15px 0;
+  flex-wrap: wrap;
   @media (max-width: 992px) {
     margin: 5px 0;
   }
-  div {
-    margin: 0 20px;
+
+
+  div:first-of-type, div:last-of-type, div {
+    margin: 5px;
   }
-  div:first-of-type,
-  div:last-of-type {
-    margin: 0;
-  }
+
 }
 
 .offre-row {
   margin: 40px 0;
 
-  @media (max-width: 992px) {
+  div:first-of-type {
+    @media (max-width: 768px) {
+      order: 1;
+    }
+  }
+
+  @media(max-width: 992px) {
     margin: 40px 0 20px;
   }
 
@@ -326,6 +333,7 @@ export default {
     margin: 15px 0;
     display: flex;
     align-items: center;
+    font-size: 2rem;
 
     @media (max-width: 992px) {
       margin: 5px 0;

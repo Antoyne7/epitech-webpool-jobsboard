@@ -46,6 +46,7 @@ export default {
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
+
     // https://go.nuxtjs.dev/bootstrap
     [
       "bootstrap-vue/nuxt",
@@ -58,7 +59,7 @@ export default {
     // https://go.nuxtjs.dev/pwa
 
     "@nuxtjs/pwa",
-    "@nuxtjs/auth"
+    "@nuxtjs/auth",
   ],
 
   auth: {
@@ -109,7 +110,7 @@ export default {
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
 
   // Serveur : https://backend.antoinebraillard.tech/jobboard/public/index.php/api/
-  // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/
+  // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/)
   axios: {
     //
     // baseURL: 'https://backend.antoinebraillard.tech/jobboard/public/index.php/',
@@ -120,8 +121,8 @@ export default {
 
   proxy: {
     "/back": {
-      target:
-        "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/",
+      target: "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/",
+      // target: "http://jobs.epitech.fr/back/public/",
       pathRewrite: { "^/back": "/" }
     }
   },

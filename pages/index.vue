@@ -6,6 +6,11 @@
 import ListeOffres from "~/components/ListeOffres";
 
 export default {
+  head() {
+    return {
+      title: 'Jobs - accueil'
+    }
+  },
   name: "Index",
   components: { ListeOffres },
   middleware: "auth",

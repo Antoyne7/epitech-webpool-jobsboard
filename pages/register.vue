@@ -43,6 +43,11 @@ import ajaxServices from "~/services/ajaxServices";
 import ModalSuccess from "@/components/modalSuccess";
 
 export default {
+  head() {
+    return {
+      title: 'Jobs - inscription'
+    }
+  },
   name: "Register",
   layout: 'auth',
   data() {
