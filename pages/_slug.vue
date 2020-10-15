@@ -11,6 +11,9 @@
         <div v-if="offre.tags.length > 0" class="tags-container">
           <Tag v-for="tag in offre.tags" :key="tag.id" :text="tag.nom"/>
         </div>
+        <div v-if="offre.typeoffres.length > 0" class="tags-container">
+          <Tag :is-type="true" v-for="offre in offre.typeoffres" :key="offre.id" :text="offre.nom"/>
+        </div>
         <div class="localisation">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><title>
             ic_location_on_48px</title>
@@ -19,7 +22,7 @@
                 d="M24 4c-7.73 0-14 6.27-14 14 0 10.5 14 26 14 26s14-15.5 14-26c0-7.73-6.27-14-14-14zm0 19c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
             </g>
           </svg>
-          {{ offre.localisation }}
+          {{ offre.ville }}, {{ offre.code_departement }}
         </div>
         <p>{{ offre.short_description }}</p>
       </b-col>
@@ -249,6 +252,7 @@ export default {
     margin: 15px 0;
     display: flex;
     align-items: center;
+    font-size: 2rem;
 
     @media (max-width: 992px) {
       margin: 5px 0;

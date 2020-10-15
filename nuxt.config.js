@@ -109,19 +109,19 @@ export default {
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
 
   // Serveur : https://backend.antoinebraillard.tech/jobboard/public/index.php/api/
-  // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/
+  // local : http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/api/)
   axios: {
     //
     // baseURL: 'https://backend.antoinebraillard.tech/jobboard/public/index.php/',
-    // baseURL: 'http://jobs.epitech.fr/back/public/',
+    baseURL: 'http://jobs.epitech.fr/back/public/',
     credentials: true,
     proxy: true
   },
 
   proxy: {
     "/back": {
-      target:
-        "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/",
+      // target: "http://localhost/EPITECH/PROJETS/JOBBOARD/T-WEB-501-STG-5-1-jobboard-lucas.michalet/back/public/",
+      target: "http://jobs.epitech.fr/back/public/",
       pathRewrite: { "^/back": "/" }
     }
   },
