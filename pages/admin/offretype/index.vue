@@ -21,17 +21,7 @@
 
     <b-container class="my-5">
       <b-row class="justify-content-between">
-        <b-button
-          variant="light"
-          @click="$router.back()"
-          class="back text-uppercase font-weight-bold d-flex align-items-center"
-        >
-          <img
-            src="~/static/icons/ic_chevron_right_48px.svg"
-            alt="Retour page précédente"
-          />
-          Retour
-        </b-button>
+        <BackButton/>
         <div>
           <b-button
             class="new-offre"
@@ -82,10 +72,17 @@ import BasicDataForm from "@/components/forms/BasicDataForm";
 import DataDeletion from "@/components/DataDeletion";
 import ModalSuccess from "@/components/ModalSuccess";
 import { ContentLoader } from "vue-content-loader";
+import BackButton from "@/components/BackButton";
 
 export default {
+  head() {
+    return {
+      title: 'Jobs - type de contrats'
+    }
+  },
   name: "Index",
   components: {
+    BackButton,
     DataCard,
     DataDeletion,
     BasicDataForm,

@@ -43,7 +43,7 @@
 <script>
 import SearchBar from "~/components/SearchBar";
 import JobCard from "~/components/JobCard";
-import { ContentLoader } from "vue-content-loader";
+import {ContentLoader} from "vue-content-loader";
 
 export default {
   name: "ListeOffres",
@@ -161,16 +161,8 @@ export default {
 
     goto() {
       this.nbr = 6 * (this.nbrShowed - 1) + 7;
-      if (
-        document.querySelector(
-          ".container-cards .row div:nth-child(" + this.nbr + ")"
-        )
-      ) {
-        document
-          .querySelector(
-            ".container-cards .row div:nth-child(" + this.nbr + ")"
-          )
-          .scrollIntoView();
+      if (document.querySelector(".container-cards .row div:nth-child(" + this.nbr + ")")) {
+        document.querySelector(".container-cards .row div:nth-child(" + this.nbr + ")").scrollIntoView();
         if (this.listeOffres.length > this.nbrShowed * this.nbr) {
           this.showBtn = true;
         }

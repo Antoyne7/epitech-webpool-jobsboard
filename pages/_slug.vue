@@ -1,18 +1,22 @@
 <template>
   <b-container v-if="offre">
     <b-row class="offre-row">
+    <BackButton class="m-0" :isMobile="true"/>
       <b-col cols="12" lg="5" md="6">
+        <BackButton :is-desktop="true"/>
         <img :src="offre.image" alt="Image de l'offre">
       </b-col>
       <b-col class="separator" lg="1" md="1"></b-col>
       <b-col lg="6" md="6" cols="12">
         <h3>{{ offre.nom }}</h3>
-        <p>Postée le {{ getDate(offre.created_at) }}</p>
+        <p>Postée le {{ getDate(offre.created_at) }}, par {{ offre.entreprise.nom }}</p>
         <div v-if="offre.tags.length > 0" class="tags-container">
           <Tag v-for="tag in offre.tags" :key="tag.id" :text="tag.nom"/>
         </div>
         <div v-if="offre.typeoffres.length > 0" class="tags-container">
           <Tag :is-type="true" v-for="offre in offre.typeoffres" :key="offre.id" :text="offre.nom"/>
+        </div>
+        <div>
         </div>
         <div class="localisation">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><title>
@@ -87,11 +91,17 @@ import Lightbox from "@/components/Lightbox";
 import param from "@/param/param";
 import Alert from "@/components/Alert";
 import ModalSuccess from "@/components/modalSuccess";
+import BackButton from "@/components/BackButton";
 
 export default {
   name: "Slug",
-  components: {ModalSuccess, Alert, Lightbox},
+  components: {BackButton, ModalSuccess, Alert, Lightbox},
   middleware: 'auth',
+  head() {
+    return {
+      title: 'Jobs - offre'
+    }
+  },
   data() {
     return {
       id: 0,
@@ -234,20 +244,26 @@ export default {
 .tags-container {
   display: flex;
   margin: 15px 0;
+  flex-wrap: wrap;
   @media (max-width: 992px) {
     margin: 5px 0;
   }
-  div {
-    margin: 0 20px;
+
+
+  div:first-of-type, div:last-of-type, div {
+    margin: 5px;
   }
-  div:first-of-type, div:last-of-type {
-    margin: 0;
-  }
+
 }
 
 .offre-row {
   margin: 40px 0;
 
+  div:first-of-type {
+    @media (max-width: 768px) {
+      order: 1;
+    }
+  }
 
   @media(max-width: 992px) {
     margin: 40px 0 20px;

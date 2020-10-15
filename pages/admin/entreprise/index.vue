@@ -53,7 +53,7 @@
         >
           {{ entreprise.nom }}
         </DataCard>
-      </div>   
+      </div>
       <div class="msg" v-else-if="loaded === true">
         Il n'y a aucune entreprise dans la base de données.
       </div>
@@ -67,7 +67,7 @@
         />
       </b-row>
     </b-container>
-    
+
   </div>
 </template>
 
@@ -80,6 +80,12 @@ import ModalSuccess from "@/components/ModalSuccess";
 import { ContentLoader } from "vue-content-loader";
 
 export default {
+  head() {
+    return {
+      title: 'Jobs - entreprises'
+    }
+  },
+
   name: "Index",
   components: {
     DataCard,

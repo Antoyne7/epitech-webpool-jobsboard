@@ -1,5 +1,6 @@
 <template>
   <b-container>
+    <BackButton/>
     <b-row class="ligne">
       <b-col lg="5" md="12" cols="12">
         <h2 class="title-deletion">Modifier vos informations
@@ -123,12 +124,19 @@ import Alert from "@/components/Alert";
 import param from "@/param/param";
 import ModalSuccess from "@/components/modalSuccess";
 import BasicDataDeletion from "@/components/DataDeletion";
+import BackButton from "@/components/BackButton";
 
 
 export default {
   name: "profil",
   middleware: 'auth',
+  head() {
+    return {
+      title: 'Jobs - profil'
+    }
+  },
   components: {
+    BackButton,
     BasicDataDeletion,
     ModalSuccess,
     Alert,
@@ -342,9 +350,17 @@ export default {
     text-decoration: none;
   }
 }
-
-.ligne {
+.container {
   margin-top: 50px;
+  @media (max-width: 992px) {
+    margin-top: 30px;
+  }
+  @media (max-width: 500px) {
+    margin-top: 15px;
+  }
+}
+.ligne {
+  margin-top: 10px;
 
   h2 {
     font-size: 3rem;

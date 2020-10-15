@@ -8,6 +8,11 @@
 import OfferForm from "~/components/forms/OfferForm";
 import AjaxServices from "@/services/ajaxServices";
 export default {
+  head() {
+    return {
+      title: "Jobs - modification offre "
+    }
+  },
   name: "Add",
   components: {
     OfferForm
