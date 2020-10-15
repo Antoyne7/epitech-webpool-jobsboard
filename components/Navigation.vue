@@ -11,14 +11,14 @@
                 <b-icon-gear-fill scale="3.3" />
                 <span class="drop-d" v-show="isShowedAdmin">
                   <ul>
-                    <li v-if="isAdminRoute">
+                    <li>
                       <b-icon-house scale="2" />
                       <nuxt-link
                         to="/">
                         Accueil
                       </nuxt-link>
                     </li>
-                    <li v-else>
+                    <li>
                       <b-icon-gear scale="2" />
                       <nuxt-link  
                         to="/admin">
@@ -69,14 +69,8 @@ export default {
   data() {
     return {
       isShowedDcnx: false,
-      isShowedAdmin: false,
-      isAdminRoute: null
+      isShowedAdmin: false
     };
-  },
-  watch: {
-    $route() {
-      this.updateIsAdminRoute();
-    }
   },
   methods: {
     disconnect() {
@@ -88,15 +82,7 @@ export default {
           console.dir(err)
       })
     },
-    updateIsAdminRoute() {
-      if (this.$route.name) {
-        this.isAdminRoute = this.$route.name.includes('admin')
-      }
-    }
   },
-  mounted() {
-    this.updateIsAdminRoute();
-  }
 };
 </script>
 

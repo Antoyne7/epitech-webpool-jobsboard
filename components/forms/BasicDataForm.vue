@@ -11,6 +11,9 @@
           name="nom"
           placeholder="Entrez un nom"
         />
+        <div class="w-100 mt-3" v-show="error">
+          <Alert class="mx-auto" type="error" :msg="errMsg" />
+        </div>
         <div class="d-flex justify-content-center mt-4">
           <b-button class="mx-auto" type="submit">Enregistrer</b-button>
         </div>
@@ -20,8 +23,13 @@
 </template>
 
 <script>
+import Alert from '~/components/Alert'
+
 export default {
   name: "BasicDataForm",
+  components: {
+    Alert
+  },
   props: {
     dataObject: {
       type: Object,
@@ -31,6 +39,16 @@ export default {
     submitFunction: {
       type: Function,
       required: true
+    },
+    errMsg: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    error: {
+      type: Boolean,
+      required: false,
+      default: false,
     }
   },
   data() {

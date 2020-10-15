@@ -1,13 +1,15 @@
 <template>
   <div>
-    <DataDeletion ref="deleteComponent" type="typeOffres" :data-id="toDelete"
-      >On supprime mon pote typeoffre
+    <DataDeletion title="Attention" ref="deleteComponent" type="typeOffres" :data-id="toDelete"
+      >Voulez-vous vraiment supprimer ce type de contrat ?
     </DataDeletion>
 
     <BasicDataForm
       id="formmodal"
       :data-object="toEdit"
       :submit-function="formSubmitFunc"
+      :error="error" 
+      :errMsg="errMsg"
     >
       {{ formText }}
     </BasicDataForm>
@@ -81,6 +83,7 @@ import DataCard from "@/components/DataCard";
 import BasicDataForm from "@/components/forms/BasicDataForm";
 import DataDeletion from "@/components/DataDeletion";
 import ModalSuccess from "@/components/ModalSuccess";
+import param from "@/param/param";
 import { ContentLoader } from "vue-content-loader";
 
 export default {
@@ -100,7 +103,9 @@ export default {
       formText: null,
       formType: "create",
       successText: null,
-      loaded: false
+      loaded: false,
+      error: false,
+      errMsg: ''
     };
   },
   created() {
@@ -124,7 +129,14 @@ export default {
         setTimeout(() => (self.loaded = true), 200);
       });
     },
+    setError(msg = null) {
+      console.log('set error:', msg);
+      this.error = true
+      this.errMsg = msg || param.message.errDefault
+    },
     openFormModal(type, objet) {
+      this.error = false
+      this.errMsg = ''
       this.formType = type;
       if (type === "create") {
         this.toEdit = null;
@@ -141,26 +153,36 @@ export default {
       this.$axios
         .$post("/back/api/typeoffres", formdata)
         .then(data => {
-          if (data.id) {
+          if (data.status_code === 200) {
             this.updateList();
-            this.successText = "Type de contrat créer.";
+            this.successText = "Type de contrat crée.";
             this.$bvModal.show("modal-success");
             this.$bvModal.hide("basic-form-modal");
+          } else {
+            this.setError(data.message)
           }
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          this.setError()
+        });
     },
     update(objet) {
       // Update, afficher animation success puis retour a la liste des entreprise
+      console.log('update2');
       this.$axios
         .$put("/back/api/typeoffres/" + objet.id, objet)
-        .then(() => {
+        .then((data) => {
+          if (data.status_code === 200) {
+
           this.updateList();
-          this.successText = "Modification effectuée.";
+          this.successText = "Modifications effectuées.";
           this.$bvModal.show("modal-success");
           this.$bvModal.hide("basic-form-modal");
+          } else {
+            this.setError(data.message)
+          }
         })
-        .catch(e => console.log(e));
+        .catch(e => this.setError());
     }
   },
   computed: {

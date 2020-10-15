@@ -29,8 +29,35 @@ class EntrepriseController extends Controller
      */
     public function store(Request $request)
     {
-        return Entreprise::create([
-            'nom' => $request['nom']
+
+        try {
+            $request->validate([
+                'nom' => 'required|unique:entreprises|max:128,nom,' . $request['id']
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 422,
+                'error_code' => 1,
+                'error' => $exception,
+                'message' => "Ce nom est déjà utilisé pour une autre entreprise.",
+            ]);
+        }
+
+        try {
+            Entreprise::create([
+                'nom' => $request['nom']
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 500,
+                'error_code' => 2,
+                'error' => $exception,
+                'message' => "Une erreur s'est produite.",
+            ]);
+        }
+        return response([
+            'status_code' => 200,
+            'message' => "Créée.",
         ]);
     }
 
@@ -55,11 +82,37 @@ class EntrepriseController extends Controller
      */
     public function update(Request $request, Entreprise $entreprise)
     {
-
+        try {
+            $request->validate([
+                'nom' => 'required|unique:entreprises|max:128,nom,' . $request['id']
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 422,
+                'error_code' => 1,
+                'error' => $exception,
+                'message' => "Le nom est déjà utilisé pour une autre entreprise.",
+            ]);
+        }
         $data = json_decode($request->getContent());
-        return response($entreprise->update([
-            'nom' => $data->nom
-        ]));
+
+        try {
+            $entreprise->update([
+                'nom' => $data->nom
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 500,
+                'error_code' => 2,
+                'error' => $exception,
+                'message' => "Impossible d'appliquer les modifications.",
+            ]);
+        }
+
+        return response([
+            'status_code' => 200,
+            'message' => "Modifié.",
+        ]);
     }
 
     /**

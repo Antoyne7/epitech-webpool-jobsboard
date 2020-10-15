@@ -28,9 +28,38 @@ class TypeOffreController extends Controller
      */
     public function store(Request $request)
     {
-        return TypeOffre::create([
-            'nom' => $request['nom']
+
+        try {
+            $request->validate([
+                'nom' => 'required|unique:type_offres|max:128,nom,' . $request['id']
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 422,
+                'error_code' => 1,
+                'error' => $exception,
+                'message' => "Ce nom est déjà utilisé pour un autre type d'offre.",
+            ]);
+        }
+
+        try {
+            return TypeOffre::create([
+                'nom' => $request['nom']
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 500,
+                'error_code' => 2,
+                'error' => $exception,
+                'message' => "Une erreur s'est produite.",
+            ]);
+        }
+        return response([
+            'status_code' => 200,
+            'message' => "Créer.",
         ]);
+
+        
     }
 
     /**
@@ -53,10 +82,38 @@ class TypeOffreController extends Controller
      */
     public function update(Request $request, TypeOffre $typeoffre)
     {
+        try {
+            $request->validate([
+                'nom' => 'required|unique:type_offres|max:128,nom,' . $request['id']
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 422,
+                'error_code' => 1,
+                'error' => $exception,
+                'message' => "Le nom est déjà utilisé pour un autre type d'offre.",
+            ]);
+        }
+
         $data = json_decode($request->getContent());
-        return response($typeoffre->update([
-            'nom' => $data->nom
-        ]));
+
+        try {
+            $typeoffre->update([
+                'nom' => $data->nom
+            ]);
+        } catch (\Exception $exception) {
+            return response([
+                'status_code' => 500,
+                'error_code' => 2,
+                'error' => $exception,
+                'message' => "Impossible d'appliquer les modifications.",
+            ]);
+        }
+
+        return response([
+            'status_code' => 200,
+            'message' => "Modifié.",
+        ]);
     }
 
     /**

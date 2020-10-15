@@ -1,18 +1,25 @@
 <template>
   <div>
-    <DataDeletion ref="deleteComponent" type="entreprises" :data-id="toDelete"
-      >On supprime mon pote entreprise
+    <DataDeletion title="Attention" ref="deleteComponent" type="entreprises" :data-id="toDelete"
+      >Voulez vous vraiment supprimer cette entreprise ?
     </DataDeletion>
 
     <BasicDataForm
       id="formmodal"
       :data-object="toEdit"
       :submit-function="formSubmitFunc"
+      :error="error"
+      :errMsg="errMsg"
     >
       {{ formText }}
     </BasicDataForm>
 
-    <ModalSuccess :route="$route" id="modal-success" :message="successText" :isCentered="true" />
+    <ModalSuccess
+      :route="$route"
+      id="modal-success"
+      :message="successText"
+      :isCentered="true"
+    />
 
     <!-- Boutons back et ajout -->
     <b-container class="my-5">
@@ -43,7 +50,10 @@
     </b-container>
 
     <b-container>
-      <div class="container-cards" v-if="entreprises.length > 0 && loaded === true">
+      <div
+        class="container-cards"
+        v-if="entreprises.length > 0 && loaded === true"
+      >
         <DataCard
           v-for="entreprise in entreprises"
           v-bind:key="entreprise.id"
@@ -53,7 +63,7 @@
         >
           {{ entreprise.nom }}
         </DataCard>
-      </div>   
+      </div>
       <div class="msg" v-else-if="loaded === true">
         Il n'y a aucune entreprise dans la base de données.
       </div>
@@ -67,7 +77,6 @@
         />
       </b-row>
     </b-container>
-    
   </div>
 </template>
 
@@ -78,6 +87,7 @@ import BasicDataForm from "@/components/forms/BasicDataForm";
 import DataDeletion from "@/components/DataDeletion";
 import ModalSuccess from "@/components/ModalSuccess";
 import { ContentLoader } from "vue-content-loader";
+import param from "@/param/param";
 
 export default {
   name: "Index",
@@ -96,7 +106,9 @@ export default {
       formText: null,
       formType: "create",
       successText: null,
-      loaded: false
+      loaded: false,
+      error: false,
+      errMsg: ""
     };
   },
   created() {
@@ -113,14 +125,21 @@ export default {
       this.$refs.deleteComponent.deleteModal(this.toDelete);
     },
     updateList() {
-      this.loaded = false
+      this.loaded = false;
       AjaxServices.getListe("entreprises").then(promise => {
         this.entreprises = promise;
-        const self = this
-        setTimeout(() => self.loaded = true, 200)
+        const self = this;
+        setTimeout(() => (self.loaded = true), 200);
       });
     },
+    setError(msg = null) {
+      console.log("set error:", msg);
+      this.error = true;
+      this.errMsg = msg || param.message.errDefault;
+    },
     openFormModal(type, objet) {
+      this.error = false;
+      this.errMsg = "";
       this.formType = type;
       if (type === "create") {
         this.toEdit = null;
@@ -137,26 +156,36 @@ export default {
       this.$axios
         .$post("/back/api/entreprises", formdata)
         .then(data => {
-          if (data.id) {
+          if (data.status_code === 200) {
             this.updateList();
-            this.successText = 'Entreprise créer.'
-            this.$bvModal.show('modal-success')
+            this.successText = "Entreprise créée.";
+            this.$bvModal.show("modal-success");
             this.$bvModal.hide("basic-form-modal");
+          } else {
+            this.setError(data.message);
           }
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          this.setError();
+        });
     },
     update(objet) {
       // Update, afficher animation success puis retour a la liste des entreprise
       this.$axios
         .$put("/back/api/entreprises/" + objet.id, objet)
-        .then(() => {
-          this.updateList();
-          this.successText = 'Modification effectuée.'
-          this.$bvModal.show('modal-success')
-          this.$bvModal.hide("basic-form-modal");
+        .then(data => {
+          if (data.status_code === 200) {
+            this.updateList();
+            this.successText = "Modifications effectuées.";
+            this.$bvModal.show("modal-success");
+            this.$bvModal.hide("basic-form-modal");
+          } else {
+            this.setError(data.message);
+          }
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          this.setError();
+        });
     }
   },
   computed: {
