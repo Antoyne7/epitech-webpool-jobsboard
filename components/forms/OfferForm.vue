@@ -3,7 +3,7 @@
     <ModalSuccess
       :is-centered="true"
       route="/admin/offre/add"
-      message="L'entreprise à bien été créer"
+      message="L'entreprise à bien été créée."
       id="modal-succ-entreprise"
     />
     <ModalSuccess
@@ -316,7 +316,7 @@ export default {
     return {
       error: false,
       errorMsg: '',
-      msgOffre: "L'offre à bien été créer",
+      msgOffre: "L'offre à bien été créée.",
       typeOffres: [],
       preview: camera,
       editIcone: edit,

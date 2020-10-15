@@ -216,7 +216,7 @@ export default {
     showCandidatureCv() {
       const name = this.candidatureToShow.cv.split('/');
       if (this.getFileExtension(name[name.length - 1]) === 'pdf') {
-        window.open(this.cvPreview, '_blank');
+        window.open(this.$getImage(this.candidatureToShow.cv), '_blank');
       } else {
         this.showCandidatureModal = true
       }
