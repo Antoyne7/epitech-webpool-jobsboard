@@ -6,7 +6,7 @@
           <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
             <!-- TODO: Enlever true -->
-            <span v-if="$store.state.auth.user.role === 2 || true">
+            <span v-if="$store.state.auth.user.role === 2">
               <button class="mr-3" @click="isShowedAdmin = !isShowedAdmin">
                 <b-icon-gear-fill scale="3.3" />
                 <span class="drop-d" v-show="isShowedAdmin">
