@@ -20,7 +20,7 @@ class Cors
             "http://localhost:3000",
             "https://localhost:3000",
             "localhost:8888",
-            "jobs.epitech.fr",
+            "https://jobsboard-pmsc.herokuapp.com/"
         ];
         $requestOrigin = $request->headers->get('origin');
 

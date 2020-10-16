@@ -131,7 +131,7 @@ export default {
     },
     updateList() {
       this.loaded = false;
-      AjaxServices.getListe("entreprises").then(promise => {
+      this.$axios.$get("/back/api/entreprises").then(promise => {
         this.entreprises = promise;
         const self = this;
         setTimeout(() => (self.loaded = true), 200);

@@ -32,7 +32,7 @@ export default {
       formdata.append('shortDescription', data.shortDescription)
       formdata.append('description', data.description )
 
-      AjaxServices.pushInformations('listeOffres', formdata)
+      this.$axios.$post('/back/api/offres', formdata)
         .then(data => {
 
         })

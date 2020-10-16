@@ -274,7 +274,7 @@ export default {
     //   }
     // }
     // if (this.id !== 0) {
-    AjaxServices.getInformations("listeOffres", this.id)
+    this.$axios.$get("/back/api/offres/" + this.id)
       .then(promise => {
         this.offre = promise;
         this.isDisabled();

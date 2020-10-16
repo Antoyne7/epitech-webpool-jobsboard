@@ -93,7 +93,7 @@ export default {
               params.append('prenom', this.prenom)
               params.append('email', this.email)
               params.append('password', this.password)
-              ajaxServices.pushInformations('register', params).then(({statusCode}) => {
+              this.$axios.$post('/back/api/register', params).then(({statusCode}) => {
                 if (statusCode === 200) {
                   this.$bvModal.show('modal-succ')
                 } else {

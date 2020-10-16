@@ -377,7 +377,7 @@ export default {
     entrepriseSubmit() {
       const entrepriseFormdata = new FormData();
       entrepriseFormdata.append("nom", this.entreprise.add);
-      AjaxServices.pushInformations("entreprises", entrepriseFormdata)
+      this.$axios.$post("/back/api/entreprises", entrepriseFormdata)
         .then(data => {
           this.hideEntrepriseModal();
           this.$bvModal.show("modal-succ-entreprise");
@@ -468,13 +468,13 @@ export default {
   },
   async mounted() {
     this.initDescription();
-    this.entreprise.list = await AjaxServices.getListe("entreprises");
+    this.entreprise.list = await this.$axios.$get("/back/api/entreprises");
     // Pour init les types d'offres après que le store sois rempli
-    const typeOffres = await AjaxServices.getListe("typeOffres");
+    const typeOffres = await this.$axios.$get("/back/api/typeoffres");
 
     if (this.$route.params.slug) {
       this.msgOffre = "L'offre à bien été modifiée";
-      AjaxServices.getInformations("listeOffres", this.$route.params.slug)
+      this.$axios.$get("/back/api/offres/" + this.$route.params.slug)
         .then(data => {
           this.offre.nom = data.nom;
           this.offre.description = data.description;
