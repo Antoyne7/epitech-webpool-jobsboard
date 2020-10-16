@@ -1,6 +1,14 @@
 <template>
   <div>
-    <DataDeletion title="Attention" ref="deleteComponent" type="entreprises" :data-id="toDelete"
+    <DataDeletion
+      route="/admin/entreprise"
+      message-success="L'entreprise a bien été supprimée !"
+      :with-success="true"
+      @deletion="deletionComplete()"
+      title="Attention"
+      ref="deleteComponent"
+      type="entreprises"
+      :data-id="toDelete"
       >Voulez vous vraiment supprimer cette entreprise ?
     </DataDeletion>
 
@@ -125,6 +133,9 @@ export default {
     });
   },
   methods: {
+    deletionComplete() {
+      this.updateList();
+    },
     deleteFunction(id) {
       this.toDelete = id;
       this.$refs.deleteComponent.deleteModal(this.toDelete);

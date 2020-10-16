@@ -13,11 +13,12 @@
       <path d="m37 61.739a1 1 0 0 1 -1-1v-29.577a1 1 0 1 1 2 0v29.577a1 1 0 0 1 -1 1z"/>
       <path d="m26.935 61.739a1 1 0 0 1 -1-1v-29.577a1 1 0 0 1 2 0v29.577a1 1 0 0 1 -1 1z"/>
     </svg>
-    <b-modal id="delete-modal" title="Modal de suppression" hide-footer hide-header>
+    <b-modal @hide="showErr = false" id="delete-modal" title="Modal de suppression" hide-footer hide-header>
       <h2>{{ title }}</h2>
       <p class="my-4 text-center">
         <slot></slot>
       </p>
+        <Alert style="text-align: center;" class="mb-3" type="error" :msg="errMsg" v-show="showErr"/>
       <div class="btn-containers">
         <button class="bg-blue-jobs" @click="cancel">Annuler</button>
         <button class="mr-2 attention" @click="deleteData">Supprimer</button>
@@ -31,12 +32,13 @@
 </template>
 
 <script>
-
+import param from "@/param/param";
 import ModalSuccess from "@/components/modalSuccess";
+import Alert from "@/components/Alert";
 
 export default {
   name: "BasicDataDeletion",
-  components: {ModalSuccess},
+  components: {Alert, ModalSuccess},
   props: [
     'title',
     'type',
@@ -49,6 +51,8 @@ export default {
   ],
   data() {
     return {
+      showErr: false,
+      errMsg: null,
       toDelete: null,
       showSuccess: false
     }
@@ -66,12 +70,18 @@ export default {
           if (this.withSuccess) {
             this.$bvModal.show('success-deletion')
           }
+          this.showErr = false
         })
-        .catch(e => console.log(e))
+        .catch(e => {
+          console.log(e)
+          this.errMsg = param.message.errDefault
+          this.showErr = true
+        })
     },
     cancel() {
       this.$bvModal.hide('delete-modal')
-      this.toDelete = null
+      this.toDelete = null;
+      this.showErr = false;
     }
   }
 }

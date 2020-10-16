@@ -1,7 +1,13 @@
 <template>
   <div>
-    <DataDeletion title="Attention" ref="deleteComponent" type="typeOffres" :data-id="toDelete"
-      >Voulez-vous vraiment supprimer ce type de contrat ?
+    <DataDeletion route="/admin/offretype"
+                  message-success="Le type de contrat a bien été supprimé !"
+                  :with-success="true"
+                  @deletion="deletionComplete()"
+                  title="Attention"
+                  ref="deleteComponent" type="typeoffres"
+                  :data-id="toDelete"
+    >Voulez-vous vraiment supprimer ce type de contrat ?
     </DataDeletion>
 
     <BasicDataForm
@@ -113,6 +119,9 @@ export default {
     });
   },
   methods: {
+    deletionComplete() {
+      this.updateList();
+    },
     deleteFunction(id) {
       this.toDelete = id;
       this.$refs.deleteComponent.deleteModal(this.toDelete);
@@ -145,19 +154,19 @@ export default {
     create(objet) {
       const formdata = new FormData();
       formdata.append("nom", objet.nom);
-      this.$axios
-        .$post("/back/api/typeoffres", formdata)
-        .then(data => {
-          if (data.status_code === 200) {
-            this.updateList();
-            this.successText = "Type de contrat crée.";
-            this.$bvModal.show("modal-success");
-            this.$bvModal.hide("basic-form-modal");
-          } else {
-            this.setError(data.message)
-          }
-        })
+      this.$axios.$post("/back/api/typeoffres", formdata).then(response => {
+        console.log(response)
+        if (response.status_code === 200) {
+          this.updateList();
+          this.successText = "Type de contrat crée.";
+          this.$bvModal.show("modal-success");
+          this.$bvModal.hide("basic-form-modal");
+        } else {
+          this.setError(response.message)
+        }
+      })
         .catch(e => {
+          console.dir(e)
           this.setError()
         });
     },
@@ -167,7 +176,6 @@ export default {
         .$put("/back/api/typeoffres/" + objet.id, objet)
         .then((data) => {
           if (data.status_code === 200) {
-
           this.updateList();
           this.successText = "Modifications effectuées.";
           this.$bvModal.show("modal-success");
