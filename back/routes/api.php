@@ -21,10 +21,9 @@ Route::apiResource('candidatures', \App\Http\Controllers\Api\CandidatureControll
 Route::post('/login', '\App\Http\Controllers\AuthController@login')->name('login');
 Route::post('/register', '\App\Http\Controllers\AuthController@register')->name('register');
 
-Route::post('/logout', '\App\Http\Controllers\AuthController@logout')->name('logout');
-
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/utilisateurs', '\App\Http\Controllers\Api\UtilisateurController@index');
+    Route::post('/logout', '\App\Http\Controllers\AuthController@logout')->name('logout');
     Route::get('/candidatures/{candidature}/seen', '\App\Http\Controllers\Api\CandidatureController@seen');
     Route::get('/me', '\App\Http\Controllers\AuthController@user');
     Route::apiResource('utilisateurs', \App\Http\Controllers\Api\UtilisateurController::class);
