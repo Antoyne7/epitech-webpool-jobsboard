@@ -5,14 +5,13 @@
         <div class="navbar-custom">
           <nuxt-link to="/"><h1>Job's</h1></nuxt-link>
           <div class="menu">
-            <!-- TODO: Enlever true -->
-            <span v-if="$store.state.auth.user.role === 2 || true">
+            <span v-if="$store.state.auth.user && $store.state.auth.user.role === 2">
               <button class="mr-3" @click="isShowedAdmin = !isShowedAdmin">
-                <b-icon-gear-fill scale="3.3" />
+                <b-icon-gear-fill scale="3.3"/>
                 <span class="drop-d" v-show="isShowedAdmin">
                   <ul>
                     <li>
-                      <b-icon-house scale="2" />
+                      <b-icon-house scale="2"/>
                       <nuxt-link
                         to="/">
                         Accueil
@@ -20,7 +19,7 @@
                     </li>
                     <li>
                       <b-icon-gear scale="2" />
-                      <nuxt-link  
+                      <nuxt-link
                         to="/admin">
                         Administration
                       </nuxt-link></li>
@@ -78,8 +77,8 @@ export default {
         .logout()
         .then(() => {
           this.$router.push('/login')
-        }).catch((err)=>{
-          console.dir(err)
+        }).catch((err) => {
+        console.dir(err)
       })
     },
   },

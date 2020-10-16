@@ -43,7 +43,7 @@ class TypeOffreController extends Controller
         }
 
         try {
-            return TypeOffre::create([
+            TypeOffre::create([
                 'nom' => $request['nom']
             ]);
         } catch (\Exception $exception) {
@@ -59,7 +59,6 @@ class TypeOffreController extends Controller
             'message' => "Créer.",
         ]);
 
-        
     }
 
     /**
