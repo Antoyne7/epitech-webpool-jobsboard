@@ -125,7 +125,7 @@
         </div>
       </form>
     </b-modal>
-    <modal-success
+    <ModalSuccess
       route="/"
       id="success"
       message="Votre candidature est envoyée !"

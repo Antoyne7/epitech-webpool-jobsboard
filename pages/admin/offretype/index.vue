@@ -69,13 +69,13 @@
 </template>
 
 <script>
-import DataCard from "@/components/DataCard";
-import BasicDataForm from "@/components/forms/BasicDataForm";
-import DataDeletion from "@/components/DataDeletion";
-import ModalSuccess from "@/components/ModalSuccess";
-import param from "@/param/param";
+import DataCard from "~/components/DataCard";
+import BasicDataForm from "~/components/forms/BasicDataForm";
+import DataDeletion from "~/components/DataDeletion";
+import ModalSuccess from "~/components/modalSuccess";
+import param from "~/param/param";
 import { ContentLoader } from "vue-content-loader";
-import BackButton from "@/components/BackButton";
+import BackButton from "~/components/BackButton";
 
 export default {
   head() {

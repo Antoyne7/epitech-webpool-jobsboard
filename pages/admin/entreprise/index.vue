@@ -81,13 +81,13 @@
 </template>
 
 <script>
-import DataCard from "@/components/DataCard";
-import AjaxServices from "@/services/ajaxServices";
-import BasicDataForm from "@/components/forms/BasicDataForm";
-import DataDeletion from "@/components/DataDeletion";
-import ModalSuccess from "@/components/ModalSuccess";
+import DataCard from "~/components/DataCard";
+import AjaxServices from "~/services/ajaxServices";
+import BasicDataForm from "~/components/forms/BasicDataForm";
+import DataDeletion from "~/components/DataDeletion";
+import ModalSuccess from "~/components/modalSuccess";
 import { ContentLoader } from "vue-content-loader";
-import param from "@/param/param";
+import param from "~/param/param";
 
 export default {
   head() {

@@ -5,17 +5,33 @@
         <h2>Se connecter à Jobs</h2>
         <b-col class="fieldset" lg="9" md="10" cols="12">
           <form @submit.prevent="submit()" ref="loginform">
-            <StyledInput :email.sync="email" var-to-update="email" class="input-login" placeholder="Email" type="email"
-                         identifier="email"/>
-            <StyledInput icone="eye.svg" :password.sync="password" var-to-update="password" class="input-login"
-                         placeholder="Mot de passe"
-                         type="password" identifier="password"/>
-            <Alert style="text-align: center" :msg="alertMsgGlobal" :type="alertTypeGlobal" v-show="showAlertGlobal"/>
-            <AuthButton type="submit" text="Connexion"/>
+            <StyledInput
+              :email.sync="email"
+              var-to-update="email"
+              class="input-login"
+              placeholder="Email"
+              type="email"
+              identifier="email"
+            />
+            <StyledInput
+              icone="eye.svg"
+              :password.sync="password"
+              var-to-update="password"
+              class="input-login"
+              placeholder="Mot de passe"
+              type="password"
+              identifier="password"
+            />
+            <Alert
+              style="text-align: center"
+              :msg="alertMsgGlobal"
+              :type="alertTypeGlobal"
+              v-show="showAlertGlobal"
+            />
+            <AuthButton type="submit" text="Connexion" />
           </form>
           <nuxt-link to="/register">
-            <AuthRedirection class="auth-redirection"
-                             text="Créer un compte"/>
+            <AuthRedirection class="auth-redirection" text="Créer un compte" />
           </nuxt-link>
           <!-- <AuthRedirection class="auth-redirection" text="Mot de passe oublié"/> -->
         </b-col>
@@ -63,8 +79,7 @@ export default {
           const formData = new FormData();
           formData.append('email', this.email)
           formData.append('password', this.password)
-          await this.$auth.loginWith('local', {data: formData}).then((res) => {
-          });
+          await this.$auth.loginWith('local', {data: formData})
         }
       } catch (err) {
         this.alertMsgGlobal = param.message.errCnx;
@@ -86,12 +101,10 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-
   .row {
     align-items: center;
     height: 100vh;
   }
-
 }
 
 .login-box {
@@ -118,7 +131,6 @@ export default {
     .auth-redirection {
       margin: 10px 0;
     }
-
   }
 }
 </style>

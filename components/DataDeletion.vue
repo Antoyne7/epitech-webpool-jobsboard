@@ -23,7 +23,7 @@
         <button class="mr-2 attention" @click="deleteData">Supprimer</button>
       </div>
     </b-modal>
-    <modal-success v-if="withSuccess" :route="route"
+    <ModalSuccess v-if="withSuccess" :route="route"
                    :need-dcnx="withDcnx" :is-centered="true"
                    :message="messageSuccess"
                    id="success-deletion"/>

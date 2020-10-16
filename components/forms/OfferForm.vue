@@ -279,7 +279,7 @@ import CheckboxButton from "~/components/forms/CheckboxButton";
 import camera from "~/static/icons/camera.svg";
 import edit from "~/static/icons/edit.svg";
 import AjaxServices from "~/services/ajaxServices";
-import modalSuccess from "@/components/modalSuccess";
+import ModalSuccess from "~/components/modalSuccess";
 import Lightbox from "~/components/Lightbox";
 import Alert from "~/components/Alert";
 import ListeCandidatures from "~/components/ListeCandidatures";
@@ -290,7 +290,7 @@ export default {
   components: {
     Tag,
     CheckboxButton,
-    modalSuccess,
+    ModalSuccess,
     Lightbox,
     Alert,
     ListeCandidatures,
