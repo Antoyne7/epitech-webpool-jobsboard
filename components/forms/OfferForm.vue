@@ -58,6 +58,7 @@
                 name="nom"
                 id="nom"
                 value="Titre de l'offre"
+                required
               />
               <img
                 class="position-absolute"
@@ -82,6 +83,7 @@
                     @focus="entreprise.showList = true"
                     @keyup.esc="entreprise.showList = false"
                     placeholder="entreprise"
+                    required
                   />
                   <ul
                     id="entreprise-autocomplete"
@@ -154,6 +156,7 @@
                     name="localisation"
                     id="localisation"
                     placeholder="Strasbourg"
+                    required
                   />
                 </div>
                 <ul
@@ -185,6 +188,7 @@
                 id="image"
                 class="h-100 w-100 position-absolute"
                 @change="updatePreviewImg($event)"
+                required
               />
               <img
                 class="mx-auto d-block mh-100 mw-100"
@@ -216,6 +220,7 @@
                 id="shortDescription"
                 placeholder="Entrez une description courte"
                 maxlength="160"
+                required
               />
               <small
                 :class="{ 'text-danger': offre.shortDescription.length > 120 }"
@@ -248,6 +253,7 @@
                   v-model="offre.description"
                   name="description"
                   id="description"
+                  required
                 />
               </div>
               <div
