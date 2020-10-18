@@ -1,6 +1,6 @@
 <template>
   <div>
-    <OfferForm :on-submit="editOffre"/>
+    <OfferForm :is-modif="true" :on-submit="editOffre"/>
   </div>
 </template>
 

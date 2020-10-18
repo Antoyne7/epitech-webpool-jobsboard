@@ -58,7 +58,7 @@
                 name="nom"
                 id="nom"
                 value="Titre de l'offre"
-                required
+                :required="isModif"
               />
               <img
                 class="position-absolute"
@@ -83,7 +83,7 @@
                     @focus="entreprise.showList = true"
                     @keyup.esc="entreprise.showList = false"
                     placeholder="entreprise"
-                    required
+                    :required="isModif"
                   />
                   <ul
                     id="entreprise-autocomplete"
@@ -156,7 +156,7 @@
                     name="localisation"
                     id="localisation"
                     placeholder="Strasbourg"
-                    required
+                    :required="isModif"
                   />
                 </div>
                 <ul
@@ -188,7 +188,7 @@
                 id="image"
                 class="h-100 w-100 position-absolute"
                 @change="updatePreviewImg($event)"
-                required
+                :required="isModif"
               />
               <img
                 class="mx-auto d-block mh-100 mw-100"
@@ -219,13 +219,13 @@
                 name="shortDescription"
                 id="shortDescription"
                 placeholder="Entrez une description courte"
-                maxlength="160"
-                required
+                maxlength="255"
+                :required="isModif"
               />
               <small
-                :class="{ 'text-danger': offre.shortDescription.length > 120 }"
+                :class="{ 'text-danger': offre.shortDescription.length > 230 }"
               >
-                {{ offre.shortDescription.length }}/160
+                {{ offre.shortDescription.length }}/255
               </small>
             </div>
 
@@ -253,7 +253,7 @@
                   v-model="offre.description"
                   name="description"
                   id="description"
-                  required
+                  :required="isModif"
                 />
               </div>
               <div
@@ -303,6 +303,11 @@ export default {
     BackButton
   },
   props: {
+    isModif: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     onSubmit: {
       type: Function,
       required: true
