@@ -1,4 +1,6 @@
-# jobs
+# JOBS
+
+Epitech web pool project
 
 ## Build Setup
 
